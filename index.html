@@ -1,0 +1,1459 @@
+```html
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>FreshSOUK — Fruits & Légumes</title>
+  <meta name="description" content="FreshSOUK — Fruits et légumes frais livrés chez vous.">
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --green: #16803a;
+      --green-dark: #0d5c2b;
+      --green-light: #eaf7ed;
+      --orange: #f59e0b;
+      --dark: #172019;
+      --gray: #667085;
+      --light: #f7faf7;
+      --white: #ffffff;
+      --border: #e5e7eb;
+      --danger: #dc2626;
+    }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--light);
+      color: var(--dark);
+      line-height: 1.5;
+    }
+
+    button,
+    input,
+    select,
+    textarea {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    /* HEADER */
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(255,255,255,.96);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav {
+      max-width: 1180px;
+      margin: auto;
+      padding: 15px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 900;
+      font-size: 23px;
+      color: var(--green);
+    }
+
+    .logo-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      background: var(--green);
+      color: white;
+      display: grid;
+      place-items: center;
+      font-size: 22px;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 24px;
+      align-items: center;
+      font-weight: 600;
+    }
+
+    .nav-links a:hover {
+      color: var(--green);
+    }
+
+    .cart-btn {
+      border: none;
+      background: var(--green);
+      color: white;
+      padding: 11px 16px;
+      border-radius: 12px;
+      font-weight: 700;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .cart-count {
+      background: white;
+      color: var(--green);
+      min-width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      font-size: 12px;
+    }
+
+    /* HERO */
+
+    .hero {
+      max-width: 1180px;
+      margin: auto;
+      padding: 70px 20px 50px;
+      display: grid;
+      grid-template-columns: 1.15fr .85fr;
+      gap: 50px;
+      align-items: center;
+    }
+
+    .badge {
+      display: inline-flex;
+      background: var(--green-light);
+      color: var(--green-dark);
+      padding: 8px 14px;
+      border-radius: 30px;
+      font-weight: 700;
+      margin-bottom: 18px;
+    }
+
+    .hero h1 {
+      font-size: clamp(40px, 6vw, 68px);
+      line-height: 1.02;
+      margin-bottom: 20px;
+    }
+
+    .hero h1 span {
+      color: var(--green);
+    }
+
+    .hero p {
+      font-size: 18px;
+      color: var(--gray);
+      max-width: 600px;
+      margin-bottom: 28px;
+    }
+
+    .hero-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .btn-primary,
+    .btn-secondary {
+      border: none;
+      border-radius: 14px;
+      padding: 14px 20px;
+      font-weight: 800;
+      transition: .2s;
+    }
+
+    .btn-primary {
+      background: var(--green);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: var(--green-dark);
+      transform: translateY(-2px);
+    }
+
+    .btn-secondary {
+      background: white;
+      border: 1px solid var(--border);
+    }
+
+    .hero-card {
+      min-height: 390px;
+      border-radius: 30px;
+      background:
+        radial-gradient(circle at 30% 25%, #fff 0 5%, transparent 6%),
+        linear-gradient(135deg, #dff5e4, #fff5dc);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 150px;
+      box-shadow: 0 25px 70px rgba(22,128,58,.12);
+    }
+
+    /* FEATURES */
+
+    .features {
+      max-width: 1180px;
+      margin: auto;
+      padding: 15px 20px 50px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+    }
+
+    .feature {
+      background: white;
+      padding: 22px;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+    }
+
+    .feature-icon {
+      font-size: 28px;
+      margin-bottom: 10px;
+    }
+
+    .feature h3 {
+      margin-bottom: 5px;
+    }
+
+    .feature p {
+      color: var(--gray);
+      font-size: 14px;
+    }
+
+    /* PRODUCTS */
+
+    .section {
+      max-width: 1180px;
+      margin: auto;
+      padding: 55px 20px;
+    }
+
+    .section-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      margin-bottom: 25px;
+      gap: 20px;
+    }
+
+    .section-title h2 {
+      font-size: 34px;
+    }
+
+    .section-title p {
+      color: var(--gray);
+    }
+
+    .products {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+    }
+
+    .product {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      overflow: hidden;
+      transition: .2s;
+    }
+
+    .product:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 15px 35px rgba(0,0,0,.07);
+    }
+
+    .product-image {
+      height: 180px;
+      background: #f4f8f3;
+      display: grid;
+      place-items: center;
+      font-size: 82px;
+    }
+
+    .product-content {
+      padding: 17px;
+    }
+
+    .product-category {
+      color: var(--green);
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .product h3 {
+      margin: 5px 0;
+    }
+
+    .product-description {
+      color: var(--gray);
+      font-size: 13px;
+      min-height: 40px;
+    }
+
+    .product-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 15px;
+      gap: 10px;
+    }
+
+    .price {
+      font-size: 18px;
+      font-weight: 900;
+    }
+
+    .add-btn {
+      border: none;
+      background: var(--green);
+      color: white;
+      border-radius: 10px;
+      padding: 9px 12px;
+      font-weight: 800;
+    }
+
+    /* CART */
+
+    .overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.45);
+      z-index: 200;
+    }
+
+    .overlay.active {
+      display: block;
+    }
+
+    .cart-panel {
+      position: fixed;
+      right: -430px;
+      top: 0;
+      height: 100vh;
+      width: min(430px, 100%);
+      background: white;
+      z-index: 201;
+      transition: .3s;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .cart-panel.active {
+      right: 0;
+    }
+
+    .cart-header {
+      padding: 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .close-btn {
+      border: none;
+      background: #f1f5f2;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+    }
+
+    .cart-items {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px;
+    }
+
+    .cart-item {
+      display: flex;
+      gap: 12px;
+      padding: 13px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .cart-item-image {
+      width: 60px;
+      height: 60px;
+      border-radius: 12px;
+      background: var(--green-light);
+      display: grid;
+      place-items: center;
+      font-size: 30px;
+    }
+
+    .cart-item-info {
+      flex: 1;
+    }
+
+    .quantity {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 6px;
+    }
+
+    .quantity button {
+      width: 27px;
+      height: 27px;
+      border: 1px solid var(--border);
+      background: white;
+      border-radius: 7px;
+    }
+
+    .cart-footer {
+      padding: 20px;
+      border-top: 1px solid var(--border);
+    }
+
+    .total-row {
+      display: flex;
+      justify-content: space-between;
+      font-weight: 900;
+      font-size: 20px;
+      margin-bottom: 15px;
+    }
+
+    /* MODAL */
+
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.55);
+      z-index: 300;
+      padding: 20px;
+      overflow-y: auto;
+    }
+
+    .modal.active {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-box {
+      background: white;
+      width: min(650px, 100%);
+      border-radius: 24px;
+      padding: 25px;
+      position: relative;
+    }
+
+    .modal-box h2 {
+      margin-bottom: 20px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .form-group.full {
+      grid-column: 1 / -1;
+    }
+
+    label {
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: 11px;
+      padding: 12px;
+      outline: none;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: var(--green);
+    }
+
+    textarea {
+      min-height: 90px;
+      resize: vertical;
+    }
+
+    .checkout-total {
+      background: var(--green-light);
+      padding: 16px;
+      border-radius: 14px;
+      margin: 20px 0;
+    }
+
+    /* WHATSAPP */
+
+    .whatsapp-float {
+      position: fixed;
+      right: 22px;
+      bottom: 22px;
+      width: 62px;
+      height: 62px;
+      border-radius: 50%;
+      background: #25D366;
+      color: white;
+      display: grid;
+      place-items: center;
+      font-size: 31px;
+      box-shadow: 0 10px 30px rgba(0,0,0,.2);
+      z-index: 150;
+      transition: .2s;
+    }
+
+    .whatsapp-float:hover {
+      transform: scale(1.08);
+    }
+
+    /* FOOTER */
+
+    footer {
+      background: #102318;
+      color: white;
+      margin-top: 40px;
+    }
+
+    .footer-inner {
+      max-width: 1180px;
+      margin: auto;
+      padding: 45px 20px;
+      display: grid;
+      grid-template-columns: 1.5fr 1fr 1fr;
+      gap: 30px;
+    }
+
+    footer p {
+      color: #b9c6bd;
+      margin-top: 10px;
+    }
+
+    .copyright {
+      border-top: 1px solid rgba(255,255,255,.1);
+      padding: 18px;
+      text-align: center;
+      color: #b9c6bd;
+      font-size: 13px;
+    }
+
+    .empty {
+      text-align: center;
+      padding: 50px 20px;
+      color: var(--gray);
+    }
+
+    @media (max-width: 900px) {
+      .hero {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-card {
+        min-height: 260px;
+        font-size: 100px;
+      }
+
+      .products {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .features {
+        grid-template-columns: 1fr;
+      }
+
+      .footer-inner {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .nav-links {
+        display: none;
+      }
+
+      .nav {
+        padding: 12px 15px;
+      }
+
+      .logo {
+        font-size: 19px;
+      }
+
+      .logo-icon {
+        width: 36px;
+        height: 36px;
+      }
+
+      .hero {
+        padding: 45px 15px 30px;
+      }
+
+      .section {
+        padding: 40px 15px;
+      }
+
+      .products {
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+      }
+
+      .product-image {
+        height: 135px;
+        font-size: 60px;
+      }
+
+      .product-content {
+        padding: 12px;
+      }
+
+      .product-description {
+        display: none;
+      }
+
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .form-group.full {
+        grid-column: auto;
+      }
+
+      .whatsapp-float {
+        width: 56px;
+        height: 56px;
+        right: 16px;
+        bottom: 16px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <nav class="nav">
+    <a href="#" class="logo">
+      <span class="logo-icon">🥬</span>
+      FreshSOUK
+    </a>
+
+    <div class="nav-links">
+      <a href="#accueil">Accueil</a>
+      <a href="#produits">Produits</a>
+      <a href="#contact">Contact</a>
+    </div>
+
+    <button class="cart-btn" onclick="openCart()">
+      🛒 Panier
+      <span class="cart-count" id="cartCount">0</span>
+    </button>
+  </nav>
+</header>
+
+<main>
+
+<section class="hero" id="accueil">
+  <div>
+    <div class="badge">🌱 Frais • Local • Livré chez vous</div>
+
+    <h1>
+      Le goût du <span>frais</span>, directement chez vous.
+    </h1>
+
+    <p>
+      Commandez vos fruits et légumes frais en quelques clics.
+      FreshSOUK prépare votre commande et vous la livre simplement.
+    </p>
+
+    <div class="hero-buttons">
+      <a href="#produits" class="btn-primary">
+        🛒 Découvrir les produits
+      </a>
+
+      <button class="btn-secondary" onclick="openWhatsApp()">
+        💬 Commander sur WhatsApp
+      </button>
+    </div>
+  </div>
+
+  <div class="hero-card">
+    🥦🍅🥕🍊
+  </div>
+</section>
+
+<section class="features">
+
+  <div class="feature">
+    <div class="feature-icon">🥬</div>
+    <h3>Produits frais</h3>
+    <p>
+      Fruits et légumes sélectionnés pour votre quotidien.
+    </p>
+  </div>
+
+  <div class="feature">
+    <div class="feature-icon">🚚</div>
+    <h3>Livraison</h3>
+    <p>
+      Recevez votre commande directement chez vous.
+    </p>
+  </div>
+
+  <div class="feature">
+    <div class="feature-icon">💬</div>
+    <h3>Commande simple</h3>
+    <p>
+      Commandez facilement via le site ou WhatsApp.
+    </p>
+  </div>
+
+</section>
+
+<section class="section" id="produits">
+
+  <div class="section-title">
+    <div>
+      <h2>Nos produits</h2>
+      <p>Une sélection fraîche pour votre panier.</p>
+    </div>
+  </div>
+
+  <div class="products" id="productsContainer"></div>
+
+</section>
+
+</main>
+
+<footer id="contact">
+
+  <div class="footer-inner">
+
+    <div>
+      <div class="logo" style="color:white;">
+        <span class="logo-icon">🥬</span>
+        FreshSOUK
+      </div>
+
+      <p>
+        Fruits et légumes frais livrés chez vous.
+      </p>
+    </div>
+
+    <div>
+      <h3>Contact</h3>
+      <p>WhatsApp : 06 43 88 04 85</p>
+      <p>Casablanca & alentours</p>
+    </div>
+
+    <div>
+      <h3>Commande</h3>
+      <p>Disponible via le site</p>
+      <p>ou directement sur WhatsApp</p>
+    </div>
+
+  </div>
+
+  <div class="copyright">
+    © 2026 FreshSOUK — Tous droits réservés.
+  </div>
+
+</footer>
+
+<!-- OVERLAY -->
+
+<div class="overlay" id="overlay" onclick="closeCart()"></div>
+
+<!-- CART -->
+
+<aside class="cart-panel" id="cartPanel">
+
+  <div class="cart-header">
+    <h2>🛒 Mon panier</h2>
+    <button class="close-btn" onclick="closeCart()">✕</button>
+  </div>
+
+  <div class="cart-items" id="cartItems"></div>
+
+  <div class="cart-footer">
+
+    <div class="total-row">
+      <span>Total</span>
+      <span id="cartTotal">0 DH</span>
+    </div>
+
+    <button
+      class="btn-primary"
+      style="width:100%;"
+      onclick="openCheckout()"
+    >
+      Commander
+    </button>
+
+  </div>
+
+</aside>
+
+<!-- CHECKOUT -->
+
+<div class="modal" id="checkoutModal">
+
+  <div class="modal-box">
+
+    <button
+      class="close-btn"
+      onclick="closeCheckout()"
+      style="position:absolute;right:18px;top:18px;"
+    >
+      ✕
+    </button>
+
+    <h2>📦 Finaliser ma commande</h2>
+
+    <form id="checkoutForm">
+
+      <div class="form-grid">
+
+        <div class="form-group">
+          <label>Nom complet</label>
+          <input
+            id="customerName"
+            type="text"
+            placeholder="Votre nom"
+            required
+          >
+        </div>
+
+        <div class="form-group">
+          <label>Téléphone</label>
+          <input
+            id="customerPhone"
+            type="tel"
+            placeholder="06XXXXXXXX"
+            required
+          >
+        </div>
+
+        <div class="form-group">
+          <label>Ville</label>
+
+          <select id="customerCity" required>
+            <option value="">Choisir</option>
+            <option>Casablanca</option>
+            <option>Bouskoura</option>
+            <option>Mohammedia</option>
+            <option>Rabat</option>
+            <option>Autre</option>
+          </select>
+
+        </div>
+
+        <div class="form-group">
+          <label>Créneau</label>
+
+          <select id="deliverySlot" required>
+            <option value="">Choisir</option>
+            <option>09h00 - 12h00</option>
+            <option>12h00 - 15h00</option>
+            <option>15h00 - 18h00</option>
+            <option>18h00 - 21h00</option>
+          </select>
+
+        </div>
+
+        <div class="form-group full">
+
+          <label>Adresse</label>
+
+          <input
+            id="customerAddress"
+            type="text"
+            placeholder="Quartier, rue, immeuble..."
+            required
+          >
+
+        </div>
+
+        <div class="form-group full">
+
+          <label>Note</label>
+
+          <textarea
+            id="customerNote"
+            placeholder="Une précision pour votre commande..."
+          ></textarea>
+
+        </div>
+
+      </div>
+
+      <div class="checkout-total">
+
+        <div class="total-row">
+          <span>Total commande</span>
+          <span id="checkoutTotal">0 DH</span>
+        </div>
+
+        <small>
+          Le paiement sera confirmé lors du traitement de votre commande.
+        </small>
+
+      </div>
+
+      <button
+        type="submit"
+        class="btn-primary"
+        style="width:100%;"
+      >
+        💬 Confirmer sur WhatsApp
+      </button>
+
+    </form>
+
+  </div>
+
+</div>
+
+<!-- WHATSAPP FLOATING BUTTON -->
+
+<a
+  class="whatsapp-float"
+  href="#"
+  onclick="openWhatsApp(); return false;"
+  title="Commander sur WhatsApp"
+>
+  💬
+</a>
+
+<script>
+
+  /* =========================
+     CONFIGURATION
+  ========================= */
+
+  const WHATSAPP_NUMBER = "212643880485";
+
+  /* =========================
+     PRODUITS
+  ========================= */
+
+  const products = [
+    {
+      id: 1,
+      name: "Tomates",
+      category: "Légumes",
+      description: "Tomates fraîches",
+      price: 12,
+      unit: "kg",
+      emoji: "🍅"
+    },
+
+    {
+      id: 2,
+      name: "Pommes de terre",
+      category: "Légumes",
+      description: "Pommes de terre fraîches",
+      price: 9,
+      unit: "kg",
+      emoji: "🥔"
+    },
+
+    {
+      id: 3,
+      name: "Carottes",
+      category: "Légumes",
+      description: "Carottes fraîches",
+      price: 10,
+      unit: "kg",
+      emoji: "🥕"
+    },
+
+    {
+      id: 4,
+      name: "Oignons",
+      category: "Légumes",
+      description: "Oignons frais",
+      price: 8,
+      unit: "kg",
+      emoji: "🧅"
+    },
+
+    {
+      id: 5,
+      name: "Oranges",
+      category: "Fruits",
+      description: "Oranges fraîches",
+      price: 14,
+      unit: "kg",
+      emoji: "🍊"
+    },
+
+    {
+      id: 6,
+      name: "Pommes",
+      category: "Fruits",
+      description: "Pommes fraîches",
+      price: 18,
+      unit: "kg",
+      emoji: "🍎"
+    },
+
+    {
+      id: 7,
+      name: "Bananes",
+      category: "Fruits",
+      description: "Bananes fraîches",
+      price: 16,
+      unit: "kg",
+      emoji: "🍌"
+    },
+
+    {
+      id: 8,
+      name: "Avocat",
+      category: "Fruits",
+      description: "Avocats frais",
+      price: 28,
+      unit: "kg",
+      emoji: "🥑"
+    }
+  ];
+
+  let cart = JSON.parse(localStorage.getItem("freshsouk_cart")) || [];
+
+  /* =========================
+     AFFICHAGE PRODUITS
+  ========================= */
+
+  function renderProducts() {
+
+    const container =
+      document.getElementById("productsContainer");
+
+    container.innerHTML = products.map(product => `
+
+      <article class="product">
+
+        <div class="product-image">
+          ${product.emoji}
+        </div>
+
+        <div class="product-content">
+
+          <div class="product-category">
+            ${product.category}
+          </div>
+
+          <h3>${product.name}</h3>
+
+          <p class="product-description">
+            ${product.description}
+          </p>
+
+          <div class="product-bottom">
+
+            <div class="price">
+              ${product.price} DH/${product.unit}
+            </div>
+
+            <button
+              class="add-btn"
+              onclick="addToCart(${product.id})"
+            >
+              + Ajouter
+            </button>
+
+          </div>
+
+        </div>
+
+      </article>
+
+    `).join("");
+
+  }
+
+  /* =========================
+     PANIER
+  ========================= */
+
+  function addToCart(id) {
+
+    const product =
+      products.find(p => p.id === id);
+
+    const existing =
+      cart.find(item => item.id === id);
+
+    if (existing) {
+      existing.quantity++;
+    } else {
+
+      cart.push({
+        ...product,
+        quantity: 1
+      });
+
+    }
+
+    saveCart();
+
+    openCart();
+
+  }
+
+  function removeFromCart(id) {
+
+    cart =
+      cart.filter(item => item.id !== id);
+
+    saveCart();
+
+  }
+
+  function changeQuantity(id, amount) {
+
+    const item =
+      cart.find(item => item.id === id);
+
+    if (!item) return;
+
+    item.quantity += amount;
+
+    if (item.quantity <= 0) {
+      removeFromCart(id);
+      return;
+    }
+
+    saveCart();
+
+  }
+
+  function saveCart() {
+
+    localStorage.setItem(
+      "freshsouk_cart",
+      JSON.stringify(cart)
+    );
+
+    renderCart();
+
+  }
+
+  function getCartTotal() {
+
+    return cart.reduce(
+      (total, item) =>
+        total + item.price * item.quantity,
+      0
+    );
+
+  }
+
+  function getCartCount() {
+
+    return cart.reduce(
+      (total, item) =>
+        total + item.quantity,
+      0
+    );
+
+  }
+
+  function renderCart() {
+
+    const container =
+      document.getElementById("cartItems");
+
+    const count =
+      document.getElementById("cartCount");
+
+    const total =
+      document.getElementById("cartTotal");
+
+    count.textContent = getCartCount();
+
+    total.textContent =
+      getCartTotal().toFixed(2) + " DH";
+
+    if (cart.length === 0) {
+
+      container.innerHTML = `
+        <div class="empty">
+          <div style="font-size:50px;">🛒</div>
+          <h3>Votre panier est vide</h3>
+          <p>Ajoutez des produits pour commencer.</p>
+        </div>
+      `;
+
+      return;
+
+    }
+
+    container.innerHTML =
+      cart.map(item => `
+
+        <div class="cart-item">
+
+          <div class="cart-item-image">
+            ${item.emoji}
+          </div>
+
+          <div class="cart-item-info">
+
+            <strong>${item.name}</strong>
+
+            <div>
+              ${item.price} DH/${item.unit}
+            </div>
+
+            <div class="quantity">
+
+              <button
+                onclick="changeQuantity(${item.id}, -1)"
+              >
+                −
+              </button>
+
+              <strong>${item.quantity}</strong>
+
+              <button
+                onclick="changeQuantity(${item.id}, 1)"
+              >
+                +
+              </button>
+
+              <button
+                onclick="removeFromCart(${item.id})"
+                style="margin-left:auto;color:#dc2626;"
+              >
+                🗑
+              </button>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      `).join("");
+
+  }
+
+  /* =========================
+     CART PANEL
+  ========================= */
+
+  function openCart() {
+
+    document
+      .getElementById("cartPanel")
+      .classList.add("active");
+
+    document
+      .getElementById("overlay")
+      .classList.add("active");
+
+  }
+
+  function closeCart() {
+
+    document
+      .getElementById("cartPanel")
+      .classList.remove("active");
+
+    document
+      .getElementById("overlay")
+      .classList.remove("active");
+
+  }
+
+  /* =========================
+     CHECKOUT
+  ========================= */
+
+  function openCheckout() {
+
+    if (cart.length === 0) {
+
+      alert("Votre panier est vide.");
+
+      return;
+
+    }
+
+    document
+      .getElementById("checkoutTotal")
+      .textContent =
+      getCartTotal().toFixed(2) + " DH";
+
+    closeCart();
+
+    document
+      .getElementById("checkoutModal")
+      .classList.add("active");
+
+  }
+
+  function closeCheckout() {
+
+    document
+      .getElementById("checkoutModal")
+      .classList.remove("active");
+
+  }
+
+  /* =========================
+     WHATSAPP
+  ========================= */
+
+  function openWhatsApp() {
+
+    const message =
+      "Bonjour FreshSOUK 👋\n\n" +
+      "Je souhaite passer une commande.\n\n" +
+      "Merci.";
+
+    const url =
+      "https://wa.me/" +
+      WHATSAPP_NUMBER +
+      "?text=" +
+      encodeURIComponent(message);
+
+    window.open(url, "_blank");
+
+  }
+
+  document
+    .getElementById("checkoutForm")
+    .addEventListener("submit", function(event) {
+
+      event.preventDefault();
+
+      if (cart.length === 0) {
+
+        alert("Votre panier est vide.");
+
+        return;
+
+      }
+
+      const name =
+        document.getElementById("customerName").value;
+
+      const phone =
+        document.getElementById("customerPhone").value;
+
+      const city =
+        document.getElementById("customerCity").value;
+
+      const address =
+        document.getElementById("customerAddress").value;
+
+      const slot =
+        document.getElementById("deliverySlot").value;
+
+      const note =
+        document.getElementById("customerNote").value;
+
+      let message =
+        "🥬 *NOUVELLE COMMANDE FRESHSOUK*\n\n";
+
+      message +=
+        "👤 Nom : " + name + "\n";
+
+      message +=
+        "📱 Téléphone : " + phone + "\n";
+
+      message +=
+        "📍 Ville : " + city + "\n";
+
+      message +=
+        "🏠 Adresse : " + address + "\n";
+
+      message +=
+        "🕐 Créneau : " + slot + "\n\n";
+
+      message += "🛒 *Produits :*\n";
+
+      cart.forEach(item => {
+
+        message +=
+          "• " +
+          item.name +
+          " x" +
+          item.quantity +
+          " = " +
+          (item.price * item.quantity).toFixed(2) +
+          " DH\n";
+
+      });
+
+      message +=
+        "\n💰 *TOTAL : " +
+        getCartTotal().toFixed(2) +
+        " DH*\n";
+
+      if (note) {
+
+        message +=
+          "\n📝 Note : " +
+          note;
+
+      }
+
+      message +=
+        "\n\nMerci pour votre confiance 🙏";
+
+      const url =
+        "https://wa.me/" +
+        WHATSAPP_NUMBER +
+        "?text=" +
+        encodeURIComponent(message);
+
+      window.open(url, "_blank");
+
+    });
+
+  /* =========================
+     INIT
+  ========================= */
+
+  renderProducts();
+  renderCart();
+
+</script>
+
+</body>
+</html>
+```
