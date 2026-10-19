@@ -1445,19 +1445,47 @@
         (item.price * item.quantity).toFixed(2) + " DH").join("\n");
       const total = getCartTotal().toFixed(2);
 
-      // Unicode escapes keep WhatsApp emojis intact through HTML and URL encoding.
-      let message = "\u{1F96C} *NOUVELLE COMMANDE FRESHSOUK*\n\n";
-      message += "\u{1F464} Nom : " + name + "\n";
-      message += "\u{1F4F1} Téléphone : " + phone + "\n";
-      message += "\u{1F4CD} Ville : " + city + "\n";
-      message += "\u{1F3E0} Adresse : " + address + "\n";
-      message += "\u{1F550} Créneau : " + slot + "\n\n";
-      message += "\u{1F6D2} *Produits :*\n" + itemsText + "\n";
-      message += "\n\u{1F4B0} *TOTAL : " + total + " DH*\n";
-      if (note) message += "\n\u{1F4DD} Note : " + note;
-      message += "\n\nMerci pour votre confiance \u{1F64F}";
+      // Replace ASCII markers with UTF-8 emoji bytes after URL encoding.
+      const emojiTokens = {
+        leaf: "FRESH_EMOJI_LEAF",
+        person: "FRESH_EMOJI_PERSON",
+        phone: "FRESH_EMOJI_PHONE",
+        location: "FRESH_EMOJI_LOCATION",
+        home: "FRESH_EMOJI_HOME",
+        clock: "FRESH_EMOJI_CLOCK",
+        cart: "FRESH_EMOJI_CART",
+        money: "FRESH_EMOJI_MONEY",
+        note: "FRESH_EMOJI_NOTE",
+        thanks: "FRESH_EMOJI_THANKS"
+      };
+      let message = emojiTokens.leaf + " *NOUVELLE COMMANDE FRESHSOUK*\n\n";
+      message += emojiTokens.person + " Nom : " + name + "\n";
+      message += emojiTokens.phone + " Téléphone : " + phone + "\n";
+      message += emojiTokens.location + " Ville : " + city + "\n";
+      message += emojiTokens.home + " Adresse : " + address + "\n";
+      message += emojiTokens.clock + " Créneau : " + slot + "\n\n";
+      message += emojiTokens.cart + " *Produits :*\n" + itemsText + "\n";
+      message += "\n" + emojiTokens.money + " *TOTAL : " + total + " DH*\n";
+      if (note) message += "\n" + emojiTokens.note + " Note : " + note;
+      message += "\n\nMerci pour votre confiance " + emojiTokens.thanks;
 
-      const whatsappUrl = "https://wa.me/" + WHATSAPP_NUMBER + "?text=" + encodeURIComponent(message);
+      const encodedEmojiBytes = {
+        [emojiTokens.leaf]: "%F0%9F%A5%AC",
+        [emojiTokens.person]: "%F0%9F%91%A4",
+        [emojiTokens.phone]: "%F0%9F%93%B1",
+        [emojiTokens.location]: "%F0%9F%93%8D",
+        [emojiTokens.home]: "%F0%9F%8F%A0",
+        [emojiTokens.clock]: "%F0%9F%95%90",
+        [emojiTokens.cart]: "%F0%9F%9B%92",
+        [emojiTokens.money]: "%F0%9F%92%B0",
+        [emojiTokens.note]: "%F0%9F%93%9D",
+        [emojiTokens.thanks]: "%F0%9F%99%8F"
+      };
+      let whatsappText = encodeURIComponent(message);
+      for (const [token, emojiBytes] of Object.entries(encodedEmojiBytes)) {
+        whatsappText = whatsappText.split(token).join(emojiBytes);
+      }
+      const whatsappUrl = "https://wa.me/" + WHATSAPP_NUMBER + "?text=" + whatsappText;
       const whatsappWindow = window.open("about:blank", "_blank");
 
       try {
