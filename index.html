@@ -1445,16 +1445,17 @@
         (item.price * item.quantity).toFixed(2) + " DH").join("\n");
       const total = getCartTotal().toFixed(2);
 
-      let message = "🥬 *NOUVELLE COMMANDE FRESHSOUK*\n\n";
-      message += "👤 Nom : " + name + "\n";
-      message += "📱 Téléphone : " + phone + "\n";
-      message += "📍 Ville : " + city + "\n";
-      message += "🏠 Adresse : " + address + "\n";
-      message += "🕐 Créneau : " + slot + "\n\n";
-      message += "🛒 *Produits :*\n" + itemsText + "\n";
-      message += "\n💰 *TOTAL : " + total + " DH*\n";
-      if (note) message += "\n📝 Note : " + note;
-      message += "\n\nMerci pour votre confiance 🙏";
+      // Unicode escapes keep WhatsApp emojis intact through HTML and URL encoding.
+      let message = "\u{1F96C} *NOUVELLE COMMANDE FRESHSOUK*\n\n";
+      message += "\u{1F464} Nom : " + name + "\n";
+      message += "\u{1F4F1} Téléphone : " + phone + "\n";
+      message += "\u{1F4CD} Ville : " + city + "\n";
+      message += "\u{1F3E0} Adresse : " + address + "\n";
+      message += "\u{1F550} Créneau : " + slot + "\n\n";
+      message += "\u{1F6D2} *Produits :*\n" + itemsText + "\n";
+      message += "\n\u{1F4B0} *TOTAL : " + total + " DH*\n";
+      if (note) message += "\n\u{1F4DD} Note : " + note;
+      message += "\n\nMerci pour votre confiance \u{1F64F}";
 
       const whatsappUrl = "https://wa.me/" + WHATSAPP_NUMBER + "?text=" + encodeURIComponent(message);
       const whatsappWindow = window.open("about:blank", "_blank");
