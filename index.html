@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -962,6 +961,12 @@
   ========================= */
 
   const WHATSAPP_NUMBER = "212643880485";
+  const ORDER_FORM_RESPONSE_URL = "https://docs.google.com/forms/d/e/1FAIpQLSehoScQrxRTyRqWgTY4oklJ11BotppPYkOgnEM-tZW712JliA/formResponse";
+  const ORDER_FORM_FIELDS = {
+    name: "entry.1211204224", phone: "entry.75017083", city: "entry.292690853",
+    address: "entry.710330222", slot: "entry.1442699908", note: "entry.1906243618",
+    items: "entry.1554169127", total: "entry.94144248"
+  };
 
   /* =========================
      PRODUITS
@@ -1354,97 +1359,123 @@
 
   }
 
-  document
-    .getElementById("checkoutForm")
-    .addEventListener("submit", function(event) {
+  function saveOrderToPrivateSheet(fields) {
+    return new Promise((resolve, reject) => {
+      const frame = document.createElement("iframe");
+      const frameName = "freshsouk-order-" + Date.now();
+      frame.name = frameName;
+      frame.title = "Order submission";
+      frame.style.display = "none";
 
-      event.preventDefault();
+      const form = document.createElement("form");
+      form.method = "POST";
+      form.action = ORDER_FORM_RESPONSE_URL;
+      form.target = frameName;
+      form.acceptCharset = "UTF-8";
+      form.style.display = "none";
 
-      if (cart.length === 0) {
-
-        alert("Votre panier est vide.");
-
-        return;
-
-      }
-
-      const name =
-        document.getElementById("customerName").value;
-
-      const phone =
-        document.getElementById("customerPhone").value;
-
-      const city =
-        document.getElementById("customerCity").value;
-
-      const address =
-        document.getElementById("customerAddress").value;
-
-      const slot =
-        document.getElementById("deliverySlot").value;
-
-      const note =
-        document.getElementById("customerNote").value;
-
-      let message =
-        "🥬 *NOUVELLE COMMANDE FRESHSOUK*\n\n";
-
-      message +=
-        "👤 Nom : " + name + "\n";
-
-      message +=
-        "📱 Téléphone : " + phone + "\n";
-
-      message +=
-        "📍 Ville : " + city + "\n";
-
-      message +=
-        "🏠 Adresse : " + address + "\n";
-
-      message +=
-        "🕐 Créneau : " + slot + "\n\n";
-
-      message += "🛒 *Produits :*\n";
-
-      cart.forEach(item => {
-
-        message +=
-          "• " +
-          item.name +
-          " x" +
-          item.quantity +
-          " = " +
-          (item.price * item.quantity).toFixed(2) +
-          " DH\n";
-
+      Object.entries(fields).forEach(([key, value]) => {
+        const input = document.createElement("input");
+        input.type = "hidden";
+        input.name = ORDER_FORM_FIELDS[key];
+        input.value = value;
+        form.appendChild(input);
       });
 
-      message +=
-        "\n💰 *TOTAL : " +
-        getCartTotal().toFixed(2) +
-        " DH*\n";
+      const fvv = document.createElement("input");
+      fvv.type = "hidden";
+      fvv.name = "fvv";
+      fvv.value = "1";
+      form.appendChild(fvv);
 
-      if (note) {
+      const pageHistory = document.createElement("input");
+      pageHistory.type = "hidden";
+      pageHistory.name = "pageHistory";
+      pageHistory.value = "0";
+      form.appendChild(pageHistory);
 
-        message +=
-          "\n📝 Note : " +
-          note;
+      let submitted = false;
+      const timeout = setTimeout(() => {
+        cleanup();
+        reject(new Error("Order submission timed out."));
+      }, 15000);
 
+      function cleanup() {
+        clearTimeout(timeout);
+        form.remove();
+        frame.remove();
       }
 
-      message +=
-        "\n\nMerci pour votre confiance 🙏";
+      frame.addEventListener("load", function() {
+        if (!submitted) {
+          submitted = true;
+          form.submit();
+          return;
+        }
+        cleanup();
+        resolve();
+      });
 
-      const url =
-        "https://wa.me/" +
-        WHATSAPP_NUMBER +
-        "?text=" +
-        encodeURIComponent(message);
-
-      window.open(url, "_blank");
-
+      document.body.appendChild(form);
+      document.body.appendChild(frame);
     });
+  }
 
+  document
+    .getElementById("checkoutForm")
+    .addEventListener("submit", async function(event) {
+      event.preventDefault();
+      if (cart.length === 0) {
+        alert("Votre panier est vide.");
+        return;
+      }
+
+      const submitButton = event.currentTarget.querySelector('button[type="submit"]');
+      const originalButtonText = submitButton.textContent;
+      submitButton.disabled = true;
+      submitButton.textContent = "Enregistrement de la commande…";
+
+      const name = document.getElementById("customerName").value.trim();
+      const phone = document.getElementById("customerPhone").value.trim();
+      const city = document.getElementById("customerCity").value;
+      const address = document.getElementById("customerAddress").value.trim();
+      const slot = document.getElementById("deliverySlot").value;
+      const note = document.getElementById("customerNote").value.trim();
+      const itemsText = cart.map(item => item.name + " x" + item.quantity + " = " +
+        (item.price * item.quantity).toFixed(2) + " DH").join("\n");
+      const total = getCartTotal().toFixed(2);
+
+      let message = "🥬 *NOUVELLE COMMANDE FRESHSOUK*\n\n";
+      message += "👤 Nom : " + name + "\n";
+      message += "📱 Téléphone : " + phone + "\n";
+      message += "📍 Ville : " + city + "\n";
+      message += "🏠 Adresse : " + address + "\n";
+      message += "🕐 Créneau : " + slot + "\n\n";
+      message += "🛒 *Produits :*\n" + itemsText + "\n";
+      message += "\n💰 *TOTAL : " + total + " DH*\n";
+      if (note) message += "\n📝 Note : " + note;
+      message += "\n\nMerci pour votre confiance 🙏";
+
+      const whatsappUrl = "https://wa.me/" + WHATSAPP_NUMBER + "?text=" + encodeURIComponent(message);
+      const whatsappWindow = window.open("about:blank", "_blank");
+
+      try {
+        await saveOrderToPrivateSheet({
+          name, phone, city, address, slot, note, items: itemsText, total: total + " DH"
+        });
+        cart = [];
+        saveCart();
+        renderCart();
+        closeCheckout();
+        if (whatsappWindow) whatsappWindow.location.href = whatsappUrl;
+        else window.location.href = whatsappUrl;
+      } catch (error) {
+        if (whatsappWindow) whatsappWindow.close();
+        submitButton.disabled = false;
+        submitButton.textContent = originalButtonText;
+        alert("La commande n'a pas pu être enregistrée. Vérifiez votre connexion puis réessayez.");
+      }
+    });
   /* =========================
      INIT
   ========================= */
@@ -1456,4 +1487,3 @@
 
 </body>
 </html>
-```
