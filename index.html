@@ -655,38 +655,38 @@
         bottom: 16px;
       }
     }
-  
 
-    /* BILINGUAL PRODUCT CATALOG */
-    .product-image { position: relative; overflow: hidden; padding: 0; }
-    .product-image img { display: block; width: 100%; height: 100%; object-fit: cover; transition: transform .3s ease; }
-    .product:hover .product-image img { transform: scale(1.04); }
-    .image-fallback { display: grid; width: 100%; height: 100%; place-items: center; font-size: 64px; }
-    .product-badge { position: absolute; top: 11px; right: 11px; max-width: calc(100% - 22px); border-radius: 999px; background: rgba(255,255,255,.94); padding: 6px 10px; color: var(--green-dark); font-size: 11px; font-weight: 800; box-shadow: 0 2px 12px rgba(0,0,0,.08); }
-    .product-title-ar { margin: 7px 0 0; font-size: 18px; line-height: 1.4; }
-    .product-title-fr { color: var(--gray); font-size: 13px; min-height: 20px; }
-    .product-description-ar, .product-description-fr { min-height: 0; margin-top: 5px; line-height: 1.5; }
-    .product-description-ar { color: #64746a; }
-    .price-unit { color: var(--gray); font-size: 12px; font-weight: 600; }
-    .catalog-tools { margin: 22px 0 10px; }
-    .catalog-search { position: relative; display: block; flex: 1 1 260px; max-width: 380px; }
-    .catalog-search input { min-height: 46px; padding: 11px 14px 11px 42px; background: white; border-radius: 13px; }
-    .catalog-search span { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--gray); font-size: 21px; }
-    .category-filters { display: flex; flex-wrap: wrap; gap: 8px; }
-    .filter-btn { border: 1px solid var(--border); border-radius: 999px; background: white; color: var(--dark); font-size: 13px; font-weight: 700; transition: .2s; }
-    .filter-btn:hover, .filter-btn.active { border-color: var(--green); background: var(--green); color: white; }
-    .catalog-count { margin: 0 0 14px; color: var(--gray); }
-    @media (max-width: 600px) {
-      .catalog-search { max-width: none; }
-      .category-filters { gap: 6px; }
-      .filter-btn { padding: 8px 11px !important; font-size: 12px; }
-      .product-title-ar { font-size: 15px; }
-      .product-title-fr { font-size: 11px; }
-      .product-description { display: none; }
-      .product-badge { top: 7px; right: 7px; padding: 5px 8px; font-size: 10px; }
-    }
+    /* FreshSOUK responsive catalog redesign */
+    :root{--green:#287b46;--green-dark:#183d2a;--green-light:#eaf6ed;--orange:#e5a139;--dark:#193126;--gray:#718077;--light:#fff}
+    body{background:#fff;color:var(--dark)}
+    header{background:rgba(255,255,255,.94);backdrop-filter:blur(18px);box-shadow:0 2px 15px #163b2310}
+    .nav{max-width:1200px;gap:22px;padding-block:12px}
+    .logo{font-size:21px;color:#183e2b;white-space:nowrap;letter-spacing:-.5px}
+    .logo-icon{width:38px;height:38px;border-radius:12px;background:#eaf6ed;color:#39894f;font-size:20px}
+    .nav-links{gap:20px;margin-left:auto;font-size:13px}
+    .top-search,.catalog-search{height:40px;display:flex;align-items:center;gap:8px;padding:0 12px;border:1px solid #e5ece6;background:#f8faf8;border-radius:12px;color:#75847a}
+    .top-search{max-width:230px;min-width:165px}.top-search span,.catalog-search span{font-size:21px;line-height:1}
+    .top-search input,.catalog-search input{border:0;background:transparent;outline:0;min-width:0;width:100%;font-size:12px;padding:0}
+    .cart-btn{border-radius:12px;background:#287b46;padding:9px 12px;box-shadow:0 6px 16px #287b4620}
+    .hero{max-width:none;width:100%;padding:65px max(calc((100% - 1160px)/2),24px) 60px;background:linear-gradient(116deg,#f3faf2 0%,#f8fbf5 58%,#fff6e5 100%);grid-template-columns:1fr 1fr;gap:50px;min-height:520px}
+    .badge{background:#e8f4e9;color:#4b8d59;font-size:11px;letter-spacing:.3px;padding:8px 13px}
+    .hero h1{font-size:clamp(42px,5.2vw,64px);line-height:1.12;letter-spacing:-2px;color:#193d29;margin-bottom:17px}
+    .hero h1 span{color:#59a66a}.hero p{font-size:15px;line-height:1.8;color:#718077;max-width:490px}
+    .btn-primary,.btn-secondary{border-radius:12px;padding:13px 17px;font-size:12px}.btn-primary{background:#287b46;box-shadow:0 8px 18px #287b4629}
+    .hero-card{position:relative;min-height:370px;border:8px solid #fff;border-radius:28px;overflow:visible;background:linear-gradient(135deg,#eaf5e8,#fff2d9);box-shadow:0 25px 65px #345a3a22;font-size:0;transform:rotate(1deg)}
+    .hero-card img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:20px}
+    .hero-card:after{content:"";position:absolute;inset:40% 0 0;border-radius:0 0 20px 20px;background:linear-gradient(transparent,#17291dd9)}
+    .hero-photo-caption{position:absolute;z-index:2;left:20px;bottom:18px;color:#fff;display:grid;gap:4px;font-size:10px;letter-spacing:.5px;text-transform:uppercase}
+    .hero-photo-caption strong{font-size:19px;letter-spacing:0;text-transform:none}.hero-floating{position:absolute;z-index:3;left:-28px;top:40px;background:white;padding:12px 15px;border-radius:14px;box-shadow:0 12px 30px #203f2920;font-size:11px;line-height:1.7;font-weight:700;color:#35533d}.hero-floating small{font-weight:400;color:#89968d}
+    .features{max-width:1160px;padding:18px 20px 25px;gap:14px}.feature{padding:18px;border-radius:16px;box-shadow:0 8px 24px #203f2910}.feature h3{font-size:13px;color:#284333}.feature p{font-size:11px;line-height:1.6}
+    .section{padding-top:55px;padding-bottom:55px}.section-title{margin-bottom:18px}.section-title h2{font-size:32px;color:#193d29}.section-title p{font-size:13px}
+    .catalog-tools{display:flex;align-items:center;justify-content:space-between;gap:14px;margin:18px 0 20px}.category-tabs{display:flex;gap:8px;flex-wrap:wrap}.category-tab{min-height:38px;padding:0 16px;border:1px solid #e5ece6;background:#fff;border-radius:11px;color:#66756b;font-size:12px;font-weight:700}.category-tab.active{background:#287b46;border-color:#287b46;color:#fff}.catalog-search{width:240px}
+    .products{grid-template-columns:repeat(4,minmax(0,1fr));gap:15px}.product{border-color:#edf1ed;border-radius:16px;box-shadow:0 5px 20px #203f2908}.product:hover{box-shadow:0 15px 35px #203f2917}.product-image{height:185px;position:relative;overflow:hidden;background:#f4f8f3;font-size:65px}.product-image img{width:100%;height:100%;object-fit:cover;transition:transform .35s}.product:hover .product-image img{transform:scale(1.04)}.product-badge{position:absolute;left:10px;top:10px;padding:5px 8px;border-radius:20px;background:#ffffffeb;color:#397d4a;font-size:9px;font-weight:800}.product-content{padding:14px}.product-category{font-size:9px;letter-spacing:.7px;color:#60966b}.product h3{font-size:14px;color:#2c4434}.product-ar{display:block;font-family:Arial,sans-serif;font-size:14px;color:#2c4434;text-align:right;margin-top:3px}.product-description{font-size:10px;line-height:1.5;min-height:30px}.price{font-size:15px;color:#287b46}.product-bottom{margin-top:11px}.add-btn{border-radius:9px;padding:9px 10px;font-size:10px}
+    footer{margin-top:20px}.whatsapp-float{box-shadow:0 10px 30px #0003}
+    @media(max-width:1000px){.nav{gap:12px}.nav-links{gap:12px}.top-search{min-width:130px}.hero{padding-inline:28px;gap:28px}.products{grid-template-columns:repeat(3,minmax(0,1fr))}}
+    @media(max-width:700px){.nav{gap:8px;flex-wrap:wrap;padding:9px 13px}.nav-links{display:flex;order:3;width:100%;justify-content:space-around;font-size:11px;gap:5px}.top-search{margin-left:auto;flex:1;min-width:90px;max-width:none;height:36px}.cart-btn{padding:7px 9px;font-size:11px}.hero{grid-template-columns:1fr;padding:38px 18px 34px;gap:15px;min-height:0}.hero h1{font-size:42px}.hero p{font-size:13px}.hero-card{min-height:255px;width:88%;margin:12px auto}.hero-floating{left:-18px;top:20px}.features{padding:13px 16px 25px;grid-template-columns:1fr}.feature{display:grid;grid-template-columns:38px 1fr;column-gap:10px;padding:13px}.feature-icon{grid-row:span 2;margin:0}.feature p{grid-column:2}.section{padding:42px 15px}.section-title h2{font-size:28px}.catalog-tools{align-items:stretch;flex-direction:column}.category-tabs{overflow:auto;flex-wrap:nowrap;padding-bottom:3px}.category-tab{white-space:nowrap;padding-inline:12px;min-height:35px}.catalog-search{width:100%}.products{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.product-image{height:clamp(125px,38vw,180px)}.product-content{padding:10px}.product-description{display:block;min-height:0;font-size:9px}.product-bottom{align-items:flex-start;flex-direction:column;gap:8px}.add-btn{width:100%}.hero-buttons{gap:8px}.btn-primary,.btn-secondary{padding:11px 12px;font-size:10px}}
+    @media(max-width:380px){.hero h1{font-size:36px}.nav-links{font-size:10px}.product h3,.product-ar{font-size:12px}.price{font-size:13px}}
   </style>
-  <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
 <body>
@@ -700,9 +700,12 @@
 
     <div class="nav-links">
       <a href="#accueil">Accueil</a>
-      <a href="#produits">Produits</a>
+      <a href="#produits">Nos Produits</a>
+      <a href="#packs" onclick="setCategory('packs')">Packs Semaine</a>
       <a href="#contact">Contact</a>
     </div>
+
+    <label class="top-search" aria-label="Rechercher un produit"><span>⌕</span><input id="headerSearch" type="search" placeholder="Rechercher un produit..." oninput="syncSearch(this.value)"></label>
 
     <button class="cart-btn" onclick="openCart()">
       🛒 Panier
@@ -738,7 +741,9 @@
   </div>
 
   <div class="hero-card">
-    🥦🍅🥕🍊
+    <img src="https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=1100&q=88" alt="Panier de fruits et légumes frais" onerror="this.remove()">
+    <div class="hero-photo-caption"><span>100% frais</span><strong>Le meilleur de la saison</strong></div>
+    <div class="hero-floating">🚚 Livraison rapide<br><small>Du marché à votre table</small></div>
   </div>
 </section>
 
@@ -746,7 +751,7 @@
 
   <div class="feature">
     <div class="feature-icon">🥬</div>
-    <h3>Produits frais</h3>
+      <h3>100% Frais & Local</h3>
     <p>
       Fruits et légumes sélectionnés pour votre quotidien.
     </p>
@@ -756,7 +761,7 @@
     <div class="feature-icon">🚚</div>
     <h3>Livraison</h3>
     <p>
-      Recevez votre commande directement chez vous.
+      Directement chez vous, à Casablanca et alentours.
     </p>
   </div>
 
@@ -764,7 +769,7 @@
     <div class="feature-icon">💬</div>
     <h3>Commande simple</h3>
     <p>
-      Commandez facilement via le site ou WhatsApp.
+      Via le site ou WhatsApp en un clic.
     </p>
   </div>
 
@@ -774,26 +779,22 @@
 
   <div class="section-title">
     <div>
-      <h2>Notre catalogue</h2>
-      <p>Fruits, légumes et paniers frais pour chaque jour.</p>
+      <h2>Nos produits</h2>
+      <p>Une sélection fraîche pour votre panier.</p>
     </div>
   </div>
 
-  <div class="catalog-tools flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-    <label class="catalog-search">
-      <span aria-hidden="true">⌕</span>
-      <input id="productSearch" type="search" class="w-full rounded-xl" placeholder="بحث / Rechercher un produit..." aria-label="بحث أو ابحث عن منتج" autocomplete="off">
-    </label>
-    <div class="category-filters" role="tablist" aria-label="Catégories de produits">
-      <button type="button" class="filter-btn active px-4 py-2" role="tab" aria-selected="true" data-filter="all">الكل / Tous</button>
-      <button type="button" class="filter-btn px-4 py-2" role="tab" aria-selected="false" data-filter="packs">السلات / Packs</button>
-      <button type="button" class="filter-btn px-4 py-2" role="tab" aria-selected="false" data-filter="legumes">الخضروات / Légumes</button>
-      <button type="button" class="filter-btn px-4 py-2" role="tab" aria-selected="false" data-filter="fruits">الفواكه / Fruits</button>
+  <div class="catalog-tools">
+    <div class="category-tabs" role="tablist" aria-label="Catégories">
+      <button class="category-tab active" data-category="all" onclick="setCategory('all')">Tous</button>
+      <button class="category-tab" data-category="packs" id="packs" onclick="setCategory('packs')">Packs</button>
+      <button class="category-tab" data-category="legumes" onclick="setCategory('legumes')">Légumes</button>
+      <button class="category-tab" data-category="fruits" onclick="setCategory('fruits')">Fruits</button>
     </div>
+    <label class="catalog-search"><span>⌕</span><input id="catalogSearch" type="search" placeholder="Un produit en tête ?" oninput="syncSearch(this.value)"></label>
   </div>
 
-  <p class="catalog-count text-sm text-slate-500" id="catalogCount" aria-live="polite"></p>
-  <div class="products grid grid-cols-2 gap-3 sm:grid-cols-3 xl:grid-cols-4" id="productsContainer"></div>
+  <div class="products" id="productsContainer"></div>
 
 </section>
 
@@ -999,6 +1000,40 @@
   💬
 </a>
 
+<script type="application/json" id="productData">[
+ {"id":"pack-familial","nameAr":"سلة السيمانة العائلية","nameFr":"Panier Semaine Familial","category":"packs","price":180,"unit":"pack","image":"/images/products/pack-familial.jpg","imageFallback":"https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=800&q=85","badgeAr":"اختيار العائلة","badgeFr":"Choix familial","descriptionAr":"5kg بطاطس، 3kg طماطم، 2kg بصل، 2kg جزر، 1kg خيار، 2kg تفاح، 2kg بنان","descriptionFr":"5kg pommes de terre, 3kg tomates, 2kg oignons, 2kg carottes, concombre et fruits."},
+ {"id":"pack-couscous","nameAr":"سلة الكسكس الجمعة","nameFr":"Panier Couscous du Vendredi","category":"packs","price":45,"unit":"pack","image":"/images/products/pack-couscous.jpg","imageFallback":"https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=800&q=85","badgeAr":"للكسكس","badgeFr":"Spécial couscous","descriptionAr":"طماطم، جزر، قرعة حمراء وخضراء، لفت، خيار، ربيع ومقدنوس","descriptionFr":"Tomates, carottes, courges, navets, concombre, coriandre et persil."},
+ {"id":"pack-jus-fruits","nameAr":"سلة العصائر والفواكه","nameFr":"Panier Jus & Fruits Fresh","category":"packs","price":95,"unit":"pack","image":"/images/products/pack-jus.jpg","imageFallback":"https://images.unsplash.com/photo-1619566636858-adf3ef46400b?auto=format&fit=crop&w=800&q=85","badgeAr":"منعش","badgeFr":"Plein de vitamines","descriptionAr":"3kg برتقال للعصير، 1kg فراولة، 1kg كيوي، 2kg بنان","descriptionFr":"3kg oranges à jus, fraises, kiwis et bananes."},
+ {"id":"pomme-de-terre","nameAr":"بطاطس طرية","nameFr":"Pommes de terre","category":"legumes","price":7,"unit":"Kg","image":"/images/products/pomme-de-terre.jpg","imageFallback":"https://images.unsplash.com/photo-1518977676601-b53f82aba655?auto=format&fit=crop&w=800&q=85","badgeAr":"100% طري","badgeFr":"100% Frais","descriptionAr":"بطاطس طرية للاستعمال اليومي","descriptionFr":"Pommes de terre fraîches pour vos recettes."},
+ {"id":"tomates","nameAr":"طماطم حمراء ممتازة","nameFr":"Tomates","category":"legumes","price":8,"unit":"Kg","image":"/images/products/tomates.jpg","imageFallback":"https://images.unsplash.com/photo-1546094096-0df4bcaaa337?auto=format&fit=crop&w=800&q=85","badgeAr":"محلية","badgeFr":"Locales","descriptionAr":"طماطم حمراء ناضجة","descriptionFr":"Tomates rouges et mûres."},
+ {"id":"oignons-rouges","nameAr":"بصل أحمر","nameFr":"Oignons rouges","category":"legumes","price":6,"unit":"Kg","image":"/images/products/oignons-rouges.jpg","imageFallback":"https://images.unsplash.com/photo-1508747703725-719777637510?auto=format&fit=crop&w=800&q=85","descriptionAr":"بصل أحمر طري","descriptionFr":"Oignons rouges du marché."},
+ {"id":"oignons-blancs","nameAr":"بصل أبيض","nameFr":"Oignons blancs","category":"legumes","price":6.5,"unit":"Kg","image":"/images/products/oignons-blancs.jpg","imageFallback":"https://images.unsplash.com/photo-1618512496248-a07fe83aa8cb?auto=format&fit=crop&w=800&q=85","descriptionAr":"بصل أبيض للاستعمال اليومي","descriptionFr":"Oignons blancs frais."},
+ {"id":"carottes","nameAr":"جزر محلي","nameFr":"Carottes","category":"legumes","price":6.5,"unit":"Kg","image":"/images/products/carottes.jpg","imageFallback":"https://images.unsplash.com/photo-1445282768818-728615cc910a?auto=format&fit=crop&w=800&q=85","badgeAr":"محلي","badgeFr":"Local","descriptionAr":"جزر محلي مقرمش","descriptionFr":"Carottes locales et croquantes."},
+ {"id":"concombres","nameAr":"خيار بلدي","nameFr":"Concombres","category":"legumes","price":8,"unit":"Kg","image":"/images/products/concombres.jpg","imageFallback":"https://images.unsplash.com/photo-1604977042946-1eecc30f269e?auto=format&fit=crop&w=800&q=85","descriptionAr":"خيار بلدي طري","descriptionFr":"Concombres frais du marché."},
+ {"id":"poivrons","nameAr":"فلفل أخضر وأحمر","nameFr":"Poivrons","category":"legumes","price":12,"unit":"Kg","image":"/images/products/poivrons.jpg","imageFallback":"https://images.unsplash.com/photo-1563565375-f3fdfdbefa83?auto=format&fit=crop&w=800&q=85","descriptionAr":"فلفل ملون طازج","descriptionFr":"Poivrons verts et rouges."},
+ {"id":"courgettes","nameAr":"كرجيت / قرعة خضراء","nameFr":"Courgettes","category":"legumes","price":10,"unit":"Kg","image":"/images/products/courgettes.jpg","imageFallback":"https://images.unsplash.com/photo-1563252722-6434563a985d?auto=format&fit=crop&w=800&q=85","descriptionAr":"قرعة خضراء طازجة","descriptionFr":"Courgettes fraîches."},
+ {"id":"courge-rouge","nameAr":"قرعة حمراء للكسكس","nameFr":"Courge rouge","category":"legumes","price":9,"unit":"Kg","image":"/images/products/courge-rouge.jpg","imageFallback":"https://images.unsplash.com/photo-1506976785307-8732e854ad03?auto=format&fit=crop&w=800&q=85","descriptionAr":"قرعة حمراء للطبخ والكسكس","descriptionFr":"Courge rouge pour vos plats."},
+ {"id":"navets","nameAr":"لفت أصفر وأبيض","nameFr":"Navets","category":"legumes","price":7,"unit":"Kg","image":"/images/products/navets.jpg","imageFallback":"https://images.unsplash.com/photo-1598170845058-32b9d6a5da37?auto=format&fit=crop&w=800&q=85","descriptionAr":"لفت طري بألوان مختلفة","descriptionFr":"Navets frais, jaunes et blancs."},
+ {"id":"chou","nameAr":"كرنب / ملفوف","nameFr":"Chou","category":"legumes","price":8,"unit":"unité","image":"/images/products/chou.jpg","imageFallback":"https://images.unsplash.com/photo-1594282486552-05b4d80fbb9f?auto=format&fit=crop&w=800&q=85","descriptionAr":"كرنب طازج","descriptionFr":"Chou frais du marché."},
+ {"id":"brocoli","nameAr":"بروكلي طازج","nameFr":"Brocoli","category":"legumes","price":15,"unit":"Kg","image":"/images/products/brocoli.jpg","imageFallback":"https://images.unsplash.com/photo-1459411621453-7b03977f4bfc?auto=format&fit=crop&w=800&q=85","badgeAr":"طازج","badgeFr":"Frais","descriptionAr":"بروكلي أخضر طازج","descriptionFr":"Brocoli vert et frais."},
+ {"id":"chou-fleur","nameAr":"شيفلور","nameFr":"Chou-fleur","category":"legumes","price":12,"unit":"unité","image":"/images/products/chou-fleur.jpg","imageFallback":"https://images.unsplash.com/photo-1568584711075-3d021a7c3ca3?auto=format&fit=crop&w=800&q=85","descriptionAr":"شيفلور طري","descriptionFr":"Chou-fleur frais."},
+ {"id":"aubergines","nameAr":"باذنجان","nameFr":"Aubergines","category":"legumes","price":9,"unit":"Kg","image":"/images/products/aubergines.jpg","imageFallback":"https://images.unsplash.com/photo-1653924855543-6b4469c6a10b?auto=format&fit=crop&w=800&q=85","descriptionAr":"باذنجان طري","descriptionFr":"Aubergines fraîches."},
+ {"id":"haricots-verts","nameAr":"لوبيا خضراء","nameFr":"Haricots verts","category":"legumes","price":16,"unit":"Kg","image":"/images/products/haricots-verts.jpg","imageFallback":"https://images.unsplash.com/photo-1567375698348-5d9d5ae99de0?auto=format&fit=crop&w=800&q=85","descriptionAr":"لوبيا خضراء طازجة","descriptionFr":"Haricots verts frais."},
+ {"id":"petits-pois","nameAr":"جلبانة","nameFr":"Petits pois","category":"legumes","price":18,"unit":"Kg","image":"/images/products/petits-pois.jpg","imageFallback":"https://images.unsplash.com/photo-1587735243615-c03f25aaff15?auto=format&fit=crop&w=800&q=85","descriptionAr":"جلبانة طازجة","descriptionFr":"Petits pois frais."},
+ {"id":"herbes","nameAr":"الأعشاب (قزبور، معدنوس، كرافس، نعناع)","nameFr":"Herbes fraîches (coriandre, persil, céleri, menthe)","category":"legumes","price":2.5,"unit":"botte","image":"/images/products/herbes.jpg","imageFallback":"https://images.unsplash.com/photo-1501004318641-b39e6451bec6?auto=format&fit=crop&w=800&q=85","descriptionAr":"باقة أعشاب عطرية طازجة","descriptionFr":"Botte d'herbes aromatiques fraîches."},
+ {"id":"pommes-rouges","nameAr":"تفاح أحمر ممتاز","nameFr":"Pommes rouges","category":"fruits","price":14,"unit":"Kg","image":"/images/products/pommes-rouges.jpg","imageFallback":"https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?auto=format&fit=crop&w=800&q=85","badgeAr":"ممتاز","badgeFr":"Sélection","descriptionAr":"تفاح أحمر مقرمش","descriptionFr":"Pommes rouges croquantes."},
+ {"id":"bananes","nameAr":"موز ممتاز","nameFr":"Bananes","category":"fruits","price":12,"unit":"Kg","image":"/images/products/bananes.jpg","imageFallback":"https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?auto=format&fit=crop&w=800&q=85","descriptionAr":"موز حلو وناضج","descriptionFr":"Bananes mûres et savoureuses."},
+ {"id":"oranges","nameAr":"برتقال العصير","nameFr":"Oranges à jus","category":"fruits","price":7,"unit":"Kg","image":"/images/products/oranges.jpg","imageFallback":"https://images.unsplash.com/photo-1547514701-42782101795e?auto=format&fit=crop&w=800&q=85","descriptionAr":"برتقال طري للعصير","descriptionFr":"Oranges fraîches à presser."},
+ {"id":"mandarines","nameAr":"ماندرين","nameFr":"Mandarines","category":"fruits","price":9,"unit":"Kg","image":"/images/products/mandarines.jpg","imageFallback":"https://images.unsplash.com/photo-1609424572698-04d9d2e04954?auto=format&fit=crop&w=800&q=85","descriptionAr":"ماندرين حلوة","descriptionFr":"Mandarines douces."},
+ {"id":"fraises","nameAr":"فراولة طازجة","nameFr":"Fraises","category":"fruits","price":16,"unit":"Kg","image":"/images/products/fraises.jpg","imageFallback":"https://images.unsplash.com/photo-1464965911861-746a04b4bca6?auto=format&fit=crop&w=800&q=85","badgeAr":"طازج","badgeFr":"Frais","descriptionAr":"فراولة موسمية","descriptionFr":"Fraises de saison."},
+ {"id":"raisins","nameAr":"عنب أحمر/أبيض","nameFr":"Raisins","category":"fruits","price":18,"unit":"Kg","image":"/images/products/raisins.jpg","imageFallback":"https://images.unsplash.com/photo-1537640538966-79f369143f8f?auto=format&fit=crop&w=800&q=85","descriptionAr":"عنب حلو بألوان مختلفة","descriptionFr":"Raisins rouges et blancs."},
+ {"id":"poires","nameAr":"إجاص","nameFr":"Poires","category":"fruits","price":20,"unit":"Kg","image":"/images/products/poires.jpg","imageFallback":"https://images.unsplash.com/photo-1519996529931-28324d7a630e?auto=format&fit=crop&w=800&q=85","descriptionAr":"إجاص طري","descriptionFr":"Poires fraîches."},
+ {"id":"peches-nectarines","nameAr":"خوخ وشهدية","nameFr":"Pêches & Nectarines","category":"fruits","price":22,"unit":"Kg","image":"/images/products/peches.jpg","imageFallback":"https://images.unsplash.com/photo-1629828874514-c1e5103a8f50?auto=format&fit=crop&w=800&q=85","descriptionAr":"خوخ وشهدية موسمية","descriptionFr":"Pêches et nectarines de saison."},
+ {"id":"pasteque","nameAr":"دلاح","nameFr":"Pastèque","category":"fruits","price":5,"unit":"Kg","image":"/images/products/pasteque.jpg","imageFallback":"https://images.unsplash.com/photo-1563114773-84221bd62daa?auto=format&fit=crop&w=800&q=85","descriptionAr":"دلاح حلو ومنعش","descriptionFr":"Pastèque douce et rafraîchissante."},
+ {"id":"melon","nameAr":"بطيخ أصفر","nameFr":"Melon","category":"fruits","price":10,"unit":"Kg","image":"/images/products/melon.jpg","imageFallback":"https://images.unsplash.com/photo-1571575173700-afb9492e6a50?auto=format&fit=crop&w=800&q=85","descriptionAr":"شمام طري","descriptionFr":"Melon frais et sucré."},
+ {"id":"grenades","nameAr":"رمان","nameFr":"Grenades","category":"fruits","price":12,"unit":"Kg","image":"/images/products/grenades.jpg","imageFallback":"https://images.unsplash.com/photo-1541344999736-83eca272f6fc?auto=format&fit=crop&w=800&q=85","descriptionAr":"رمان حلو","descriptionFr":"Grenades fraîches."}
+]
+</script>
 <script>
 
   /* =========================
@@ -1017,7 +1052,18 @@
      PRODUITS
   ========================= */
 
-  let products = [];
+  const productData = JSON.parse(document.getElementById("productData").textContent);
+  const categoryNames = { packs: "Packs", legumes: "Légumes", fruits: "Fruits" };
+  const categoryEmoji = { packs: "🧺", legumes: "🥕", fruits: "🍊" };
+  const products = productData.map(product => ({
+    ...product,
+    name: product.nameFr,
+    description: product.descriptionFr || "Produits frais du marché.",
+    categoryLabel: categoryNames[product.category] || product.category,
+    emoji: categoryEmoji[product.category] || "🥬"
+  }));
+  let selectedCategory = "all";
+  let searchQuery = "";
 
   let cart = JSON.parse(localStorage.getItem("freshsouk_cart")) || [];
 
@@ -1025,90 +1071,48 @@
      AFFICHAGE PRODUITS
   ========================= */
 
-  let activeCatalogFilter = "all";
-
   function renderProducts() {
     const container = document.getElementById("productsContainer");
-    const count = document.getElementById("catalogCount");
-    const query = document.getElementById("productSearch").value.trim().toLocaleLowerCase("fr");
-    const categoryLabels = { packs: "السلات / Packs", legumes: "الخضروات / Légumes", fruits: "الفواكه / Fruits" };
-    const visibleProducts = products.filter(product => {
-      const matchesCategory = activeCatalogFilter === "all" || product.category === activeCatalogFilter;
-      const searchText = [product.nameAr, product.nameFr, product.descriptionAr, product.descriptionFr].join(" ").toLocaleLowerCase("fr");
-      return matchesCategory && searchText.includes(query);
+    const query = searchQuery.trim().toLocaleLowerCase();
+    const visible = products.filter(product => {
+      const matchesCategory = selectedCategory === "all" || product.category === selectedCategory;
+      const text = `${product.nameFr} ${product.nameAr} ${product.descriptionFr} ${product.descriptionAr}`.toLocaleLowerCase();
+      return matchesCategory && text.includes(query);
     });
-    count.textContent = visibleProducts.length + (visibleProducts.length === 1 ? " produit" : " produits");
-    if (!visibleProducts.length) {
-      container.innerHTML = '<div class="empty col-span-full"><div style="font-size:42px">🔎</div><h3>ما لقيناش هاد المنتوج / Aucun produit trouvé</h3><p>جرّب كلمة بحث أخرى / Essayez une autre recherche.</p></div>';
-      return;
-    }
-    container.innerHTML = visibleProducts.map(product => {
-      const emoji = product.category === "packs" ? "🧺" : product.category === "fruits" ? "🍊" : "🥕";
-      const formattedPrice = new Intl.NumberFormat("fr-MA", { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(product.price);
-      const badge = product.badgeAr || product.badgeFr ? '<span class="product-badge">' + (product.badgeAr || "") + ' · ' + (product.badgeFr || "") + '</span>' : "";
-      return '<article class="product group overflow-hidden rounded-2xl bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-lg">' +
-        '<div class="product-image"><img src="' + product.image + '" data-fallback="' + (product.imageFallback || "") + '" alt="' + product.nameAr + ' — ' + product.nameFr + '" loading="lazy">' + badge + '</div>' +
-        '<div class="product-content"><div class="product-category">' + categoryLabels[product.category] + '</div>' +
-        '<h3 class="product-title-ar" lang="ar" dir="rtl">' + product.nameAr + '</h3>' +
-        '<p class="product-title-fr" lang="fr">' + product.nameFr + '</p>' +
-        '<p class="product-description product-description-ar" lang="ar" dir="rtl">' + (product.descriptionAr || "") + '</p>' +
-        '<p class="product-description product-description-fr" lang="fr">' + (product.descriptionFr || "") + '</p>' +
-        '<div class="product-bottom"><div class="price">' + formattedPrice + ' DH<span class="price-unit"> / ' + product.unit + '</span></div>' +
-        '<button type="button" class="add-btn rounded-xl px-3 py-2 font-bold" data-add-to-cart="' + product.id + '">+ Ajouter</button></div></div></article>';
-    }).join("");
-    container.querySelectorAll(".product-image img").forEach(image => {
-      image.addEventListener("error", function onImageError() {
-        if (!this.dataset.fallbackUsed && this.dataset.fallback) {
-          this.dataset.fallbackUsed = "true";
-          this.src = this.dataset.fallback;
-        } else {
-          const icon = document.createElement("span");
-          const product = products.find(item => item.nameAr === this.alt.split(" — ")[0]);
-          icon.className = "image-fallback";
-          icon.textContent = product && product.category === "packs" ? "🧺" : product && product.category === "fruits" ? "🍊" : "🥕";
-          this.replaceWith(icon);
-        }
-      });
-    });
-    container.querySelectorAll("[data-add-to-cart]").forEach(button => {
-      button.addEventListener("click", () => addToCart(button.dataset.addToCart));
-    });
+    container.innerHTML = visible.length ? visible.map(product => `
+      <article class="product">
+        <div class="product-image">
+          <img src="${product.imageFallback || product.image}" alt="${product.nameFr}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='grid'">
+          <span class="product-emoji" style="display:none">${product.emoji}</span>
+          ${(product.badgeFr || product.badgeAr) ? `<span class="product-badge">${product.badgeFr || product.badgeAr}</span>` : ""}
+        </div>
+        <div class="product-content">
+          <div class="product-category">${product.categoryLabel}</div>
+          <h3>${product.nameFr}</h3>
+          <span class="product-ar" lang="ar" dir="rtl">${product.nameAr}</span>
+          <p class="product-description">${product.descriptionFr || "Produits frais du marché."}</p>
+          <div class="product-bottom"><div class="price">${Number(product.price).toFixed(2)} DH <small>/ ${product.unit}</small></div>
+            <button class="add-btn" onclick="addToCart('${product.id}')">+ Ajouter</button>
+          </div>
+        </div>
+      </article>
+    `).join("") : `<div class="empty">Aucun produit trouvé.</div>`;
   }
 
-  function setupCatalogFilters() {
-    document.querySelectorAll("[data-filter]").forEach(button => {
-      button.addEventListener("click", () => {
-        activeCatalogFilter = button.dataset.filter;
-        document.querySelectorAll("[data-filter]").forEach(tab => {
-          const selected = tab === button;
-          tab.classList.toggle("active", selected);
-          tab.setAttribute("aria-selected", String(selected));
-        });
-        renderProducts();
-      });
-    });
-    document.getElementById("productSearch").addEventListener("input", renderProducts);
+  function setCategory(category) {
+    selectedCategory = category;
+    document.querySelectorAll(".category-tab").forEach(button => button.classList.toggle("active", button.dataset.category === category));
+    renderProducts();
   }
 
-  async function loadProducts() {
-    const container = document.getElementById("productsContainer");
-    try {
-      const response = await fetch("./products.json", { cache: "no-cache" });
-      if (!response.ok) throw new Error("Catalog file could not be loaded");
-      products = await response.json();
-      cart = cart.map(item => {
-        const current = products.find(product => product.id === String(item.id) || product.nameFr === item.nameFr || product.nameFr === item.name);
-        return current ? { ...current, quantity: item.quantity } : item;
-      });
-      saveCart();
-      renderCart();
-      setupCatalogFilters();
-      renderProducts();
-    } catch (error) {
-      container.innerHTML = '<div class="empty col-span-full"><h3>تعذر تحميل الكاتالوغ / Catalogue indisponible</h3><p>عاود حدّث الصفحة / Actualisez la page.</p></div>';
-    }
+  function syncSearch(value) {
+    searchQuery = value;
+    const header = document.getElementById("headerSearch");
+    const catalog = document.getElementById("catalogSearch");
+    if (header && header.value !== value) header.value = value;
+    if (catalog && catalog.value !== value) catalog.value = value;
+    renderProducts();
   }
-
   /* =========================
      PANIER
   ========================= */
@@ -1232,12 +1236,12 @@
         <div class="cart-item">
 
           <div class="cart-item-image">
-            ${item.emoji || (item.category === "packs" ? "🧺" : item.category === "fruits" ? "🍊" : "🥕")}
+            ${item.emoji}
           </div>
 
           <div class="cart-item-info">
 
-            <strong>${item.nameAr || item.name || item.nameFr}</strong><small>${item.nameFr || ""}</small>
+            <strong>${item.name || item.nameFr}</strong><div class="cart-item-ar" lang="ar" dir="rtl">${item.nameAr || ""}</div>
 
             <div>
               ${item.price} DH/${item.unit}
@@ -1442,7 +1446,7 @@
       const address = document.getElementById("customerAddress").value.trim();
       const slot = document.getElementById("deliverySlot").value;
       const note = document.getElementById("customerNote").value.trim();
-      const itemsText = cart.map(item => (item.nameFr || item.name || item.nameAr) + " / " + (item.nameAr || "") + " x" + item.quantity + " = " +
+      const itemsText = cart.map(item => (item.name || item.nameFr) + " x" + item.quantity + " = " +
         (item.price * item.quantity).toFixed(2) + " DH").join("\n");
       const total = getCartTotal().toFixed(2);
 
@@ -1510,10 +1514,11 @@
      INIT
   ========================= */
 
+  renderProducts();
   renderCart();
-  loadProducts();
 
 </script>
 
 </body>
 </html>
+
