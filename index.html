@@ -1485,7 +1485,7 @@
       for (const [token, emojiBytes] of Object.entries(encodedEmojiBytes)) {
         whatsappText = whatsappText.split(token).join(emojiBytes);
       }
-      const whatsappUrl = "https://wa.me/" + WHATSAPP_NUMBER + "?text=" + whatsappText;
+      const whatsappUrl = "https://api.whatsapp.com/send/?phone=" + WHATSAPP_NUMBER + "&text=" + whatsappText;
       const whatsappWindow = window.open("about:blank", "_blank");
 
       try {
