@@ -655,7 +655,38 @@
         bottom: 16px;
       }
     }
+  
+
+    /* BILINGUAL PRODUCT CATALOG */
+    .product-image { position: relative; overflow: hidden; padding: 0; }
+    .product-image img { display: block; width: 100%; height: 100%; object-fit: cover; transition: transform .3s ease; }
+    .product:hover .product-image img { transform: scale(1.04); }
+    .image-fallback { display: grid; width: 100%; height: 100%; place-items: center; font-size: 64px; }
+    .product-badge { position: absolute; top: 11px; right: 11px; max-width: calc(100% - 22px); border-radius: 999px; background: rgba(255,255,255,.94); padding: 6px 10px; color: var(--green-dark); font-size: 11px; font-weight: 800; box-shadow: 0 2px 12px rgba(0,0,0,.08); }
+    .product-title-ar { margin: 7px 0 0; font-size: 18px; line-height: 1.4; }
+    .product-title-fr { color: var(--gray); font-size: 13px; min-height: 20px; }
+    .product-description-ar, .product-description-fr { min-height: 0; margin-top: 5px; line-height: 1.5; }
+    .product-description-ar { color: #64746a; }
+    .price-unit { color: var(--gray); font-size: 12px; font-weight: 600; }
+    .catalog-tools { margin: 22px 0 10px; }
+    .catalog-search { position: relative; display: block; flex: 1 1 260px; max-width: 380px; }
+    .catalog-search input { min-height: 46px; padding: 11px 14px 11px 42px; background: white; border-radius: 13px; }
+    .catalog-search span { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--gray); font-size: 21px; }
+    .category-filters { display: flex; flex-wrap: wrap; gap: 8px; }
+    .filter-btn { border: 1px solid var(--border); border-radius: 999px; background: white; color: var(--dark); font-size: 13px; font-weight: 700; transition: .2s; }
+    .filter-btn:hover, .filter-btn.active { border-color: var(--green); background: var(--green); color: white; }
+    .catalog-count { margin: 0 0 14px; color: var(--gray); }
+    @media (max-width: 600px) {
+      .catalog-search { max-width: none; }
+      .category-filters { gap: 6px; }
+      .filter-btn { padding: 8px 11px !important; font-size: 12px; }
+      .product-title-ar { font-size: 15px; }
+      .product-title-fr { font-size: 11px; }
+      .product-description { display: none; }
+      .product-badge { top: 7px; right: 7px; padding: 5px 8px; font-size: 10px; }
+    }
   </style>
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
 <body>
@@ -743,12 +774,26 @@
 
   <div class="section-title">
     <div>
-      <h2>Nos produits</h2>
-      <p>Une sélection fraîche pour votre panier.</p>
+      <h2>Notre catalogue</h2>
+      <p>Fruits, légumes et paniers frais pour chaque jour.</p>
     </div>
   </div>
 
-  <div class="products" id="productsContainer"></div>
+  <div class="catalog-tools flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+    <label class="catalog-search">
+      <span aria-hidden="true">⌕</span>
+      <input id="productSearch" type="search" class="w-full rounded-xl" placeholder="بحث / Rechercher un produit..." aria-label="بحث أو ابحث عن منتج" autocomplete="off">
+    </label>
+    <div class="category-filters" role="tablist" aria-label="Catégories de produits">
+      <button type="button" class="filter-btn active px-4 py-2" role="tab" aria-selected="true" data-filter="all">الكل / Tous</button>
+      <button type="button" class="filter-btn px-4 py-2" role="tab" aria-selected="false" data-filter="packs">السلات / Packs</button>
+      <button type="button" class="filter-btn px-4 py-2" role="tab" aria-selected="false" data-filter="legumes">الخضروات / Légumes</button>
+      <button type="button" class="filter-btn px-4 py-2" role="tab" aria-selected="false" data-filter="fruits">الفواكه / Fruits</button>
+    </div>
+  </div>
+
+  <p class="catalog-count text-sm text-slate-500" id="catalogCount" aria-live="polite"></p>
+  <div class="products grid grid-cols-2 gap-3 sm:grid-cols-3 xl:grid-cols-4" id="productsContainer"></div>
 
 </section>
 
@@ -972,87 +1017,7 @@
      PRODUITS
   ========================= */
 
-  const products = [
-    {
-      id: 1,
-      name: "Tomates",
-      category: "Légumes",
-      description: "Tomates fraîches",
-      price: 12,
-      unit: "kg",
-      emoji: "🍅"
-    },
-
-    {
-      id: 2,
-      name: "Pommes de terre",
-      category: "Légumes",
-      description: "Pommes de terre fraîches",
-      price: 9,
-      unit: "kg",
-      emoji: "🥔"
-    },
-
-    {
-      id: 3,
-      name: "Carottes",
-      category: "Légumes",
-      description: "Carottes fraîches",
-      price: 10,
-      unit: "kg",
-      emoji: "🥕"
-    },
-
-    {
-      id: 4,
-      name: "Oignons",
-      category: "Légumes",
-      description: "Oignons frais",
-      price: 8,
-      unit: "kg",
-      emoji: "🧅"
-    },
-
-    {
-      id: 5,
-      name: "Oranges",
-      category: "Fruits",
-      description: "Oranges fraîches",
-      price: 14,
-      unit: "kg",
-      emoji: "🍊"
-    },
-
-    {
-      id: 6,
-      name: "Pommes",
-      category: "Fruits",
-      description: "Pommes fraîches",
-      price: 18,
-      unit: "kg",
-      emoji: "🍎"
-    },
-
-    {
-      id: 7,
-      name: "Bananes",
-      category: "Fruits",
-      description: "Bananes fraîches",
-      price: 16,
-      unit: "kg",
-      emoji: "🍌"
-    },
-
-    {
-      id: 8,
-      name: "Avocat",
-      category: "Fruits",
-      description: "Avocats frais",
-      price: 28,
-      unit: "kg",
-      emoji: "🥑"
-    }
-  ];
+  let products = [];
 
   let cart = JSON.parse(localStorage.getItem("freshsouk_cart")) || [];
 
@@ -1060,52 +1025,74 @@
      AFFICHAGE PRODUITS
   ========================= */
 
+  let activeCatalogFilter = "all";
+
   function renderProducts() {
+    const container = document.getElementById("productsContainer");
+    const count = document.getElementById("catalogCount");
+    const query = document.getElementById("productSearch").value.trim().toLocaleLowerCase("fr");
+    const categoryLabels = { packs: "السلات / Packs", legumes: "الخضروات / Légumes", fruits: "الفواكه / Fruits" };
+    const visibleProducts = products.filter(product => {
+      const matchesCategory = activeCatalogFilter === "all" || product.category === activeCatalogFilter;
+      const searchText = [product.nameAr, product.nameFr, product.descriptionAr, product.descriptionFr].join(" ").toLocaleLowerCase("fr");
+      return matchesCategory && searchText.includes(query);
+    });
+    count.textContent = visibleProducts.length + (visibleProducts.length === 1 ? " produit" : " produits");
+    if (!visibleProducts.length) {
+      container.innerHTML = '<div class="empty col-span-full"><div style="font-size:42px">🔎</div><h3>ما لقيناش هاد المنتوج / Aucun produit trouvé</h3><p>جرّب كلمة بحث أخرى / Essayez une autre recherche.</p></div>';
+      return;
+    }
+    container.innerHTML = visibleProducts.map(product => {
+      const emoji = product.category === "packs" ? "🧺" : product.category === "fruits" ? "🍊" : "🥕";
+      const formattedPrice = new Intl.NumberFormat("fr-MA", { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(product.price);
+      const badge = product.badgeAr || product.badgeFr ? '<span class="product-badge">' + (product.badgeAr || "") + ' · ' + (product.badgeFr || "") + '</span>' : "";
+      return '<article class="product group overflow-hidden rounded-2xl bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-lg">' +
+        '<div class="product-image"><img src="' + product.image + '" data-fallback="' + (product.imageFallback || "") + '" alt="' + product.nameAr + ' — ' + product.nameFr + '" loading="lazy" onerror="if(!this.dataset.fallbackUsed && this.dataset.fallback){this.dataset.fallbackUsed='1';this.src=this.dataset.fallback;}else{const icon=document.createElement('span');icon.className='image-fallback';icon.textContent='' + emoji + '';this.replaceWith(icon);}">' + badge + '</div>' +
+        '<div class="product-content"><div class="product-category">' + categoryLabels[product.category] + '</div>' +
+        '<h3 class="product-title-ar" lang="ar" dir="rtl">' + product.nameAr + '</h3>' +
+        '<p class="product-title-fr" lang="fr">' + product.nameFr + '</p>' +
+        '<p class="product-description product-description-ar" lang="ar" dir="rtl">' + (product.descriptionAr || "") + '</p>' +
+        '<p class="product-description product-description-fr" lang="fr">' + (product.descriptionFr || "") + '</p>' +
+        '<div class="product-bottom"><div class="price">' + formattedPrice + ' DH<span class="price-unit"> / ' + product.unit + '</span></div>' +
+        '<button type="button" class="add-btn rounded-xl px-3 py-2 font-bold" data-add-to-cart="' + product.id + '">+ Ajouter</button></div></div></article>';
+    }).join("");
+    container.querySelectorAll("[data-add-to-cart]").forEach(button => {
+      button.addEventListener("click", () => addToCart(button.dataset.addToCart));
+    });
+  }
 
-    const container =
-      document.getElementById("productsContainer");
+  function setupCatalogFilters() {
+    document.querySelectorAll("[data-filter]").forEach(button => {
+      button.addEventListener("click", () => {
+        activeCatalogFilter = button.dataset.filter;
+        document.querySelectorAll("[data-filter]").forEach(tab => {
+          const selected = tab === button;
+          tab.classList.toggle("active", selected);
+          tab.setAttribute("aria-selected", String(selected));
+        });
+        renderProducts();
+      });
+    });
+    document.getElementById("productSearch").addEventListener("input", renderProducts);
+  }
 
-    container.innerHTML = products.map(product => `
-
-      <article class="product">
-
-        <div class="product-image">
-          ${product.emoji}
-        </div>
-
-        <div class="product-content">
-
-          <div class="product-category">
-            ${product.category}
-          </div>
-
-          <h3>${product.name}</h3>
-
-          <p class="product-description">
-            ${product.description}
-          </p>
-
-          <div class="product-bottom">
-
-            <div class="price">
-              ${product.price} DH/${product.unit}
-            </div>
-
-            <button
-              class="add-btn"
-              onclick="addToCart(${product.id})"
-            >
-              + Ajouter
-            </button>
-
-          </div>
-
-        </div>
-
-      </article>
-
-    `).join("");
-
+  async function loadProducts() {
+    const container = document.getElementById("productsContainer");
+    try {
+      const response = await fetch("./products.json", { cache: "no-cache" });
+      if (!response.ok) throw new Error("Catalog file could not be loaded");
+      products = await response.json();
+      cart = cart.map(item => {
+        const current = products.find(product => product.id === String(item.id) || product.nameFr === item.nameFr || product.nameFr === item.name);
+        return current ? { ...current, quantity: item.quantity } : item;
+      });
+      saveCart();
+      renderCart();
+      setupCatalogFilters();
+      renderProducts();
+    } catch (error) {
+      container.innerHTML = '<div class="empty col-span-full"><h3>تعذر تحميل الكاتالوغ / Catalogue indisponible</h3><p>عاود حدّث الصفحة / Actualisez la page.</p></div>';
+    }
   }
 
   /* =========================
@@ -1231,12 +1218,12 @@
         <div class="cart-item">
 
           <div class="cart-item-image">
-            ${item.emoji}
+            ${item.emoji || (item.category === "packs" ? "🧺" : item.category === "fruits" ? "🍊" : "🥕")}
           </div>
 
           <div class="cart-item-info">
 
-            <strong>${item.name}</strong>
+            <strong>${item.nameAr || item.name || item.nameFr}</strong><small>${item.nameFr || ""}</small>
 
             <div>
               ${item.price} DH/${item.unit}
@@ -1245,7 +1232,7 @@
             <div class="quantity">
 
               <button
-                onclick="changeQuantity(${item.id}, -1)"
+                onclick="changeQuantity('${item.id}', -1)"
               >
                 −
               </button>
@@ -1253,13 +1240,13 @@
               <strong>${item.quantity}</strong>
 
               <button
-                onclick="changeQuantity(${item.id}, 1)"
+                onclick="changeQuantity('${item.id}', 1)"
               >
                 +
               </button>
 
               <button
-                onclick="removeFromCart(${item.id})"
+                onclick="removeFromCart('${item.id}')"
                 style="margin-left:auto;color:#dc2626;"
               >
                 🗑
@@ -1441,7 +1428,7 @@
       const address = document.getElementById("customerAddress").value.trim();
       const slot = document.getElementById("deliverySlot").value;
       const note = document.getElementById("customerNote").value.trim();
-      const itemsText = cart.map(item => item.name + " x" + item.quantity + " = " +
+      const itemsText = cart.map(item => (item.nameFr || item.name || item.nameAr) + " / " + (item.nameAr || "") + " x" + item.quantity + " = " +
         (item.price * item.quantity).toFixed(2) + " DH").join("\n");
       const total = getCartTotal().toFixed(2);
 
@@ -1509,8 +1496,8 @@
      INIT
   ========================= */
 
-  renderProducts();
   renderCart();
+  loadProducts();
 
 </script>
 
