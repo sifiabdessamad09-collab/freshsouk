@@ -683,6 +683,7 @@
     .section{padding-top:55px;padding-bottom:55px}.section-title{margin-bottom:18px}.section-title h2{font-size:32px;color:#193d29}.section-title p{font-size:13px}
     .catalog-tools{display:flex;align-items:center;justify-content:space-between;gap:14px;margin:18px 0 20px}.category-tabs{display:flex;gap:8px;flex-wrap:wrap}.category-tab{min-height:38px;padding:0 16px;border:1px solid #e5ece6;background:#fff;border-radius:11px;color:#66756b;font-size:12px;font-weight:700}.category-tab.active{background:#287b46;border-color:#287b46;color:#fff}.catalog-search{width:240px}
     .products{grid-template-columns:repeat(4,minmax(0,1fr));gap:15px}.product{border-color:#edf1ed;border-radius:16px;box-shadow:0 5px 20px #203f2908}.product:hover{box-shadow:0 15px 35px #203f2917}.product-image{height:185px;position:relative;overflow:hidden;background:#f4f8f3;font-size:65px}.product-image img{width:100%;height:100%;object-fit:cover;transition:transform .35s}.product:hover .product-image img{transform:scale(1.04)}.product-badge{position:absolute;left:10px;top:10px;padding:5px 8px;border-radius:20px;color:#fff;font-size:9px;font-weight:800;box-shadow:0 3px 10px #1c3a2430}.product-badge-green{background:linear-gradient(120deg,#16803a,#45a95e)}.product-badge-gold{background:linear-gradient(120deg,#b87b08,#edb52e)}.product-content{padding:14px}.product-category{font-size:9px;letter-spacing:.7px;color:#60966b}.product h3{font-size:14px;color:#2c4434}.product-ar{display:block;font-family:Arial,sans-serif;font-size:14px;color:#2c4434;text-align:right;margin-top:3px}.product-description{font-size:10px;line-height:1.5;min-height:30px}.price{font-size:15px;color:#287b46}.product-bottom{margin-top:11px;display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}.product-actions{display:grid;grid-template-columns:1fr 1fr;gap:7px;width:100%}.product-actions button{min-width:0;width:100%;border:0;border-radius:9px;padding:9px 6px;font-size:10px;font-weight:800;white-space:nowrap;cursor:pointer;transition:transform .18s,filter .18s}.product-actions button:hover{transform:translateY(-2px);filter:brightness(.96)}.product-actions .add-btn{background:#16803a;color:white}.product-actions .whatsapp-btn{background:#e8f8ed;color:#117536;border:1px solid #c8e9d1}
+    .shipping-progress{margin:0 0 14px;padding:11px 12px;border-radius:12px;background:#f2f8f2;color:#4c6453;font-size:11px}.shipping-progress-track{height:6px;margin-top:8px;border-radius:9px;background:#dce9dd;overflow:hidden}.shipping-progress-bar{height:100%;width:0;border-radius:inherit;background:linear-gradient(90deg,#16803a,#d7a62f);transition:width .25s}
     .announcement-bar{min-height:38px;padding:7px 45px 7px 14px;display:flex;align-items:center;justify-content:center;position:relative;text-align:center;color:#fff;background:linear-gradient(100deg,#16803a,#258843 55%,#c28b18);font-size:12px;font-weight:750}.announcement-bar button{position:absolute;right:12px;top:50%;transform:translateY(-50%);width:26px;height:26px;border:0;border-radius:50%;background:#ffffff24;color:#fff;font-size:20px;line-height:1;cursor:pointer}
     .btn-primary,.btn-secondary{transition:transform .2s,box-shadow .2s,background .2s}.btn-primary{box-shadow:0 8px 20px #16803a35;animation:heroGlow 3s ease-in-out infinite}.btn-primary:hover,.btn-secondary:hover{transform:translateY(-3px);box-shadow:0 12px 25px #16803a2c}.hero-card{animation:heroFloat 6s ease-in-out infinite}@keyframes heroGlow{0%,100%{box-shadow:0 8px 20px #16803a30}50%{box-shadow:0 10px 30px #dca92855}}@keyframes heroFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
     footer{margin-top:20px}.whatsapp-float{box-shadow:0 10px 30px #0003}
@@ -696,7 +697,7 @@
 <body>
 
 <header>
-  <div class="announcement-bar" id="announcementBar"><span>🚚 التوصيل مجاني في الدار البيضاء للطلبات فوق 150 درهم! | Livraison gratuite dès 150 DH</span><button type="button" aria-label="Fermer l’annonce" onclick="closeAnnouncement()">×</button></div>
+  <div class="announcement-bar" id="announcementBar"><span>🚚 التوصيل مجاني في الدار البيضاء للطلبات فوق 200 درهم! | Livraison gratuite dès 200 DH</span><button type="button" aria-label="Fermer l’annonce" onclick="closeAnnouncement()">×</button></div>
   <nav class="nav">
     <a href="#" class="logo">
       <span class="logo-icon">🥬</span>
@@ -857,6 +858,8 @@
   <div class="cart-items" id="cartItems"></div>
 
   <div class="cart-footer">
+
+    <div class="shipping-progress"><div id="shippingText">Ajoutez des produits pour profiter de la livraison gratuite dès 200 DH.</div><div class="shipping-progress-track"><div class="shipping-progress-bar" id="shippingProgressBar"></div></div></div>
 
     <div class="total-row">
       <span>Total</span>
@@ -1047,6 +1050,7 @@
   ========================= */
 
   const WHATSAPP_NUMBER = "212643880485";
+  const FREE_SHIPPING_THRESHOLD = 200;
   const ORDER_FORM_RESPONSE_URL = "https://docs.google.com/forms/d/e/1FAIpQLSehoScQrxRTyRqWgTY4oklJ11BotppPYkOgnEM-tZW712JliA/formResponse";
   const ORDER_FORM_FIELDS = {
     name: "entry.1211204224", phone: "entry.75017083", city: "entry.292690853",
@@ -1242,6 +1246,15 @@
 
     const total =
       document.getElementById("cartTotal");
+
+    const shippingText = document.getElementById("shippingText");
+    const shippingProgressBar = document.getElementById("shippingProgressBar");
+    const cartTotal = getCartTotal();
+    const remainingForFreeShipping = Math.max(0, FREE_SHIPPING_THRESHOLD - cartTotal);
+    shippingText.textContent = remainingForFreeShipping === 0
+      ? "🎉 Livraison gratuite ! / التوصيل مجاني"
+      : `🚚 Plus que ${remainingForFreeShipping.toFixed(2)} DH pour la livraison gratuite dès 200 DH.`;
+    shippingProgressBar.style.width = Math.min(100, (cartTotal / FREE_SHIPPING_THRESHOLD) * 100) + "%";
 
     count.textContent = getCartCount();
 
