@@ -1047,7 +1047,7 @@
       const formattedPrice = new Intl.NumberFormat("fr-MA", { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(product.price);
       const badge = product.badgeAr || product.badgeFr ? '<span class="product-badge">' + (product.badgeAr || "") + ' · ' + (product.badgeFr || "") + '</span>' : "";
       return '<article class="product group overflow-hidden rounded-2xl bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-lg">' +
-        '<div class="product-image"><img src="' + product.image + '" data-fallback="' + (product.imageFallback || "") + '" alt="' + product.nameAr + ' — ' + product.nameFr + '" loading="lazy" onerror="if(!this.dataset.fallbackUsed && this.dataset.fallback){this.dataset.fallbackUsed='1';this.src=this.dataset.fallback;}else{const icon=document.createElement('span');icon.className='image-fallback';icon.textContent='' + emoji + '';this.replaceWith(icon);}">' + badge + '</div>' +
+        '<div class="product-image"><img src="' + product.image + '" data-fallback="' + (product.imageFallback || "") + '" alt="' + product.nameAr + ' — ' + product.nameFr + '" loading="lazy">' + badge + '</div>' +
         '<div class="product-content"><div class="product-category">' + categoryLabels[product.category] + '</div>' +
         '<h3 class="product-title-ar" lang="ar" dir="rtl">' + product.nameAr + '</h3>' +
         '<p class="product-title-fr" lang="fr">' + product.nameFr + '</p>' +
@@ -1056,6 +1056,20 @@
         '<div class="product-bottom"><div class="price">' + formattedPrice + ' DH<span class="price-unit"> / ' + product.unit + '</span></div>' +
         '<button type="button" class="add-btn rounded-xl px-3 py-2 font-bold" data-add-to-cart="' + product.id + '">+ Ajouter</button></div></div></article>';
     }).join("");
+    container.querySelectorAll(".product-image img").forEach(image => {
+      image.addEventListener("error", function onImageError() {
+        if (!this.dataset.fallbackUsed && this.dataset.fallback) {
+          this.dataset.fallbackUsed = "true";
+          this.src = this.dataset.fallback;
+        } else {
+          const icon = document.createElement("span");
+          const product = products.find(item => item.nameAr === this.alt.split(" — ")[0]);
+          icon.className = "image-fallback";
+          icon.textContent = product && product.category === "packs" ? "🧺" : product && product.category === "fruits" ? "🍊" : "🥕";
+          this.replaceWith(icon);
+        }
+      });
+    });
     container.querySelectorAll("[data-add-to-cart]").forEach(button => {
       button.addEventListener("click", () => addToCart(button.dataset.addToCart));
     });
