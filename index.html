@@ -699,20 +699,28 @@
     .brand-video-heading{text-align:center;margin:0 auto 18px}
     .brand-video-heading h2{font-size:clamp(23px,3vw,32px);color:#193d29;margin-bottom:6px}
     .brand-video-heading p{font-size:13px;color:#718077}
-    .brand-video-frame{position:relative;aspect-ratio:16/9;width:100%;overflow:hidden;border:1px solid #e3ece3;border-radius:22px;background:linear-gradient(135deg,#eaf6ed,#fff5df);box-shadow:0 18px 48px #203f2914}
-    .brand-video-poster,.brand-video-player{position:absolute;inset:0;width:100%;height:100%}
-    .brand-video-poster{display:grid;place-items:center;padding:16px;transition:opacity .25s}
+    .brand-video-frame{display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(0,1fr);position:relative;aspect-ratio:16/9;width:100%;overflow:hidden;border:1px solid #e3ece3;border-radius:22px;background:linear-gradient(135deg,#eaf6ed,#fff5df);box-shadow:0 18px 48px #203f2914}
+    .brand-video-poster,.brand-video-player{grid-area:1/1;position:relative;inset:auto;width:100%;height:100%;min-width:0;min-height:0}
+    .brand-video-poster{z-index:0;display:grid;place-items:center;padding:16px;transition:opacity .25s}
     .brand-video-poster img{width:100%;height:100%;object-fit:contain}
-    .brand-video-player{object-fit:contain;opacity:0;transition:opacity .25s}
+    .brand-video-player{z-index:1;object-fit:contain;opacity:0;transition:opacity .25s}
     .brand-video-frame.has-frame .brand-video-player{opacity:1}
     .brand-video-frame.has-frame .brand-video-poster{opacity:0;pointer-events:none}
-    .brand-video-toggle{position:absolute;z-index:2;left:16px;bottom:16px;min-width:120px;min-height:44px;padding:10px 15px;border:1px solid #ffffff8a;border-radius:12px;background:#173c29ef;color:#fff;font-weight:800;font-size:13px;box-shadow:0 5px 18px #10231838}
+    .brand-video-toggle{position:relative;grid-area:1/1;align-self:end;justify-self:start;margin:0 0 16px 16px;z-index:2;min-width:120px;min-height:44px;padding:10px 15px;border:1px solid #ffffff8a;border-radius:12px;background:#173c29ef;color:#fff;font-weight:800;font-size:13px;box-shadow:0 5px 18px #10231838}
     .brand-video-toggle:focus-visible{outline:3px solid #e5a139;outline-offset:3px}
-    .brand-video-status{position:absolute;z-index:2;right:16px;bottom:16px;max-width:calc(100% - 160px);padding:7px 10px;border-radius:10px;background:#173c29bd;color:#fff;font-size:11px}
+    .brand-video-status{position:relative;grid-area:1/1;align-self:end;justify-self:end;margin:0 16px 16px 0;z-index:2;max-width:calc(100% - 160px);padding:7px 10px;border-radius:10px;background:#173c29bd;color:#fff;font-size:11px}
     @media(max-width:700px){.brand-video-section{padding:30px 15px 24px}.brand-video-frame{border-radius:15px}.brand-video-toggle{left:10px;bottom:10px;min-height:40px;min-width:108px;padding:8px 11px;font-size:11px}.brand-video-status{right:10px;bottom:10px;max-width:calc(100% - 135px);font-size:9px}}
     @media(prefers-reduced-motion:reduce){.brand-video-poster,.brand-video-player{transition:none}}
 
-  </style>
+  
+    /* Keep the complete 16:9 video and its controls aligned in one responsive frame. */
+    .brand-video-frame{display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(0,1fr)}
+    .brand-video-poster,.brand-video-player{grid-area:1/1;position:relative;inset:auto;width:100%;height:100%;min-width:0;min-height:0}
+    .brand-video-poster{z-index:0}
+    .brand-video-player{z-index:1}
+    .brand-video-toggle{position:relative;grid-area:1/1;align-self:end;justify-self:start;margin:0 0 16px 16px;z-index:2}
+    .brand-video-status{position:relative;grid-area:1/1;align-self:end;justify-self:end;margin:0 16px 16px 0;z-index:2}
+</style>
 </head>
 
 <body>
