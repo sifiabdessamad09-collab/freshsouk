@@ -1129,7 +1129,7 @@
      AFFICHAGE PRODUITS
   ========================= */
 
-  function renderProducts() {
+  function renderProducts() { if (!window.freshsoukCatalogReady) { if (!window.freshsoukCatalogLoading) { window.freshsoukCatalogLoading = true; fetch("./products.json").then(response => { if (!response.ok) throw new Error("Product data unavailable"); return response.json(); }).then(data => { products.splice(0, products.length, ...data.map(product => ({ ...product, name: product.nameFr, description: product.descriptionFr || "Produits frais du marché.", categoryLabel: categoryNames[product.category] || product.category, emoji: categoryEmoji[product.category] || "🥬" }))); window.freshsoukCatalogReady = true; renderProducts(); }).catch(() => { window.freshsoukCatalogReady = true; renderProducts(); }); } return; }
     const container = document.getElementById("productsContainer");
     const query = searchQuery.trim().toLocaleLowerCase();
     const visible = products.filter(product => {
