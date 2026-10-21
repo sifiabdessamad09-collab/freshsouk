@@ -771,10 +771,10 @@
       <button type="button" class="slider-dot" aria-label="Pack jus et fruits" aria-selected="false" onclick="currentSlide(2)"></button>
     </div>
     <div class="hero-slide active" style="background-image:url('https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=1100&q=88')">
-      <div class="hero-slide-content"><span class="hero-slide-badge">Choix familial · 180 DH</span><h3 lang="ar" dir="rtl">سلة السيمانة العائلية</h3><p>5kg بطاطس، 3kg طماطم، 2kg بصل وخضرة وفواكه طازجة.</p><button type="button" class="btn-primary" style="padding:8px 14px;font-size:11px" onclick="addToCart('')">+ Ajouter au panier</button></div>
+      <div class="hero-slide-content"><span class="hero-slide-badge">Choix familial · 180 DH</span><h3 lang="ar" dir="rtl">سلة السيمانة العائلية</h3><p>5kg بطاطس، 3kg طماطم، 2kg بصل وخضرة وفواكه طازجة.</p><button type="button" class="btn-primary" style="padding:8px 14px;font-size:11px" onclick="addToCart('pack-semaine-familial')">+ Ajouter au panier</button></div>
     </div>
     <div class="hero-slide" style="background-image:url('https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=1100&q=88')">
-      <div class="hero-slide-content"><span class="hero-slide-badge">Spécial couscous · 45 DH</span><h3 lang="ar" dir="rtl">سلة الكسكس الجمعة</h3><p>طماطم، جزر، قرعة، لفت، خيار، قزبور ومعدنوس.</p><button type="button" class="btn-primary" style="padding:8px 14px;font-size:11px" onclick="addToCart('pack-semaine-familial')">+ Ajouter au panier</button></div>
+      <div class="hero-slide-content"><span class="hero-slide-badge">Spécial couscous · 45 DH</span><h3 lang="ar" dir="rtl">سلة الكسكس الجمعة</h3><p>طماطم، جزر، قرعة، لفت، خيار، قزبور ومعدنوس.</p><button type="button" class="btn-primary" style="padding:8px 14px;font-size:11px" onclick="addToCart('pack-couscous-vendredi')">+ Ajouter au panier</button></div>
     </div>
     <div class="hero-slide" style="background-image:url('https://images.unsplash.com/photo-1619566636858-adf3ef46400b?auto=format&fit=crop&w=1100&q=88')">
       <div class="hero-slide-content"><span class="hero-slide-badge">Plein de vitamines · 95 DH</span><h3 lang="ar" dir="rtl">سلة العصائر والفواكه</h3><p>برتقال للعصير، فراولة، كيوي وبنان طري.</p><button type="button" class="btn-primary" style="padding:8px 14px;font-size:11px" onclick="addToCart('pack-jus-fruits')">+ Ajouter au panier</button></div>
@@ -1675,7 +1675,10 @@
     function showPoster(message) {
       status.textContent = message;
       frame.classList.remove("has-frame");
-      toggle.hidden = true;
+      toggle.hidden = false;
+      toggle.textContent = "▶ Lire";
+      toggle.setAttribute("aria-label", "Lire la vidéo");
+      toggle.setAttribute("aria-pressed", "false");
     }
     toggle.addEventListener("click", () => {
       if (video.paused) {
