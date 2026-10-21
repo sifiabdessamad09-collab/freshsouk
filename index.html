@@ -720,6 +720,15 @@
     .brand-video-player{z-index:1}
     .brand-video-toggle{position:relative;grid-area:1/1;align-self:end;justify-self:start;margin:0 0 16px 16px;z-index:2}
     .brand-video-status{position:relative;grid-area:1/1;align-self:end;justify-self:end;margin:0 16px 16px 0;z-index:2}
+    .product-count{display:inline-flex;align-items:center;gap:7px;margin-top:10px;padding:7px 12px;border:1px solid #d8eadb;border-radius:999px;background:#fff;color:var(--green-dark);font-size:13px;font-weight:800}
+    .reviews-section{max-width:1180px;margin:12px auto 64px;padding:0 20px}
+    .reviews-panel{display:flex;align-items:center;justify-content:space-between;gap:24px;padding:28px 32px;border:1px solid #dcebdd;border-radius:24px;background:linear-gradient(120deg,#f0f9f1,#fff9eb)}
+    .reviews-panel h2{font-size:clamp(23px,3vw,32px);margin-bottom:7px}
+    .reviews-panel p{color:var(--gray);max-width:620px}
+    .reviews-empty{display:inline-flex;margin-top:13px;padding:7px 11px;border-radius:999px;background:#fff;color:#55705c;font-size:13px;font-weight:700}
+    .reviews-contact{border:0;border-radius:13px;padding:13px 18px;background:var(--green);color:#fff;font-weight:800;white-space:nowrap;transition:transform .2s,background .2s}
+    .reviews-contact:hover{background:var(--green-dark);transform:translateY(-2px)}
+    @media(max-width:640px){.reviews-panel{align-items:flex-start;flex-direction:column;padding:23px}.reviews-contact{width:100%}.product-count{font-size:12px}}
 </style>
 </head>
 
@@ -845,6 +854,7 @@
     <div>
       <h2>Nos produits</h2>
       <p>Une sélection fraîche pour votre panier.</p>
+      <span class="product-count" id="productCount" aria-live="polite">Chargement des produits…</span>
     </div>
   </div>
 
@@ -860,6 +870,17 @@
 
   <div class="products" id="productsContainer"></div>
 
+</section>
+
+<section class="reviews-section" id="avis" aria-labelledby="reviewsTitle">
+  <div class="reviews-panel">
+    <div>
+      <h2 id="reviewsTitle">Avis de nos clients | آراء زبنائنا</h2>
+      <p>Votre avis nous aide à améliorer FreshSOUK. Les avis seront affichés ici après réception et validation.</p>
+      <span class="reviews-empty">Pas encore d’avis publié • مازال ما كاين حتى تقييم منشور</span>
+    </div>
+    <button class="reviews-contact" type="button" onclick="openWhatsApp()">💬 Partager mon avis</button>
+  </div>
 </section>
 
 </main>
@@ -1182,6 +1203,8 @@
       const text = `${product.nameFr} ${product.nameAr} ${product.descriptionFr} ${product.descriptionAr}`.toLocaleLowerCase();
       return matchesCategory && text.includes(query);
     });
+    const productCount = document.getElementById("productCount");
+    if (productCount) productCount.textContent = `${products.length} produits au catalogue · ${visible.length} affichés`;
     container.innerHTML = visible.length ? visible.map(product => `
       <article class="product">
         <div class="product-image">
