@@ -693,7 +693,7 @@
     @media(max-width:700px){.announcement-bar{font-size:10px;padding:7px 38px 7px 9px;line-height:1.4}.nav{gap:8px;flex-wrap:wrap;padding:9px 13px}.nav-links{display:flex;order:3;width:100%;justify-content:space-around;font-size:11px;gap:5px}.top-search{margin-left:auto;flex:1;min-width:90px;max-width:none;height:36px}.cart-btn{padding:7px 9px;font-size:11px}.hero{grid-template-columns:1fr;padding:38px 18px 34px;gap:15px;min-height:0}.hero h1{font-size:42px}.hero p{font-size:13px}.hero-card{min-height:255px;width:88%;margin:12px auto}.hero-slider-container{min-height:280px;width:94%;margin:10px auto}.hero-slide{padding:19px}.hero-slide-content h3{font-size:19px}.hero-slide-content p{font-size:11px}.features{padding:13px 16px 25px;grid-template-columns:1fr}.feature{display:grid;grid-template-columns:38px 1fr;column-gap:10px;padding:13px}.feature-icon{grid-row:span 2;margin:0}.feature p{grid-column:2}.section{padding:42px 15px}.section-title h2{font-size:28px}.catalog-tools{align-items:stretch;flex-direction:column}.category-tabs{overflow:auto;flex-wrap:nowrap;padding-bottom:3px;scrollbar-width:thin}.category-tab{white-space:nowrap;padding-inline:12px;min-height:35px}.catalog-search{width:100%}.products{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.product-image{height:clamp(125px,38vw,180px)}.product-content{padding:10px}.product-description{display:block;min-height:0;font-size:9px}.product-bottom{align-items:stretch;flex-direction:column;gap:8px}.product-actions{gap:5px}.product-actions button{font-size:9px;padding:9px 3px}.hero-trust{gap:6px;margin-top:14px}.hero-trust span{font-size:9px;padding:7px 8px}.hero-buttons{gap:8px}.btn-primary,.btn-secondary{padding:11px 12px;font-size:10px}}
     @media(max-width:700px){.trust-strip{grid-template-columns:1fr;margin:0 15px 12px;padding:0;gap:8px}.trust-item{padding:12px}.cart-breakdown{font-size:12px}}
     @media(max-width:420px){.nav .top-search{order:3;flex:1 1 100%;width:100%;max-width:none;min-width:0;margin:0}.nav .cart-btn{order:2;margin-left:auto}.nav .nav-links{order:4}.product-actions{grid-template-columns:1fr}.product-actions button{min-height:40px;white-space:normal;font-size:11px}}@media(max-width:380px){.hero h1{font-size:36px}.nav-links{font-size:10px}.product h3,.product-ar{font-size:12px}.price{font-size:13px}}
-    @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+    .logo-image{width:56px;height:56px;object-fit:contain;display:block;flex:0 0 auto}@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
   </style>
 </head>
 
@@ -703,7 +703,7 @@
   <div class="announcement-bar" id="announcementBar"><span>🚚 التوصيل مجاني في الدار البيضاء للطلبات فوق 200 درهم! | Livraison gratuite dès 200 DH</span><button type="button" aria-label="Fermer l’annonce" onclick="closeAnnouncement()">×</button></div>
   <nav class="nav">
     <a href="#" class="logo">
-      <span class="logo-icon">🥬</span>
+      <img class="logo-image" src="./freshsouk-logo.png" alt="FreshSOUK">
       FreshSOUK
     </a>
 
@@ -829,7 +829,7 @@
 
     <div>
       <div class="logo" style="color:white;">
-        <span class="logo-icon">🥬</span>
+        <img class="logo-image" src="./freshsouk-logo.png" alt="FreshSOUK">
         FreshSOUK
       </div>
 
