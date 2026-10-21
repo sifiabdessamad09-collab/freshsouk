@@ -1124,6 +1124,10 @@
   let searchQuery = "";
 
   let cart = JSON.parse(localStorage.getItem("freshsouk_cart")) || [];
+  cart = Array.isArray(cart)
+    ? cart.filter(item => item && typeof item.id === "string" && item.id !== "undefined" && Number.isFinite(Number(item.price)) && Number.isFinite(Number(item.quantity)))
+    : [];
+  if (!cart.length) localStorage.setItem("freshsouk_cart", JSON.stringify(cart));
 
   let slideIndex = 0;
   const heroSlides = Array.from(document.querySelectorAll(".hero-slide"));
