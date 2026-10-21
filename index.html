@@ -1023,9 +1023,9 @@
 </a>
 
 <script type="application/json" id="productData">[
- {"id":"pack-familial","nameAr":"سلة السيمانة العائلية","nameFr":"Panier Semaine Familial","category":"packs","price":180,"unit":"pack","image":"/images/products/pack-familial.jpg","imageFallback":"https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=800&q=85","badgeAr":"اختيار العائلة","badgeFr":"Choix familial","descriptionAr":"5kg بطاطس، 3kg طماطم، 2kg بصل، 2kg جزر، 1kg خيار، 2kg تفاح، 2kg بنان","descriptionFr":"5kg pommes de terre, 3kg tomates, 2kg oignons, 2kg carottes, concombre et fruits."},
- {"id":"pack-couscous","nameAr":"سلة الكسكس الجمعة","nameFr":"Panier Couscous du Vendredi","category":"packs","price":45,"unit":"pack","image":"/images/products/pack-couscous.jpg","imageFallback":"https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=800&q=85","badgeAr":"للكسكس","badgeFr":"Spécial couscous","descriptionAr":"طماطم، جزر، قرعة حمراء وخضراء، لفت، خيار، ربيع ومقدنوس","descriptionFr":"Tomates, carottes, courges, navets, concombre, coriandre et persil."},
- {"id":"pack-jus-fruits","nameAr":"سلة العصائر والفواكه","nameFr":"Panier Jus & Fruits Fresh","category":"packs","price":95,"unit":"pack","image":"/images/products/pack-jus.jpg","imageFallback":"https://images.unsplash.com/photo-1619566636858-adf3ef46400b?auto=format&fit=crop&w=800&q=85","badgeAr":"منعش","badgeFr":"Plein de vitamines","descriptionAr":"3kg برتقال للعصير، 1kg فراولة، 1kg كيوي، 2kg بنان","descriptionFr":"3kg oranges à jus, fraises, kiwis et bananes."},
+ {"id":"pack-familial","nameAr":"سلة السيمانة العائلية","nameFr":"Panier Semaine Familial","category":"packs","price":180,"unit":"pack","image":"./pack-familial.jpg","imageFallback":"https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=800&q=85","badgeAr":"اختيار العائلة","badgeFr":"Choix familial","descriptionAr":"5kg بطاطس، 3kg طماطم، 2kg بصل، 2kg جزر، 1kg خيار، 2kg تفاح، 2kg بنان","descriptionFr":"5kg pommes de terre, 3kg tomates, 2kg oignons, 2kg carottes, concombre et fruits."},
+ {"id":"pack-couscous","nameAr":"سلة الكسكس الجمعة","nameFr":"Panier Couscous du Vendredi","category":"packs","price":45,"unit":"pack","image":"./pack-couscous.jpg","imageFallback":"https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=800&q=85","badgeAr":"للكسكس","badgeFr":"Spécial couscous","descriptionAr":"طماطم، جزر، قرعة حمراء وخضراء، لفت، خيار، ربيع ومقدنوس","descriptionFr":"Tomates, carottes, courges, navets, concombre, coriandre et persil."},
+ {"id":"pack-jus-fruits","nameAr":"سلة العصائر والفواكه","nameFr":"Panier Jus & Fruits Fresh","category":"packs","price":95,"unit":"pack","image":"./pack-jus.jpg","imageFallback":"https://images.unsplash.com/photo-1619566636858-adf3ef46400b?auto=format&fit=crop&w=800&q=85","badgeAr":"منعش","badgeFr":"Plein de vitamines","descriptionAr":"3kg برتقال للعصير، 1kg فراولة، 1kg كيوي، 2kg بنان","descriptionFr":"3kg oranges à jus, fraises, kiwis et bananes."},
  {"id":"pomme-de-terre","nameAr":"بطاطس طرية","nameFr":"Pommes de terre","category":"legumes","price":7,"unit":"Kg","image":"/images/products/pomme-de-terre.jpg","imageFallback":"https://images.unsplash.com/photo-1518977676601-b53f82aba655?auto=format&fit=crop&w=800&q=85","badgeAr":"100% طري","badgeFr":"100% Frais","descriptionAr":"بطاطس طرية للاستعمال اليومي","descriptionFr":"Pommes de terre fraîches pour vos recettes."},
  {"id":"tomates","nameAr":"طماطم حمراء ممتازة","nameFr":"Tomates","category":"legumes","price":8,"unit":"Kg","image":"/images/products/tomates.jpg","imageFallback":"https://images.unsplash.com/photo-1546094096-0df4bcaaa337?auto=format&fit=crop&w=800&q=85","badgeAr":"محلية","badgeFr":"Locales","descriptionAr":"طماطم حمراء ناضجة","descriptionFr":"Tomates rouges et mûres."},
  {"id":"oignons-rouges","nameAr":"بصل أحمر","nameFr":"Oignons rouges","category":"legumes","price":6,"unit":"Kg","image":"/images/products/oignons-rouges.jpg","imageFallback":"https://images.unsplash.com/photo-1508747703725-719777637510?auto=format&fit=crop&w=800&q=85","descriptionAr":"بصل أحمر طري","descriptionFr":"Oignons rouges du marché."},
@@ -1140,7 +1140,7 @@
     container.innerHTML = visible.length ? visible.map(product => `
       <article class="product">
         <div class="product-image">
-          <img src="${product.imageFallback || product.image}" alt="${product.nameFr}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='grid'">
+          <img src="${product.image}" data-fallback="${product.imageFallback || ''}" alt="${product.nameFr}" loading="lazy" decoding="async" onerror="if(this.dataset.fallback){this.src=this.dataset.fallback;this.dataset.fallback='';}else{this.style.display='none';this.nextElementSibling.style.display='grid'}">
           <span class="product-emoji" style="display:none">${product.emoji}</span>
           ${(product.badgeFr || product.badgeAr) ? `<span class="product-badge ${product.category === "packs" ? "product-badge-gold" : "product-badge-green"}">${product.badgeFr || product.badgeAr}</span>` : ""}
         </div>
@@ -1464,7 +1464,7 @@
 
   }
 
-  function saveOrderToPrivateSheet(fields) {
+  function saveOrderToPrivateSheet(fields) { if (!fields.name || !fields.phone || !fields.city || !fields.address || !fields.slot) return Promise.resolve(false);
     return new Promise((resolve, reject) => {
       const frame = document.createElement("iframe");
       const frameName = "freshsouk-order-" + Date.now();
