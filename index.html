@@ -729,6 +729,10 @@
     .reviews-contact{border:0;border-radius:13px;padding:13px 18px;background:var(--green);color:#fff;font-weight:800;white-space:nowrap;transition:transform .2s,background .2s}
     .reviews-contact:hover{background:var(--green-dark);transform:translateY(-2px)}
     @media(max-width:640px){.reviews-panel{align-items:flex-start;flex-direction:column;padding:23px}.reviews-contact{width:100%}.product-count{font-size:12px}}
+    .reviews-panel{display:grid;grid-template-columns:.85fr 1.15fr;align-items:start}
+    .reviews-copy{padding:7px 0}.reviews-note{display:block;margin-top:14px;color:#55705c;font-size:13px;line-height:1.6}
+    .review-form{display:grid;gap:12px}.review-fields{display:grid;grid-template-columns:1fr 1fr;gap:12px}.review-form label{display:grid;gap:6px;color:#35533d;font-size:13px;font-weight:750}.review-form input,.review-form select,.review-form textarea{width:100%;padding:11px;border:1px solid #dce8de;border-radius:11px;background:#fff;color:var(--dark);font:inherit;font-size:13px}.review-form textarea{min-height:95px;resize:vertical}.review-message{grid-column:1/-1}.review-form .reviews-contact{justify-self:start}
+    @media(max-width:640px){.reviews-panel{grid-template-columns:1fr}.review-fields{grid-template-columns:1fr}.review-message{grid-column:auto}.review-form .reviews-contact{width:100%}}
 </style>
 </head>
 
@@ -874,12 +878,32 @@
 
 <section class="reviews-section" id="avis" aria-labelledby="reviewsTitle">
   <div class="reviews-panel">
-    <div>
+    <div class="reviews-copy">
       <h2 id="reviewsTitle">Avis de nos clients | آراء زبنائنا</h2>
-      <p>Votre avis nous aide à améliorer FreshSOUK. Les avis seront affichés ici après réception et validation.</p>
-      <span class="reviews-empty">Pas encore d’avis publié • مازال ما كاين حتى تقييم منشور</span>
+      <p>Votre avis nous aide à améliorer FreshSOUK. Donnez une note et partagez votre expérience.</p>
+      <span class="reviews-note">Votre message s’ouvrira dans WhatsApp. Il sera affiché sur le site après vérification.</span>
     </div>
-    <button class="reviews-contact" type="button" onclick="openWhatsApp()">💬 Partager mon avis</button>
+    <form class="review-form" id="reviewForm" onsubmit="submitReview(event)">
+      <div class="review-fields">
+        <label for="reviewName">Nom (facultatif)
+          <input id="reviewName" name="name" maxlength="50" autocomplete="name" placeholder="Votre prénom">
+        </label>
+        <label for="reviewRating">Votre note
+          <select id="reviewRating" name="rating" required>
+            <option value="">Choisissez une note</option>
+            <option value="5">★★★★★ — Excellent</option>
+            <option value="4">★★★★☆ — Très bien</option>
+            <option value="3">★★★☆☆ — Bien</option>
+            <option value="2">★★☆☆☆ — Moyen</option>
+            <option value="1">★☆☆☆☆ — À améliorer</option>
+          </select>
+        </label>
+        <label class="review-message" for="reviewText">Votre avis
+          <textarea id="reviewText" name="review" maxlength="500" required placeholder="Racontez votre expérience (500 caractères maximum)…"></textarea>
+        </label>
+      </div>
+      <button class="reviews-contact" type="submit">💬 Envoyer mon avis sur WhatsApp</button>
+    </form>
   </div>
 </section>
 
@@ -1514,6 +1538,20 @@
   /* =========================
      WHATSAPP
   ========================= */
+
+  function submitReview(event) {
+    event.preventDefault();
+    const name = document.getElementById("reviewName").value.trim();
+    const rating = document.getElementById("reviewRating").value;
+    const review = document.getElementById("reviewText").value.trim();
+    if (!rating || !review) return;
+    const message = "Bonjour FreshSOUK 👋\n\nJe souhaite partager mon avis :\n" +
+      "Note : " + rating + "/5\n" +
+      (name ? "Nom : " + name + "\n" : "") +
+      "Avis : " + review + "\n\nMerci.";
+    const url = "https://api.whatsapp.com/send/?phone=" + WHATSAPP_NUMBER + "&text=" + encodeURIComponent(message);
+    window.open(url, "_blank", "noopener,noreferrer");
+  }
 
   function openWhatsApp() {
 
