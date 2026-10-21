@@ -692,8 +692,8 @@
     @media(max-width:1000px){.nav{gap:12px}.nav-links{gap:12px}.top-search{min-width:130px}.hero{padding-inline:28px;gap:28px}.products{grid-template-columns:repeat(3,minmax(0,1fr))}}
     @media(max-width:700px){.announcement-bar{font-size:10px;padding:7px 38px 7px 9px;line-height:1.4}.nav{gap:8px;flex-wrap:wrap;padding:9px 13px}.nav-links{display:flex;order:3;width:100%;justify-content:space-around;font-size:11px;gap:5px}.top-search{margin-left:auto;flex:1;min-width:90px;max-width:none;height:36px}.cart-btn{padding:7px 9px;font-size:11px}.hero{grid-template-columns:1fr;padding:38px 18px 34px;gap:15px;min-height:0}.hero h1{font-size:42px}.hero p{font-size:13px}.hero-card{min-height:255px;width:88%;margin:12px auto}.hero-slider-container{min-height:280px;width:94%;margin:10px auto}.hero-slide{padding:19px}.hero-slide-content h3{font-size:19px}.hero-slide-content p{font-size:11px}.features{padding:13px 16px 25px;grid-template-columns:1fr}.feature{display:grid;grid-template-columns:38px 1fr;column-gap:10px;padding:13px}.feature-icon{grid-row:span 2;margin:0}.feature p{grid-column:2}.section{padding:42px 15px}.section-title h2{font-size:28px}.catalog-tools{align-items:stretch;flex-direction:column}.category-tabs{overflow:auto;flex-wrap:nowrap;padding-bottom:3px;scrollbar-width:thin}.category-tab{white-space:nowrap;padding-inline:12px;min-height:35px}.catalog-search{width:100%}.products{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.product-image{height:clamp(125px,38vw,180px)}.product-content{padding:10px}.product-description{display:block;min-height:0;font-size:9px}.product-bottom{align-items:stretch;flex-direction:column;gap:8px}.product-actions{gap:5px}.product-actions button{font-size:9px;padding:9px 3px}.hero-trust{gap:6px;margin-top:14px}.hero-trust span{font-size:9px;padding:7px 8px}.hero-buttons{gap:8px}.btn-primary,.btn-secondary{padding:11px 12px;font-size:10px}}
     @media(max-width:700px){.trust-strip{grid-template-columns:1fr;margin:0 15px 12px;padding:0;gap:8px}.trust-item{padding:12px}.cart-breakdown{font-size:12px}}
-    @media(max-width:380px){.hero h1{font-size:36px}.nav-links{font-size:10px}.product h3,.product-ar{font-size:12px}.price{font-size:13px}}
-    @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+    @media(max-width:420px){.nav .top-search{order:3;flex:1 1 100%;width:100%;max-width:none;min-width:0;margin:0}.nav .cart-btn{order:2;margin-left:auto}.nav .nav-links{order:4}.product-actions{grid-template-columns:1fr}.product-actions button{min-height:40px;white-space:normal;font-size:11px}}@media(max-width:380px){.hero h1{font-size:36px}.nav-links{font-size:10px}.product h3,.product-ar{font-size:12px}.price{font-size:13px}}
+    .logo-image{width:56px;height:56px;object-fit:contain;display:block;flex:0 0 auto}@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
   </style>
 </head>
 
@@ -703,7 +703,7 @@
   <div class="announcement-bar" id="announcementBar"><span>🚚 التوصيل مجاني في الدار البيضاء للطلبات فوق 200 درهم! | Livraison gratuite dès 200 DH</span><button type="button" aria-label="Fermer l’annonce" onclick="closeAnnouncement()">×</button></div>
   <nav class="nav">
     <a href="#" class="logo">
-      <span class="logo-icon">🥬</span>
+      <img class="logo-image" src="./freshsouk-logo.png" alt="FreshSOUK">
       FreshSOUK
     </a>
 
@@ -829,7 +829,7 @@
 
     <div>
       <div class="logo" style="color:white;">
-        <span class="logo-icon">🥬</span>
+        <img class="logo-image" src="./freshsouk-logo.png" alt="FreshSOUK">
         FreshSOUK
       </div>
 
@@ -1023,9 +1023,9 @@
 </a>
 
 <script type="application/json" id="productData">[
- {"id":"pack-familial","nameAr":"سلة السيمانة العائلية","nameFr":"Panier Semaine Familial","category":"packs","price":180,"unit":"pack","image":"/images/products/pack-familial.jpg","imageFallback":"https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=800&q=85","badgeAr":"اختيار العائلة","badgeFr":"Choix familial","descriptionAr":"5kg بطاطس، 3kg طماطم، 2kg بصل، 2kg جزر، 1kg خيار، 2kg تفاح، 2kg بنان","descriptionFr":"5kg pommes de terre, 3kg tomates, 2kg oignons, 2kg carottes, concombre et fruits."},
- {"id":"pack-couscous","nameAr":"سلة الكسكس الجمعة","nameFr":"Panier Couscous du Vendredi","category":"packs","price":45,"unit":"pack","image":"/images/products/pack-couscous.jpg","imageFallback":"https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=800&q=85","badgeAr":"للكسكس","badgeFr":"Spécial couscous","descriptionAr":"طماطم، جزر، قرعة حمراء وخضراء، لفت، خيار، ربيع ومقدنوس","descriptionFr":"Tomates, carottes, courges, navets, concombre, coriandre et persil."},
- {"id":"pack-jus-fruits","nameAr":"سلة العصائر والفواكه","nameFr":"Panier Jus & Fruits Fresh","category":"packs","price":95,"unit":"pack","image":"/images/products/pack-jus.jpg","imageFallback":"https://images.unsplash.com/photo-1619566636858-adf3ef46400b?auto=format&fit=crop&w=800&q=85","badgeAr":"منعش","badgeFr":"Plein de vitamines","descriptionAr":"3kg برتقال للعصير، 1kg فراولة، 1kg كيوي، 2kg بنان","descriptionFr":"3kg oranges à jus, fraises, kiwis et bananes."},
+ {"id":"pack-familial","nameAr":"سلة السيمانة العائلية","nameFr":"Panier Semaine Familial","category":"packs","price":180,"unit":"pack","image":"./pack-familial.jpg","imageFallback":"https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=800&q=85","badgeAr":"اختيار العائلة","badgeFr":"Choix familial","descriptionAr":"5kg بطاطس، 3kg طماطم، 2kg بصل، 2kg جزر، 1kg خيار، 2kg تفاح، 2kg بنان","descriptionFr":"5kg pommes de terre, 3kg tomates, 2kg oignons, 2kg carottes, concombre et fruits."},
+ {"id":"pack-couscous","nameAr":"سلة الكسكس الجمعة","nameFr":"Panier Couscous du Vendredi","category":"packs","price":45,"unit":"pack","image":"./pack-couscous.jpg","imageFallback":"https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=800&q=85","badgeAr":"للكسكس","badgeFr":"Spécial couscous","descriptionAr":"طماطم، جزر، قرعة حمراء وخضراء، لفت، خيار، ربيع ومقدنوس","descriptionFr":"Tomates, carottes, courges, navets, concombre, coriandre et persil."},
+ {"id":"pack-jus-fruits","nameAr":"سلة العصائر والفواكه","nameFr":"Panier Jus & Fruits Fresh","category":"packs","price":95,"unit":"pack","image":"./pack-jus.jpg","imageFallback":"https://images.unsplash.com/photo-1619566636858-adf3ef46400b?auto=format&fit=crop&w=800&q=85","badgeAr":"منعش","badgeFr":"Plein de vitamines","descriptionAr":"3kg برتقال للعصير، 1kg فراولة، 1kg كيوي، 2kg بنان","descriptionFr":"3kg oranges à jus, fraises, kiwis et bananes."},
  {"id":"pomme-de-terre","nameAr":"بطاطس طرية","nameFr":"Pommes de terre","category":"legumes","price":7,"unit":"Kg","image":"/images/products/pomme-de-terre.jpg","imageFallback":"https://images.unsplash.com/photo-1518977676601-b53f82aba655?auto=format&fit=crop&w=800&q=85","badgeAr":"100% طري","badgeFr":"100% Frais","descriptionAr":"بطاطس طرية للاستعمال اليومي","descriptionFr":"Pommes de terre fraîches pour vos recettes."},
  {"id":"tomates","nameAr":"طماطم حمراء ممتازة","nameFr":"Tomates","category":"legumes","price":8,"unit":"Kg","image":"/images/products/tomates.jpg","imageFallback":"https://images.unsplash.com/photo-1546094096-0df4bcaaa337?auto=format&fit=crop&w=800&q=85","badgeAr":"محلية","badgeFr":"Locales","descriptionAr":"طماطم حمراء ناضجة","descriptionFr":"Tomates rouges et mûres."},
  {"id":"oignons-rouges","nameAr":"بصل أحمر","nameFr":"Oignons rouges","category":"legumes","price":6,"unit":"Kg","image":"/images/products/oignons-rouges.jpg","imageFallback":"https://images.unsplash.com/photo-1508747703725-719777637510?auto=format&fit=crop&w=800&q=85","descriptionAr":"بصل أحمر طري","descriptionFr":"Oignons rouges du marché."},
@@ -1129,7 +1129,7 @@
      AFFICHAGE PRODUITS
   ========================= */
 
-  function renderProducts() {
+  function renderProducts() { if (!window.freshsoukCatalogReady) { if (!window.freshsoukCatalogLoading) { window.freshsoukCatalogLoading = true; fetch("./products.json").then(response => { if (!response.ok) throw new Error("Product data unavailable"); return response.json(); }).then(data => { products.splice(0, products.length, ...data.map(product => ({ ...product, name: product.nameFr, description: product.descriptionFr || "Produits frais du marché.", categoryLabel: categoryNames[product.category] || product.category, emoji: categoryEmoji[product.category] || "🥬" }))); window.freshsoukCatalogReady = true; renderProducts(); }).catch(() => { window.freshsoukCatalogReady = true; renderProducts(); }); } return; }
     const container = document.getElementById("productsContainer");
     const query = searchQuery.trim().toLocaleLowerCase();
     const visible = products.filter(product => {
@@ -1140,7 +1140,7 @@
     container.innerHTML = visible.length ? visible.map(product => `
       <article class="product">
         <div class="product-image">
-          <img src="${product.imageFallback || product.image}" alt="${product.nameFr}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='grid'">
+          <img src="${product.image}" data-fallback="${product.imageFallback || ''}" alt="${product.nameFr}" loading="lazy" decoding="async" onerror="if(this.dataset.fallback){this.src=this.dataset.fallback;this.dataset.fallback='';}else{this.style.display='none';this.nextElementSibling.style.display='grid'}">
           <span class="product-emoji" style="display:none">${product.emoji}</span>
           ${(product.badgeFr || product.badgeAr) ? `<span class="product-badge ${product.category === "packs" ? "product-badge-gold" : "product-badge-green"}">${product.badgeFr || product.badgeAr}</span>` : ""}
         </div>
@@ -1464,7 +1464,7 @@
 
   }
 
-  function saveOrderToPrivateSheet(fields) {
+  function saveOrderToPrivateSheet(fields) { if (!fields.name || !fields.phone || !fields.city || !fields.address || !fields.slot) return Promise.resolve(false);
     return new Promise((resolve, reject) => {
       const frame = document.createElement("iframe");
       const frameName = "freshsouk-order-" + Date.now();
