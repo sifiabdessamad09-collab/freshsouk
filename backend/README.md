@@ -1,31 +1,47 @@
-# FreshSOUK backend séparé — commandes privées
+# FreshSOUK — إعداد السيرفر الخاص
 
-**Statut : préparation uniquement.** Ce service n'est pas déployé et le site public ne lui envoie pas encore les commandes. Les commandes continuent donc d'utiliser le flux actuellement configuré dans le site. Ne pas annoncer au client qu'une commande est enregistrée par ce backend avant d'avoir terminé le raccordement et les essais.
+## شنو واجد فالكود
 
-## Fichiers
+- `worker.js`: API كيتأكد من المنتوج والثمن والكمية والتوصيل فالسيرفر، وكيحفظ الطلب فـ Cloudflare D1.
+- `schema.sql`: جداول الطلبات، تاريخ الحالات، اشتراكات FreshSOUK Hebdo، وتكوين FreshSOUK Club المطفي.
+- `admin.html`: لوحة كتخدم من نفس نطاق الـ Worker؛ الولوج والـ API محميين بـ Cloudflare Access.
+- `wrangler.toml`: قالب إعداد، خاص يتعمر بمعرّف قاعدة البيانات ومعلومات Access ديالك.
 
-- worker.js : API Cloudflare Worker. Vérifie les produits et les prix côté serveur, calcule la livraison, vérifie le JWT Cloudflare Access et utilise une clé d'idempotence contre les doublons.
-- schema.sql : tables privées des commandes et de leur historique.
-- wrangler.toml : modèle de configuration avec identifiants à remplacer dans le compte Cloudflare.
+الداتا الخاصة ما كايناش فـ GitHub Pages ولا فـ JavaScript ديال المتصفح. الصفحة كتقول «تسجلات الطلبية» غير من بعد ما يرجع السيرفر بإيصال ناجح. الطلب السريع عبر WhatsApp غير طلب أولي وما كيتسجلش كطلبية كاملة بلا العنوان والموعد.
 
-La base D1 reste privée. Aucun mot de passe ou jeton n'est inclus dans le navigateur. L'envoi public des commandes est limité; la consultation et le changement de statut exigent un JWT Access valide. La règle Cloudflare Access doit aussi être limitée à ton compte.
+## شنو خاص يتدار فـ Cloudflare
 
-## Mise en service (dans ton compte Cloudflare)
+1. ثبّت Cloudflare Wrangler وسجّل الدخول للحساب ديالك.
+2. أنشئ D1 باسم `freshsouk-orders` وخذ `database_id` اللي غادي يعطيك Cloudflare.
+3. حط المعرّف فـ `backend/wrangler.toml`، ومن جذر المشروع نفّذ:
 
-1. Crée une base D1 nommée freshsouk-orders, copie son identifiant dans wrangler.toml puis exécute le schéma : npx wrangler d1 execute freshsouk-orders --remote --file=backend/schema.sql
-2. Remplace les valeurs REPLACE_WITH dans wrangler.toml par l'identifiant D1, le domaine de ton équipe Access et l'audience de l'application. Garde la politique Access réservée à ton compte.
-3. Depuis la racine du dépôt, déploie avec npx wrangler deploy --config backend/wrangler.toml. Configure la liaison des assets selon la version Wrangler utilisée si Cloudflare signale un chemin invalide.
-4. Vérifie /api/health puis prépare une commande de test avec des données fictives. Vérifie qu'un même Idempotency-Key ne crée pas une seconde ligne, que le Worker recalcule les prix/livraison et qu'un appel admin sans JWT reçoit 401.
-5. Ajoute l'URL du Worker au site et raccorde le checkout : envoyer customer et items avec productId/quantity ainsi que Idempotency-Key. Le site ne doit vider le panier ni annoncer une commande enregistrée qu'après la réponse ok:true.
-6. Crée et protège l'écran d'administration avec Cloudflare Access; ne renvoie jamais les données admin à une page non authentifiée.
+   ```sh
+   npx wrangler d1 execute freshsouk-orders --remote --file=backend/schema.sql --config=backend/wrangler.toml
+   ```
 
-## Reste à faire avant production
+4. أنشئ Access application على نطاق الـ Worker، وخلي policy ديال السماح فيها غير الإيميل ديالك. حمي المسارين `/admin*` و`/api/admin/*`. خلي `/api/orders` و`/api/subscriptions` مفتوحين للإرسال العمومي فقط؛ ما تحميهمش بتسجيل الدخول حيث الزبون خاصو يقدر يرسل طلبه. البيانات ديال الإدارة ما كترجعش إلا مع JWT صحيح من Access.
+5. دخل `ACCESS_TEAM_DOMAIN` و`ACCESS_AUD` اللي كيولدهم Access فـ `wrangler.toml`. ما تحط حتى سر أو JWT فـ `index.html`.
+6. نشر الـ Worker:
 
-- créer la base et les règles Access dans ton compte;
-- déployer le Worker et tester les liaisons D1/assets;
-- raccorder le checkout et créer un tableau de bord admin privé;
-- ajouter quartier, identifiant, statistiques et export CSV dans le dashboard;
-- tester l'enregistrement et le refus d'accès sans authentification;
-- configurer domaine, cookies et CORS. Si les cookies Access sont bloqués depuis github.io, utiliser un domaine personnalisé servi via Cloudflare.
+   ```sh
+   npx wrangler deploy --config backend/wrangler.toml
+   ```
 
-Les paniers repas sur la branche sont des estimations éditables basées sur les prix actuels; ils ne changent pas les prix des packs existants. Fidélité et commandes hebdomadaires restent désactivées jusqu'à validation et intégration.
+7. جرّب `/api/health`، وتأكد أن `/api/admin/orders` بلا دخول كترجع `401`. من بعد حط رابط Worker العمومي فقط فـ `ORDER_API_URL` داخل `index.html`، مثال: `https://freshsouk-orders-api.<account>.workers.dev`.
+8. عاود جرّب الطلبات التجريبية ببيانات وهمية، وتأكّد أن CSV كيتحل فـ Excel وأن الحساب ديال Access كيبقى ديالك بوحدك. ما تستعملش بيانات زبون حقيقي للاختبار.
+
+## لوحة الإدارة
+
+من بعد إعداد Access وWorker، حلّ `https://<worker-domain>/admin`. اللوحة فيها البحث والتاريخ والحالة والتفاصيل وتاريخ تغييرات الحالة وتصدير CSV للإكسل. الأرقام ديال المداخيل كتحسب الطلبات اللي حالتها «تسلّم» فقط. التصدير كيهرب قيم الخلايا اللي ممكن Excel يفسرها كصيغ.
+
+## FreshSOUK Hebdo
+
+الزبون كيعطي موافقة صريحة وكيختار الباك والتكرار والنهار والوقت. اللوحة كتسمح للمالك يوقف أو يرجع أو يلغي الاشتراك. زر «وجد تذكير» كيوجد رسالة WhatsApp وما كيبعثهاش بوحدو. من بعد ما يجاوب الزبون بالتأكيد، المالك هو اللي يضغط «أكد وصايب الطلب». الطلب كيتسجل مرة وحدة وبالثمن الحالي ديال الباك. ما كاين لا اقتطاع تلقائي لا إرسال WhatsApp آلي.
+
+## FreshSOUK Club
+
+الجداول وتهيئة القواعد موجودين ولكن البرنامج **مطفي**. `1 DH = 1 point` و`500 points = 20 DH` غير أمثلة؛ ما كيتعطى حتى point وما كايناش مكافأة قابلة للاستعمال حتى تصادق على القواعد وشروطها. ما تشعلش `enabled` أوتوماتيكياً.
+
+## الحالة دابا
+
+هاد الملفات واجدة للمراجعة، ولكن مازال ما تدار لا قاعدة D1 ولا إعداد Access ولا نشر Worker، و`ORDER_API_URL` باقية خاوية. بالتالي لا الطلبات الخاصة ولا الاشتراكات غادي يتسجلو بهاد السيرفر حتى تدوز خطوات Cloudflare وتدار اختبارات بعد النشر. الموقع الرئيسي وWhatsApp ديالو ما تبدلوش بهاد التعديل المحلي.

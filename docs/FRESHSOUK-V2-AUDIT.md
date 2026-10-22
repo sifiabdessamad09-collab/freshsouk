@@ -1,61 +1,65 @@
-# FreshSOUK V2.0 — Audit initial
+# FreshSOUK V2 — المراجعة والتغييرات
 
-Date de l’audit : 21 octobre 2026  
-Branche de travail : feature/freshsouk-v2
-Base examinée : main
+**الفرع:** `feature/freshsouk-v2`
+**الموقع الأصلي:** GitHub Pages
+**الحالة:** التعديلات محلية للمراجعة؛ ما تدار لا عملية دمج ولا نشر للموقع.
 
-> Cet audit décrit l’état réel du dépôt. Aucun changement n’est publié sur le site de production depuis cette branche.
+## شنو كان موجود قبل التعديل
 
-## Résumé
+- الموقع صفحة HTML ثابتة فيها الهوية، اللوجو، الفيديو، الكتالوج، البحث والتصنيفات، سلة الشراء، نموذج العنوان والوقت، رسائل WhatsApp، وتجميع التقييمات برسالة WhatsApp.
+- الكتالوج فيه 31 منتوج: 3 سلات، 17 خضرة، و11 فاكهة. الثمن، مصاريف التوصيل، حد التوصيل المجاني ورقم WhatsApp بقوا كيف كانوا.
+- صور الكتالوج المحلية كانت ناقصة، والموقع كان كيعتمد على صور Unsplash خارجية كاحتياط. بعض روابط الصور كانت كتعرض منتوج مختلف: الجلبانة موز، اللوبيا دواء، والأعشاب بروكولي.
+- الطلبات كانت كتدوز عبر Google Forms فـ iframe. المتصفح ما يقدرش يعرف واش Google Forms سجّل السطر فعلاً، لذلك ما كانش كاين إيصال موثوق.
+- ما كانش Backend أو لوحة إدارة خاصة أو تتبع حالات أو تصدير Excel.
 
-Le dépôt est un site statique compatible GitHub Pages, construit autour de index.html et products.json. Il comprend déjà le catalogue, le panier, le formulaire de commande, la génération du message WhatsApp, la vidéo de marque, la recherche et les filtres, ainsi qu’un formulaire d’avis WhatsApp.
+## شنو تصلّح
 
-Le catalogue contient **31 références** : **3 paniers, 17 légumes et 11 fruits**. Le compteur se base sur les données du catalogue et non sur les résultats actuellement filtrés.
+### الصور والكتالوج
 
-## Éléments confirmés dans le code
+- تزادو 31 صورة WebP محلية فـ `images/products/`؛ مساراتها نسبية وتخدم مع GitHub Pages.
+- تبدلات الصور الغلط ديال اللوبيا والجلبانة والأعشاب، وتفرقات صورة البصل الأبيض على الأحمر.
+- تركّب اللوجو الرسمي اللي عطيتيني على واجهة صور السلات الثلاث. الصور مركبة للتسويق من الصور اللي كانت فالريبو مع طبعة اللوجو نفسها، ماشي ادعاء بأن كل سلة فعلية عندها نفس الملصق.
+- توثقات روابط ومصادر الصور فـ `images/SOURCES.md`. Unsplash كيوضح أن الصور متاحة للاستعمال التجاري حسب رخصته، مع ضرورة احترام حقوق الأشخاص والعلامات إذا بانوا فالصورة. [رخصة Unsplash](https://unsplash.com/license)، [إرشادات الاستخدام التجاري](https://help.unsplash.com/en/articles/2612315-can-i-use-unsplash-images-for-personal-or-commercial-projects).
+- `products.json` هو المصدر الأساسي وتزامن مع البيانات المضمنة فالـ HTML؛ الأسعار ما تبدلاتش.
 
-- La configuration CONFIG_BOUTIQUE centralise WhatsApp 212643880485, les frais de livraison à **20 DH** et la livraison gratuite dès **200 DH**.
-- Le panier est conservé dans le navigateur avec localStorage. Les tarifs et totaux sont calculés côté navigateur.
-- La commande complète est envoyée à un formulaire Google Forms public en écriture, puis WhatsApp s’ouvre avec le récapitulatif. Le classeur Google Sheets n’est pas rendu public par ce mécanisme.
-- Le code attend le chargement de l’iframe après l’envoi, mais ne peut pas lire la réponse privée de Google Forms pour prouver que la ligne a bien été enregistrée. L’interface doit donc éviter de présenter ce chargement comme une confirmation serveur certaine.
-- Le bouton de commande rapide d’un produit ne possède pas les coordonnées client nécessaires pour enregistrer une commande complète. Il ouvre un message WhatsApp prérempli; ce message n’est pas une confirmation d’envoi ou d’enregistrement.
-- Les avis sont préparés dans WhatsApp. Ils ne sont ni enregistrés automatiquement, ni publiés sur le site; la vérification manuelle est cohérente avec le texte affiché.
-- Aucune page ou API d’administration, authentification propriétaire, gestion de statut, abonnement hebdomadaire ou programme de fidélité n’est présente dans le dépôt.
-- Il n’y a ni serveur ni service backend dans le dépôt. Un code secret ne doit pas être ajouté au HTML public.
+### سلات الوجبات
 
-## Audit des images
+- تبدل عنوان القسم لـ «شنو غادي طيب اليوم؟» وزادو Tajine، Salade، Couscous وJus.
+- الكميات قابلة للتعديل، تقدر تحيد أو تبدل أو تزيد المكونات، والثمن كيتحسب من أثمنة الكتالوج الحالية. الاقتراحات موسومة كتقديرات وباقية محتاجة مصادقتك.
 
-- Il y a **31 produits**, et chaque fiche possède une image principale ainsi qu’une URL de secours.
-- Les chemins principaux du catalogue pointent vers images/products/…, mais ce répertoire n’existe pas dans l’arborescence actuelle. Les photos de secours sont des URL Unsplash; elles nécessitent donc une connexion Internet et le chargement du fournisseur distant.
-- Le dépôt contient trois photos de paniers au format JPG à la racine, le logo officiel, et la vidéo du site. Les images locales ne sont pas encore harmonisées en WebP.
-- Vérification navigateur effectuée lors du contrôle précédent : les **31 images** de la page publiée se chargeaient avec leurs secours, y compris le brocoli après correction. Cela confirme l’affichage actuel, mais ne transforme pas les URLs distantes en fichiers locaux sous licence documentée.
-- Les images de paniers disponibles dans le dossier de travail ne portent pas le logo officiel sur la face de la selila. Elles ne doivent pas être présentées comme des visuels FreshSOUK marqués avant superposition fidèle du logo.
+### الطلبات ولوحة الإدارة
 
-## Risques et corrections recommandées
+- تزاد Cloudflare Worker + D1 كـ Backend منفصل. السيرفر كيتحقق من المنتوج والثمن والتوصيل، وكيستعمل Idempotency-Key لمنع التكرار. ما كاين حتى سر فـ JavaScript.
+- منين يتضبط رابط الـ Worker، واجهة Checkout كتطلب إيصال من السيرفر قبل ما تقول إن الطلب تسجل، ورسالة WhatsApp كتستعمل المجموع اللي حسبه السيرفر. رقم WhatsApp وبنية الإيموجيات بقاو.
+- تزادت صفحة `/admin` وAPI محمية بـ Cloudflare Access: الإحصائيات، البحث، فلاتر التاريخ والحالة، التفاصيل، سجل الحالات، تغيير الحالة، وتصدير CSV مناسب لـ Excel.
+- الطلب السريع عبر WhatsApp ما كيتسجلش كطلب كامل، لأنه ما فيه لا العنوان لا موعد التوصيل؛ هو غير رسالة أولية حتى يأكد الزبون.
 
-1. **Confirmation de commande** : remplacer l’iframe Google Forms par une réponse backend vérifiable; montrer « enregistrée » seulement après un reçu serveur.
-2. **Sécurité des commandes** : déplacer le calcul des prix et la validation vers le backend; ajouter un identifiant de requête pour éviter les doubles commandes.
-3. **Administration** : héberger l’API privée et protéger l’espace admin par une véritable authentification côté serveur. Un mot de passe caché dans le JavaScript public n’est pas une protection.
-4. **Photos** : ajouter les fichiers WebP sous images/products/, conserver un secours explicite et documenter la provenance/licence des images.
-5. **Abonnements** : stocker l’accord du client, sa prochaine date et son statut dans un backend; demander une confirmation avant chaque commande planifiée. Sans intégration WhatsApp officielle, seuls des rappels manuels préremplis sont possibles.
-6. **Fidélité** : ne pas activer la règle d’exemple « 1 DH = 1 point / 500 points = 20 DH » sans validation du propriétaire. Les crédits doivent provenir d’un paiement livré et confirmé.
-7. **Paniers repas** : conserver les recettes en brouillon jusqu’à validation des quantités; calculer les estimations à partir du catalogue existant et ne pas créer de prix fixes arbitraires.
+### FreshSOUK Hebdo وClub
 
-## Vérifications déjà effectuées
+- تزاد نموذج اشتراك اختياري مع موافقة صريحة، الباك، عدد السلات، الأسبوعي أو كل جوج سيمانات، التاريخ، النهار، الوقت والعنوان.
+- التذكير كيحضرو المالك يدوياً فـ WhatsApp؛ ما كاين لا إرسال آلي لا طلب جديد حتى يجاوب الزبون بالتأكيد والمالك يضغط «أكد وصايب الطلب». الاشتراك يتوقف أو يرجع أو يتلغى، والمالك يقدر يعدل الباك والتاريخ والكمية والتكرار.
+- جداول FreshSOUK Club موجودة بإعدادات أمثلة، ولكن البرنامج مطفي (`enabled = 0`). ما كيتحسبو حتى نقط حتى تصادق على القواعد؛ مكايناش مكافآت مفعلة.
 
-- Comptage du catalogue JSON : **31** (3 packs, 17 légumes, 11 fruits).
-- Page publiée : compteur, filtres de catégorie, avis, ajout/suppression panier et affichage des 31 images avec secours.
-- Contrôle des fichiers connus à la racine : page HTML, JSON, logo, 3 JPG de paniers et dossier vidéo.
-- Pas de test d’une vraie commande : cela créerait des données client réelles. La réussite d’écriture dans Google Sheets n’est pas vérifiable depuis le navigateur public.
-- Pas de test d’administration, d’abonnement ou de fidélité : ces modules n’existent pas encore.
+## الملفات المتبدلة
 
-## Périmètre restant pour V2.0
+- `index.html`
+- `products.json`
+- `images/products/*.webp` و`images/SOURCES.md`
+- `backend/worker.js`, `backend/schema.sql`, `backend/wrangler.toml`, `backend/admin.html`, `backend/README.md`, `backend/test-worker.mjs`
+- `docs/FRESHSOUK-V2-AUDIT.md`
 
-Cette branche démarre par l’audit. Les phases suivantes nécessitent des modifications distinctes et des contrôles : photos WebP locales, configurateur de paniers repas, backend de commandes et d’administration, abonnements avec rappels manuels, puis programme de fidélité désactivé jusqu’à validation des règles. Tout reste hors production tant que la branche n’est pas fusionnée et que le déploiement n’est pas autorisé.
+## الفحوصات اللي دازت فعلاً
 
-## Décisions requises avant les modules sensibles
+- فحص syntax ديال JavaScript فـ `index.html` و`backend/admin.html`.
+- 5 اختبارات للـ Worker: تسجيل بثمن الكتالوج والتوصيل، idempotency، رفض منتوج غلط، رفض رقم غير صالح، رفض الوصول للإدارة بلا JWT، ورفض Origin غير مسموح.
+- SQLite قدر يهيّأ `schema.sql`، وتأكدت أن loyalty مطفي فالإعداد الأول.
+- JSON فيه 31 منتوج بلا IDs مكررة؛ البيانات المضمنة مطابقة لـ `products.json`؛ الصور الـ31 WebP موجودة وسليمة، وتصفحت الصور بصرياً.
+- فتح محلي عبر HTTP: 31 بطاقة منتوج، الصور المحلية ظهرت، وما بان حتى خطأ JavaScript فـ Console وقت الفحص.
+- محاكاة شاشة الهاتف 390×844: ما كاينش تجاوز أفقي، وقسم الوجبات بعمود واحد.
+- ما ترسلات حتى طلبية أو معلومة زبون حقيقية. ما تدارش تجربة حية للسلة/WhatsApp ولا اختبار دخول Access، حيث الخدمة مازال ما تنشراتش.
 
-- Choisir le backend à utiliser pour les données privées (par exemple Google Apps Script sécurisé associé à la feuille existante, ou un backend dédié).
-- Confirmer si les villes autorisées restent celles du code actuel ou si la zone doit être limitée à Casablanca, Bouskoura et Mohammedia.
-- Valider les quantités des paniers Tajine, Salade, Couscous et Jus.
-- Valider séparément les règles du programme FreshSOUK Club.
+## الإعدادات اللي مازال خاصها فحسابك
+
+`backend/wrangler.toml` فيه `database_id` وبيانات Access مؤقتة. خاص إنشاء D1، إعداد Cloudflare Access للإيميل ديالك وحده، نشر Worker، ومن بعد وضع رابط Worker العمومي فـ `ORDER_API_URL`. إلى بقا الرابط خاوي، الموقع كيبقى على مسار Google Forms القديم وما نقدرش نأكد التسجيل ديالو. تفاصيل الإعداد خطوة بخطوة فـ `backend/README.md`.
+
+خص كذلك مراجعة صور السلات الموسومة فالموقع، وتجربة سيناريو الطلب والسلة وWhatsApp من بعد إعداد الـ Backend. ما تدارش نشر ولا دمج بلا موافقتك.
