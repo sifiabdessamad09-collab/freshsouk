@@ -733,6 +733,7 @@
     .reviews-copy{padding:7px 0}.reviews-note{display:block;margin-top:14px;color:#55705c;font-size:13px;line-height:1.6}
     .review-form{display:grid;gap:12px}.review-fields{display:grid;grid-template-columns:1fr 1fr;gap:12px}.review-form label{display:grid;gap:6px;color:#35533d;font-size:13px;font-weight:750}.review-form input,.review-form select,.review-form textarea{width:100%;padding:11px;border:1px solid #dce8de;border-radius:11px;background:#fff;color:var(--dark);font:inherit;font-size:13px}.review-form textarea{min-height:95px;resize:vertical}.review-message{grid-column:1/-1}.review-form .reviews-contact{justify-self:start}
     @media(max-width:640px){.reviews-panel{grid-template-columns:1fr}.review-fields{grid-template-columns:1fr}.review-message{grid-column:auto}.review-form .reviews-contact{width:100%}}
+    .meal-section{max-width:1180px;margin:10px auto 30px;padding:42px 20px;background:linear-gradient(135deg,#f4faf3,#fff9ec);border:1px solid #e4eee2;border-radius:24px}.meal-heading{display:flex;justify-content:space-between;align-items:end;gap:16px;margin-bottom:20px}.meal-kicker{color:#bd861f;font-size:12px;font-weight:800}.meal-heading h2{font-size:clamp(24px,3vw,34px);color:#193d29;margin:5px 0}.meal-heading p,.meal-footnote{font-size:13px;line-height:1.7;color:#718077}.meal-estimate-note{border:1px solid #e6d7ad;background:#fffdf6;padding:8px 12px;border-radius:99px;color:#82651f;font-size:11px;font-weight:700;white-space:nowrap}.meal-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.meal-card{background:#fff;border:1px solid #e7ede6;border-radius:18px;padding:17px;box-shadow:0 8px 25px #203f2909}.meal-card-top{display:flex;justify-content:space-between;gap:12px;align-items:start}.meal-card h3{font-size:16px;color:#284333}.meal-card p{font-size:12px;color:#77857b;margin-top:3px}.meal-icon{font-size:24px}.meal-photo{display:block;width:100%;height:170px;margin:12px 0;border-radius:13px;object-fit:cover;background:#f1f6f0}.meal-draft-badge{display:inline-flex;margin-top:7px;padding:4px 8px;border-radius:99px;background:#fff6df;color:#80611b;font-size:10px;font-weight:800}.meal-ingredients{display:grid;gap:8px;margin:14px 0}.meal-ingredient{display:grid;grid-template-columns:minmax(110px,1fr) 88px 78px auto;align-items:center;gap:7px;font-size:12px;color:#3b5543}.meal-ingredient select,.meal-add-controls select{min-width:0;padding:8px 7px;border:1px solid #dfe8df;border-radius:9px;background:#fff;font-size:11px}.meal-ingredient input{min-width:0;padding:7px 6px;text-align:center;border-radius:9px}.meal-line-price{font-size:11px;color:#718077;min-width:58px;text-align:right}.meal-remove-btn,.meal-add-controls button{border:1px solid #dbe7dc;border-radius:9px;padding:8px 9px;background:#f6faf6;color:#315b3b;font-weight:700;cursor:pointer}.meal-remove-btn{color:#a33b33;background:#fff8f7;border-color:#f0dedc}.meal-add-controls{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:7px;margin:8px 0 12px}.meal-add-controls button{white-space:nowrap}.meal-add-controls button:disabled{opacity:.5;cursor:not-allowed}.meal-total{display:flex;align-items:center;justify-content:space-between;border-top:1px solid #edf1ed;padding-top:12px;font-weight:800;color:#254a31}.meal-add-btn{width:100%;border:0;border-radius:10px;background:#287b46;color:white;font-size:12px;font-weight:800;padding:10px 13px;cursor:pointer}.meal-footnote{margin-top:16px}@media(max-width:700px){.meal-section{margin:6px 12px 25px;padding:25px 14px;border-radius:18px}.meal-heading{display:block}.meal-estimate-note{display:inline-block;margin-top:12px}.meal-grid{grid-template-columns:1fr}.meal-ingredient{grid-template-columns:minmax(0,1fr) 72px 65px auto;gap:5px}.meal-card{padding:14px}.meal-photo{height:150px}.meal-ingredient select,.meal-add-controls select{font-size:10px;padding:7px 4px}.meal-ingredient input{font-size:11px;padding:7px 3px}.meal-line-price{min-width:50px;font-size:10px}.meal-remove-btn{padding:7px 5px;font-size:10px}.meal-add-controls button{font-size:10px;padding:7px 8px}}
 </style>
 </head>
 
@@ -852,6 +853,9 @@
   <div class="trust-item"><strong>Frais à prix accessibles | خضرة وفواكه طريّة بأثمنة مناسبة</strong><span>Une sélection quotidienne pour votre panier.</span></div>
 </section>
 
+<section class="meal-section" id="paniers-repas"><div class="meal-heading"><div><span class="meal-kicker">اقتراحات FreshSOUK · Idées FreshSOUK</span><h2>شنو غادي طيب اليوم؟</h2><p>مقادير تقريبية لـ 4 أشخاص، قابلة للتغيير. الثمن كيتحسب بأثمنة المنتجات الحالية.</p></div><span class="meal-estimate-note">غيّر الكميات قبل الإضافة</span></div><div class="meal-grid" id="mealBasketGrid"></div><p class="meal-footnote">الكيوي ما كاينش دابا فالكتالوج، لذلك ما داخلش فحساب سلة العصير. هاد الاقتراحات ما كتبدلش أثمنة الباكات الحالية.</p></section>
+<section class="meal-section" id="freshsouk-hebdo"><div class="meal-heading"><div><span class="meal-kicker">FreshSOUK Hebdo</span><h2>خلي سلّتك توصلك كل سيمانة</h2><p>اختار الباك والموعد. غادي نسولوك قبل كل توصيل، وما غاديش يتخلق الطلب حتى تأكد لينا.</p></div><span class="meal-estimate-note">بلا اقتطاع تلقائي</span></div><form id="subscriptionForm" class="subscription-form"><div class="form-grid"><div class="form-group"><label for="subName">الاسم الكامل</label><input id="subName" required maxlength="240"></div><div class="form-group"><label for="subPhone">الهاتف</label><input id="subPhone" type="tel" inputmode="tel" pattern="(0[567][0-9]{8}|\+212[567][0-9]{8})" placeholder="06XXXXXXXX" required></div><div class="form-group"><label for="subCity">المدينة</label><select id="subCity" required><option value="">اختار المدينة</option><option>Casablanca</option><option>Bouskoura</option><option>Mohammedia</option><option>Rabat</option><option>Autre</option></select></div><div class="form-group"><label for="subPack">الباك</label><select id="subPack" required><option value="">كنحمّلو السلات…</option></select></div><div class="form-group"><label for="subQuantity">عدد السلات</label><input id="subQuantity" type="number" min="1" max="20" value="1" required></div><div class="form-group"><label for="subFrequency">التكرار</label><select id="subFrequency" required><option value="1">كل سيمانة</option><option value="2">كل جوج سيمانات</option></select></div><div class="form-group"><label for="subDate">أول نهار للتوصيل</label><input id="subDate" type="date" required></div><div class="form-group"><label for="subWeekday">نهار التوصيل المتكرر</label><select id="subWeekday" disabled><option>اختار التاريخ اللول</option></select></div><div class="form-group"><label for="subSlot">الوقت المناسب</label><select id="subSlot" required><option value="">اختار</option><option>09h00 - 12h00</option><option>12h00 - 15h00</option><option>15h00 - 18h00</option><option>18h00 - 21h00</option></select></div><div class="form-group"><label for="subNeighborhood">الحي</label><input id="subNeighborhood" maxlength="240" required></div><div class="form-group full"><label for="subAddress">العنوان</label><input id="subAddress" maxlength="240" required></div><div class="form-group full"><label style="display:flex;gap:9px;align-items:flex-start"><input id="subConsent" type="checkbox" required style="width:auto;margin-top:3px">كنوافق نصيفط هاد المعلومات عبر WhatsApp باش تتواصلو معايا على الاشتراك. هاد الطلب غير للاستفسار، وما كاين حتى اشتراك قبل ما نتفاهمو ونأكدوه.</label></div></div><p id="subscriptionMessage" role="status" aria-live="polite"></p><button class="meal-add-btn" type="submit">كمّل الطلب على WhatsApp</button></form></section>
+<section class="meal-section" id="freshsouk-club"><div class="meal-heading"><div><span class="meal-kicker">FreshSOUK Club</span><h2>قريباً: برنامج الوفاء ديال FreshSOUK</h2><p>كنحضّروه دابا. غادي نعلنو على الشروط والنقط من بعد ما نصادقو عليهم؛ حتى لداك الساعة ما كاين لا نقط لا تخفيضات مفعّلة.</p></div><span class="meal-estimate-note">مازال مطفي</span></div></section>
 <section class="section" id="produits">
 
   <div class="section-title">
@@ -1049,6 +1053,14 @@
 
         <div class="form-group full">
 
+          <label for="customerNeighborhood">Quartier</label>
+
+          <input id="customerNeighborhood" type="text" maxlength="240" placeholder="Votre quartier">
+
+        </div>
+
+        <div class="form-group full">
+
           <label>Adresse</label>
 
           <input
@@ -1109,39 +1121,441 @@
 </a>
 
 <script type="application/json" id="productData">[
- {"id":"","nameAr":"سلة السيمانة العائلية","nameFr":"Panier Semaine Familial","category":"packs","price":180,"unit":"pack","image":"./.jpg","imageFallback":"https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=800&q=85","badgeAr":"اختيار العائلة","badgeFr":"Choix familial","descriptionAr":"5kg بطاطس، 3kg طماطم، 2kg بصل، 2kg جزر، 1kg خيار، 2kg تفاح، 2kg بنان","descriptionFr":"5kg pommes de terre, 3kg tomates, 2kg oignons, 2kg carottes, concombre et fruits."},
- {"id":"pack-couscous","nameAr":"سلة الكسكس الجمعة","nameFr":"Panier Couscous du Vendredi","category":"packs","price":45,"unit":"pack","image":"./pack-couscous.jpg","imageFallback":"https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=800&q=85","badgeAr":"للكسكس","badgeFr":"Spécial couscous","descriptionAr":"طماطم، جزر، قرعة حمراء وخضراء، لفت، خيار، ربيع ومقدنوس","descriptionFr":"Tomates, carottes, courges, navets, concombre, coriandre et persil."},
- {"id":"pack-jus-fruits","nameAr":"سلة العصائر والفواكه","nameFr":"Panier Jus & Fruits Fresh","category":"packs","price":95,"unit":"pack","image":"./pack-jus.jpg","imageFallback":"https://images.unsplash.com/photo-1619566636858-adf3ef46400b?auto=format&fit=crop&w=800&q=85","badgeAr":"منعش","badgeFr":"Plein de vitamines","descriptionAr":"3kg برتقال للعصير، 1kg فراولة، 1kg كيوي، 2kg بنان","descriptionFr":"3kg oranges à jus, fraises, kiwis et bananes."},
- {"id":"pomme-de-terre","nameAr":"بطاطس طرية","nameFr":"Pommes de terre","category":"legumes","price":7,"unit":"Kg","image":"/images/products/pomme-de-terre.jpg","imageFallback":"https://images.unsplash.com/photo-1518977676601-b53f82aba655?auto=format&fit=crop&w=800&q=85","badgeAr":"100% طري","badgeFr":"100% Frais","descriptionAr":"بطاطس طرية للاستعمال اليومي","descriptionFr":"Pommes de terre fraîches pour vos recettes."},
- {"id":"tomates","nameAr":"طماطم حمراء ممتازة","nameFr":"Tomates","category":"legumes","price":8,"unit":"Kg","image":"/images/products/tomates.jpg","imageFallback":"https://images.unsplash.com/photo-1546094096-0df4bcaaa337?auto=format&fit=crop&w=800&q=85","badgeAr":"محلية","badgeFr":"Locales","descriptionAr":"طماطم حمراء ناضجة","descriptionFr":"Tomates rouges et mûres."},
- {"id":"oignons-rouges","nameAr":"بصل أحمر","nameFr":"Oignons rouges","category":"legumes","price":6,"unit":"Kg","image":"/images/products/oignons-rouges.jpg","imageFallback":"https://images.unsplash.com/photo-1508747703725-719777637510?auto=format&fit=crop&w=800&q=85","descriptionAr":"بصل أحمر طري","descriptionFr":"Oignons rouges du marché."},
- {"id":"oignons-blancs","nameAr":"بصل أبيض","nameFr":"Oignons blancs","category":"legumes","price":6.5,"unit":"Kg","image":"/images/products/oignons-blancs.jpg","imageFallback":"https://images.unsplash.com/photo-1618512496248-a07fe83aa8cb?auto=format&fit=crop&w=800&q=85","descriptionAr":"بصل أبيض للاستعمال اليومي","descriptionFr":"Oignons blancs frais."},
- {"id":"carottes","nameAr":"جزر محلي","nameFr":"Carottes","category":"legumes","price":6.5,"unit":"Kg","image":"/images/products/carottes.jpg","imageFallback":"https://images.unsplash.com/photo-1445282768818-728615cc910a?auto=format&fit=crop&w=800&q=85","badgeAr":"محلي","badgeFr":"Local","descriptionAr":"جزر محلي مقرمش","descriptionFr":"Carottes locales et croquantes."},
- {"id":"concombres","nameAr":"خيار بلدي","nameFr":"Concombres","category":"legumes","price":8,"unit":"Kg","image":"/images/products/concombres.jpg","imageFallback":"https://images.unsplash.com/photo-1604977042946-1eecc30f269e?auto=format&fit=crop&w=800&q=85","descriptionAr":"خيار بلدي طري","descriptionFr":"Concombres frais du marché."},
- {"id":"poivrons","nameAr":"فلفل أخضر وأحمر","nameFr":"Poivrons","category":"legumes","price":12,"unit":"Kg","image":"/images/products/poivrons.jpg","imageFallback":"https://images.unsplash.com/photo-1563565375-f3fdfdbefa83?auto=format&fit=crop&w=800&q=85","descriptionAr":"فلفل ملون طازج","descriptionFr":"Poivrons verts et rouges."},
- {"id":"courgettes","nameAr":"كرجيت / قرعة خضراء","nameFr":"Courgettes","category":"legumes","price":10,"unit":"Kg","image":"/images/products/courgettes.jpg","imageFallback":"https://images.unsplash.com/photo-1563252722-6434563a985d?auto=format&fit=crop&w=800&q=85","descriptionAr":"قرعة خضراء طازجة","descriptionFr":"Courgettes fraîches."},
- {"id":"courge-rouge","nameAr":"قرعة حمراء للكسكس","nameFr":"Courge rouge","category":"legumes","price":9,"unit":"Kg","image":"/images/products/courge-rouge.jpg","imageFallback":"https://images.unsplash.com/photo-1506976785307-8732e854ad03?auto=format&fit=crop&w=800&q=85","descriptionAr":"قرعة حمراء للطبخ والكسكس","descriptionFr":"Courge rouge pour vos plats."},
- {"id":"navets","nameAr":"لفت أصفر وأبيض","nameFr":"Navets","category":"legumes","price":7,"unit":"Kg","image":"/images/products/navets.jpg","imageFallback":"https://images.unsplash.com/photo-1598170845058-32b9d6a5da37?auto=format&fit=crop&w=800&q=85","descriptionAr":"لفت طري بألوان مختلفة","descriptionFr":"Navets frais, jaunes et blancs."},
- {"id":"chou","nameAr":"كرنب / ملفوف","nameFr":"Chou","category":"legumes","price":8,"unit":"unité","image":"/images/products/chou.jpg","imageFallback":"https://images.unsplash.com/photo-1594282486552-05b4d80fbb9f?auto=format&fit=crop&w=800&q=85","descriptionAr":"كرنب طازج","descriptionFr":"Chou frais du marché."},
- {"id":"brocoli","nameAr":"بروكلي طازج","nameFr":"Brocoli","category":"legumes","price":15,"unit":"Kg","image":"/images/products/brocoli.jpg","imageFallback":"https://images.unsplash.com/photo-1459411621453-7b03977f4bfc?auto=format&fit=crop&w=800&q=85","badgeAr":"طازج","badgeFr":"Frais","descriptionAr":"بروكلي أخضر طازج","descriptionFr":"Brocoli vert et frais."},
- {"id":"chou-fleur","nameAr":"شيفلور","nameFr":"Chou-fleur","category":"legumes","price":12,"unit":"unité","image":"/images/products/chou-fleur.jpg","imageFallback":"https://images.unsplash.com/photo-1568584711075-3d021a7c3ca3?auto=format&fit=crop&w=800&q=85","descriptionAr":"شيفلور طري","descriptionFr":"Chou-fleur frais."},
- {"id":"aubergines","nameAr":"باذنجان","nameFr":"Aubergines","category":"legumes","price":9,"unit":"Kg","image":"/images/products/aubergines.jpg","imageFallback":"https://images.unsplash.com/photo-1653924855543-6b4469c6a10b?auto=format&fit=crop&w=800&q=85","descriptionAr":"باذنجان طري","descriptionFr":"Aubergines fraîches."},
- {"id":"haricots-verts","nameAr":"لوبيا خضراء","nameFr":"Haricots verts","category":"legumes","price":16,"unit":"Kg","image":"/images/products/haricots-verts.jpg","imageFallback":"https://images.unsplash.com/photo-1567375698348-5d9d5ae99de0?auto=format&fit=crop&w=800&q=85","descriptionAr":"لوبيا خضراء طازجة","descriptionFr":"Haricots verts frais."},
- {"id":"petits-pois","nameAr":"جلبانة","nameFr":"Petits pois","category":"legumes","price":18,"unit":"Kg","image":"/images/products/petits-pois.jpg","imageFallback":"https://images.unsplash.com/photo-1587735243615-c03f25aaff15?auto=format&fit=crop&w=800&q=85","descriptionAr":"جلبانة طازجة","descriptionFr":"Petits pois frais."},
- {"id":"herbes","nameAr":"الأعشاب (قزبور، معدنوس، كرافس، نعناع)","nameFr":"Herbes fraîches (coriandre, persil, céleri, menthe)","category":"legumes","price":2.5,"unit":"botte","image":"/images/products/herbes.jpg","imageFallback":"https://images.unsplash.com/photo-1501004318641-b39e6451bec6?auto=format&fit=crop&w=800&q=85","descriptionAr":"باقة أعشاب عطرية طازجة","descriptionFr":"Botte d'herbes aromatiques fraîches."},
- {"id":"pommes-rouges","nameAr":"تفاح أحمر ممتاز","nameFr":"Pommes rouges","category":"fruits","price":14,"unit":"Kg","image":"/images/products/pommes-rouges.jpg","imageFallback":"https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?auto=format&fit=crop&w=800&q=85","badgeAr":"ممتاز","badgeFr":"Sélection","descriptionAr":"تفاح أحمر مقرمش","descriptionFr":"Pommes rouges croquantes."},
- {"id":"bananes","nameAr":"موز ممتاز","nameFr":"Bananes","category":"fruits","price":12,"unit":"Kg","image":"/images/products/bananes.jpg","imageFallback":"https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?auto=format&fit=crop&w=800&q=85","descriptionAr":"موز حلو وناضج","descriptionFr":"Bananes mûres et savoureuses."},
- {"id":"oranges","nameAr":"برتقال العصير","nameFr":"Oranges à jus","category":"fruits","price":7,"unit":"Kg","image":"/images/products/oranges.jpg","imageFallback":"https://images.unsplash.com/photo-1547514701-42782101795e?auto=format&fit=crop&w=800&q=85","descriptionAr":"برتقال طري للعصير","descriptionFr":"Oranges fraîches à presser."},
- {"id":"mandarines","nameAr":"ماندرين","nameFr":"Mandarines","category":"fruits","price":9,"unit":"Kg","image":"/images/products/mandarines.jpg","imageFallback":"https://images.unsplash.com/photo-1609424572698-04d9d2e04954?auto=format&fit=crop&w=800&q=85","descriptionAr":"ماندرين حلوة","descriptionFr":"Mandarines douces."},
- {"id":"fraises","nameAr":"فراولة طازجة","nameFr":"Fraises","category":"fruits","price":16,"unit":"Kg","image":"/images/products/fraises.jpg","imageFallback":"https://images.unsplash.com/photo-1464965911861-746a04b4bca6?auto=format&fit=crop&w=800&q=85","badgeAr":"طازج","badgeFr":"Frais","descriptionAr":"فراولة موسمية","descriptionFr":"Fraises de saison."},
- {"id":"raisins","nameAr":"عنب أحمر/أبيض","nameFr":"Raisins","category":"fruits","price":18,"unit":"Kg","image":"/images/products/raisins.jpg","imageFallback":"https://images.unsplash.com/photo-1537640538966-79f369143f8f?auto=format&fit=crop&w=800&q=85","descriptionAr":"عنب حلو بألوان مختلفة","descriptionFr":"Raisins rouges et blancs."},
- {"id":"poires","nameAr":"إجاص","nameFr":"Poires","category":"fruits","price":20,"unit":"Kg","image":"/images/products/poires.jpg","imageFallback":"https://images.unsplash.com/photo-1519996529931-28324d7a630e?auto=format&fit=crop&w=800&q=85","descriptionAr":"إجاص طري","descriptionFr":"Poires fraîches."},
- {"id":"peches-nectarines","nameAr":"خوخ وشهدية","nameFr":"Pêches & Nectarines","category":"fruits","price":22,"unit":"Kg","image":"/images/products/peches.jpg","imageFallback":"https://images.unsplash.com/photo-1629828874514-c1e5103a8f50?auto=format&fit=crop&w=800&q=85","descriptionAr":"خوخ وشهدية موسمية","descriptionFr":"Pêches et nectarines de saison."},
- {"id":"pasteque","nameAr":"دلاح","nameFr":"Pastèque","category":"fruits","price":5,"unit":"Kg","image":"/images/products/pasteque.jpg","imageFallback":"https://images.unsplash.com/photo-1563114773-84221bd62daa?auto=format&fit=crop&w=800&q=85","descriptionAr":"دلاح حلو ومنعش","descriptionFr":"Pastèque douce et rafraîchissante."},
- {"id":"melon","nameAr":"بطيخ أصفر","nameFr":"Melon","category":"fruits","price":10,"unit":"Kg","image":"/images/products/melon.jpg","imageFallback":"https://images.unsplash.com/photo-1571575173700-afb9492e6a50?auto=format&fit=crop&w=800&q=85","descriptionAr":"شمام طري","descriptionFr":"Melon frais et sucré."},
- {"id":"grenades","nameAr":"رمان","nameFr":"Grenades","category":"fruits","price":12,"unit":"Kg","image":"/images/products/grenades.jpg","imageFallback":"https://images.unsplash.com/photo-1541344999736-83eca272f6fc?auto=format&fit=crop&w=800&q=85","descriptionAr":"رمان حلو","descriptionFr":"Grenades fraîches."}
-]
-</script>
+  {
+    "id": "pack-semaine-familial",
+    "nameAr": "سلة السيمانة العائلية",
+    "nameFr": "Panier Semaine Familial",
+    "category": "packs",
+    "price": 180,
+    "unit": "pack",
+    "image": "./images/products/pack-semaine-familial.webp",
+    "imageFallback": "https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=900&q=82",
+    "badgeAr": "اختيار العائلة",
+    "badgeFr": "Choix famille",
+    "descriptionAr": "5kg بطاطس، 3kg طماطم، 2kg بصل، 2kg جزر، 1kg خيار، 2kg تفاح، 2kg بنان",
+    "descriptionFr": "5kg pommes de terre, 3kg tomates, 2kg oignons, 2kg carottes, 1kg concombres, 2kg pommes et 2kg bananes"
+  },
+  {
+    "id": "pack-couscous-vendredi",
+    "nameAr": "سلة الكسكس الجمعة",
+    "nameFr": "Panier Couscous du Vendredi",
+    "category": "packs",
+    "price": 45,
+    "unit": "pack",
+    "image": "./images/products/pack-couscous-vendredi.webp",
+    "imageFallback": "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=900&q=82",
+    "badgeAr": "للمة الجمعة",
+    "badgeFr": "Spécial vendredi",
+    "descriptionAr": "طماطم، جزر، قرعة حمراء وخضراء، لفت، خيار، ربيع ومقدنوس",
+    "descriptionFr": "Tomates, carottes, courges rouge et verte, navets, concombre, coriandre et persil"
+  },
+  {
+    "id": "pack-jus-fruits",
+    "nameAr": "سلة العصائر والفواكه",
+    "nameFr": "Panier Jus & Fruits Fresh",
+    "category": "packs",
+    "price": 95,
+    "unit": "pack",
+    "image": "./images/products/pack-jus-fruits.webp",
+    "imageFallback": "https://images.unsplash.com/photo-1610832958506-aa56368176cf?auto=format&fit=crop&w=900&q=82",
+    "badgeAr": "منعش وطري",
+    "badgeFr": "Fraîcheur fruitée",
+    "descriptionAr": "3kg برتقال للعصير، 1kg فراولة، 1kg كيوي، 2kg بنان",
+    "descriptionFr": "3kg d'oranges à jus, 1kg de fraises, 1kg de kiwi et 2kg de bananes"
+  },
+  {
+    "id": "pomme-de-terre",
+    "nameAr": "بطاطس طرية",
+    "nameFr": "Pommes de terre fraîches",
+    "category": "legumes",
+    "price": 7,
+    "unit": "Kg",
+    "image": "./images/products/pomme-de-terre.webp",
+    "imageFallback": "https://images.unsplash.com/photo-1518977676601-b53f82aba655?auto=format&fit=crop&w=900&q=82",
+    "badgeAr": "100% طري",
+    "badgeFr": "100% Frais",
+    "descriptionAr": "بطاطس مختارة للاستعمال اليومي",
+    "descriptionFr": "Pommes de terre sélectionnées pour vos recettes quotidiennes"
+  },
+  {
+    "id": "tomates",
+    "nameAr": "طماطم حمراء ممتازة",
+    "nameFr": "Tomates rouges premium",
+    "category": "legumes",
+    "price": 8,
+    "unit": "Kg",
+    "image": "./images/products/tomates.webp",
+    "imageFallback": "https://images.unsplash.com/photo-1635843130996-68824252660d?auto=format&fit=crop&w=900&q=82",
+    "badgeAr": "حمراء وناضجة",
+    "badgeFr": "Rouges & mûres",
+    "descriptionAr": "طماطم حمراء لذيذة وطازجة",
+    "descriptionFr": "Tomates rouges savoureuses et fraîches"
+  },
+  {
+    "id": "oignons-rouges",
+    "nameAr": "بصل أحمر",
+    "nameFr": "Oignons rouges",
+    "category": "legumes",
+    "price": 6,
+    "unit": "Kg",
+    "image": "./images/products/oignons-rouges.webp",
+    "imageFallback": "https://images.unsplash.com/photo-1681758442447-f36ed14c0a8a?auto=format&fit=crop&w=900&q=84",
+    "badgeAr": "طري",
+    "badgeFr": "Frais",
+    "descriptionAr": "بصل أحمر يضيف مذاقاً مميزاً",
+    "descriptionFr": "Oignons rouges au goût intense"
+  },
+  {
+    "id": "oignons-blancs",
+    "nameAr": "بصل أبيض",
+    "nameFr": "Oignons blancs",
+    "category": "legumes",
+    "price": 6.5,
+    "unit": "Kg",
+    "image": "./images/products/oignons-blancs.webp",
+    "imageFallback": "https://images.unsplash.com/photo-1578922426864-d99c48111d19?auto=format&fit=crop&w=900&q=84",
+    "badgeAr": "طري",
+    "badgeFr": "Frais",
+    "descriptionAr": "بصل أبيض للاستعمال اليومي",
+    "descriptionFr": "Oignons blancs pour vos plats quotidiens"
+  },
+  {
+    "id": "carottes",
+    "nameAr": "جزر محلي",
+    "nameFr": "Carottes locales",
+    "category": "legumes",
+    "price": 6.5,
+    "unit": "Kg",
+    "image": "./images/products/carottes.webp",
+    "imageFallback": "https://images.unsplash.com/photo-1654248568705-3d21fbafa6a5?auto=format&fit=crop&w=900&q=82",
+    "badgeAr": "محلي وطري",
+    "badgeFr": "Local & frais",
+    "descriptionAr": "جزر محلي مقرمش ولذيذ",
+    "descriptionFr": "Carottes locales, croquantes et savoureuses"
+  },
+  {
+    "id": "concombres",
+    "nameAr": "خيار بلدي",
+    "nameFr": "Concombres du marché",
+    "category": "legumes",
+    "price": 8,
+    "unit": "Kg",
+    "image": "./images/products/concombres.webp",
+    "imageFallback": "https://images.unsplash.com/photo-1604977042946-1eecc30f269e?auto=format&fit=crop&w=900&q=82",
+    "badgeAr": "بلدي",
+    "badgeFr": "Du marché",
+    "descriptionAr": "خيار بلدي طري للسلطات",
+    "descriptionFr": "Concombres frais, parfaits pour les salades"
+  },
+  {
+    "id": "poivrons",
+    "nameAr": "فلفل أخضر وأحمر",
+    "nameFr": "Poivrons verts & rouges",
+    "category": "legumes",
+    "price": 12,
+    "unit": "Kg",
+    "image": "./images/products/poivrons.webp",
+    "imageFallback": "https://images.unsplash.com/photo-1760108273004-91a6eaa10163?auto=format&fit=crop&w=900&q=82",
+    "badgeAr": "ألوان طازجة",
+    "badgeFr": "Couleurs fraîches",
+    "descriptionAr": "فلفل أخضر وأحمر طازج",
+    "descriptionFr": "Poivrons verts et rouges, frais et colorés"
+  },
+  {
+    "id": "courgettes",
+    "nameAr": "كرجيت / قرعة خضراء",
+    "nameFr": "Courgettes",
+    "category": "legumes",
+    "price": 10,
+    "unit": "Kg",
+    "image": "./images/products/courgettes.webp",
+    "imageFallback": "https://images.unsplash.com/photo-1692956475726-d4a90d0dfbdf?auto=format&fit=crop&w=900&q=82",
+    "badgeAr": "طرية",
+    "badgeFr": "Fraîches",
+    "descriptionAr": "قرعة خضراء طازجة للطبخ",
+    "descriptionFr": "Courgettes fraîches pour vos plats"
+  },
+  {
+    "id": "courge-rouge",
+    "nameAr": "قرعة حمراء للكسكس",
+    "nameFr": "Courge rouge",
+    "category": "legumes",
+    "price": 9,
+    "unit": "Kg",
+    "image": "./images/products/courge-rouge.webp",
+    "imageFallback": "https://images.unsplash.com/photo-1570586437263-ab629fccc818?auto=format&fit=crop&w=900&q=82",
+    "badgeAr": "مناسبة للكسكس",
+    "badgeFr": "Pour le couscous",
+    "descriptionAr": "قرعة حمراء لذيذة للكسكس والأطباق المغربية",
+    "descriptionFr": "Courge rouge savoureuse pour couscous et plats marocains"
+  },
+  {
+    "id": "navets",
+    "nameAr": "لفت أصفر وأبيض",
+    "nameFr": "Navets jaunes & blancs",
+    "category": "legumes",
+    "price": 7,
+    "unit": "Kg",
+    "image": "./images/products/navets.webp",
+    "imageFallback": "https://images.unsplash.com/photo-1751843700582-505903641bdb?auto=format&fit=crop&w=900&q=82",
+    "badgeAr": "محلي وطري",
+    "badgeFr": "Local & frais",
+    "descriptionAr": "لفت أصفر وأبيض طازج",
+    "descriptionFr": "Navets jaunes et blancs frais"
+  },
+  {
+    "id": "chou",
+    "nameAr": "كرنب / ملفوف",
+    "nameFr": "Chou",
+    "category": "legumes",
+    "price": 8,
+    "unit": "unité",
+    "image": "./images/products/chou.webp",
+    "imageFallback": "https://images.unsplash.com/photo-1594282486552-05b4d80fbb9f?auto=format&fit=crop&w=900&q=82",
+    "badgeAr": "طري",
+    "badgeFr": "Frais",
+    "descriptionAr": "حبة كرنب طازجة",
+    "descriptionFr": "Chou frais vendu à la pièce"
+  },
+  {
+    "id": "brocoli",
+    "nameAr": "بروكلي طازج",
+    "nameFr": "Brocoli frais",
+    "category": "legumes",
+    "price": 15,
+    "unit": "Kg",
+    "image": "./images/products/brocoli.webp",
+    "imageFallback": "https://images.unsplash.com/photo-1459411621453-7b03977f4bfc?auto=format&fit=crop&w=900&q=82",
+    "badgeAr": "طري",
+    "badgeFr": "Frais",
+    "descriptionAr": "بروكلي أخضر طازج",
+    "descriptionFr": "Brocoli vert et frais"
+  },
+  {
+    "id": "chou-fleur",
+    "nameAr": "شيفلور",
+    "nameFr": "Chou-fleur",
+    "category": "legumes",
+    "price": 12,
+    "unit": "unité",
+    "image": "./images/products/chou-fleur.webp",
+    "imageFallback": "https://images.unsplash.com/photo-1692956706779-576c151ec712?auto=format&fit=crop&w=900&q=82",
+    "badgeAr": "طري",
+    "badgeFr": "Frais",
+    "descriptionAr": "حبة شيفلور طازجة",
+    "descriptionFr": "Chou-fleur frais vendu à la pièce"
+  },
+  {
+    "id": "aubergines",
+    "nameAr": "باذنجان",
+    "nameFr": "Aubergines",
+    "category": "legumes",
+    "price": 9,
+    "unit": "Kg",
+    "image": "./images/products/aubergines.webp",
+    "imageFallback": "https://images.unsplash.com/photo-1578283360724-288afbe9cffb?auto=format&fit=crop&w=900&q=82",
+    "badgeAr": "طري",
+    "badgeFr": "Fraîches",
+    "descriptionAr": "باذنجان طازج للطبخ",
+    "descriptionFr": "Aubergines fraîches pour vos recettes"
+  },
+  {
+    "id": "haricots-verts",
+    "nameAr": "لوبيا خضراء",
+    "nameFr": "Haricots verts",
+    "category": "legumes",
+    "price": 16,
+    "unit": "Kg",
+    "image": "./images/products/haricots-verts.webp",
+    "imageFallback": "https://images.unsplash.com/photo-1563746785-be24526199ea?auto=format&fit=crop&w=900&q=84",
+    "badgeAr": "طرية",
+    "badgeFr": "Frais",
+    "descriptionAr": "لوبيا خضراء طازجة",
+    "descriptionFr": "Haricots verts frais et croquants"
+  },
+  {
+    "id": "petits-pois",
+    "nameAr": "جلبانة",
+    "nameFr": "Petits pois",
+    "category": "legumes",
+    "price": 18,
+    "unit": "Kg",
+    "image": "./images/products/petits-pois.webp",
+    "imageFallback": "https://images.unsplash.com/photo-1651793440182-090126813ac0?auto=format&fit=crop&w=900&q=84",
+    "badgeAr": "طري",
+    "badgeFr": "Frais",
+    "descriptionAr": "جلبانة خضراء طازجة",
+    "descriptionFr": "Petits pois verts frais"
+  },
+  {
+    "id": "herbes",
+    "nameAr": "الأعشاب (قزبور، معدنوس، كرافس، نعناع)",
+    "nameFr": "Herbes (coriandre, persil, céleri, menthe)",
+    "category": "legumes",
+    "price": 2.5,
+    "unit": "botte",
+    "image": "./images/products/herbes.webp",
+    "imageFallback": "https://images.unsplash.com/photo-1758055660473-a61e426ade6e?auto=format&fit=crop&w=900&q=84",
+    "badgeAr": "عطرية وطازجة",
+    "badgeFr": "Aromatiques & fraîches",
+    "descriptionAr": "ربطة أعشاب طازجة: قزبور أو معدنوس أو كرافس أو نعناع",
+    "descriptionFr": "Botte fraîche au choix : coriandre, persil, céleri ou menthe"
+  },
+  {
+    "id": "pommes-rouges",
+    "nameAr": "تفاح أحمر ممتاز",
+    "nameFr": "Pommes rouges premium",
+    "category": "fruits",
+    "price": 14,
+    "unit": "Kg",
+    "image": "./images/products/pommes-rouges.webp",
+    "imageFallback": "https://images.unsplash.com/photo-1639328946611-6f274e05a5f5?auto=format&fit=crop&w=900&q=82",
+    "badgeAr": "حلو ومقرمش",
+    "badgeFr": "Sucrées & croquantes",
+    "descriptionAr": "تفاح أحمر ممتاز وطازج",
+    "descriptionFr": "Pommes rouges premium, fraîches et croquantes"
+  },
+  {
+    "id": "bananes",
+    "nameAr": "موز ممتاز",
+    "nameFr": "Bananes premium",
+    "category": "fruits",
+    "price": 12,
+    "unit": "Kg",
+    "image": "./images/products/bananes.webp",
+    "imageFallback": "https://images.unsplash.com/photo-1635843115461-0c29b8509b2e?auto=format&fit=crop&w=900&q=82",
+    "badgeAr": "حلو وطري",
+    "badgeFr": "Douces & fraîches",
+    "descriptionAr": "موز طري بطعم حلو",
+    "descriptionFr": "Bananes fraîches au goût doux"
+  },
+  {
+    "id": "oranges",
+    "nameAr": "برتقال العصير",
+    "nameFr": "Oranges à jus",
+    "category": "fruits",
+    "price": 7,
+    "unit": "Kg",
+    "image": "./images/products/oranges.webp",
+    "imageFallback": "https://images.unsplash.com/photo-1640003287136-69e17a88e9be?auto=format&fit=crop&w=900&q=82",
+    "badgeAr": "عصيري",
+    "badgeFr": "Juteuses",
+    "descriptionAr": "برتقال طري مناسب للعصير",
+    "descriptionFr": "Oranges juteuses, idéales pour vos jus"
+  },
+  {
+    "id": "mandarines",
+    "nameAr": "ماندرين",
+    "nameFr": "Mandarines",
+    "category": "fruits",
+    "price": 9,
+    "unit": "Kg",
+    "image": "./images/products/mandarines.webp",
+    "imageFallback": "https://images.unsplash.com/photo-1547514701-42782101795e?auto=format&fit=crop&w=900&q=82",
+    "badgeAr": "حلوة",
+    "badgeFr": "Sucrées",
+    "descriptionAr": "ماندرين طازج وحلو",
+    "descriptionFr": "Mandarines fraîches et sucrées"
+  },
+  {
+    "id": "fraises",
+    "nameAr": "فراولة طازجة",
+    "nameFr": "Fraises fraîches",
+    "category": "fruits",
+    "price": 16,
+    "unit": "Kg",
+    "image": "./images/products/fraises.webp",
+    "imageFallback": "https://images.unsplash.com/photo-1587393855524-087f83d95bc9?auto=format&fit=crop&w=900&q=82",
+    "badgeAr": "طرية",
+    "badgeFr": "Fraîches",
+    "descriptionAr": "فراولة حمراء طازجة",
+    "descriptionFr": "Fraises rouges fraîches et parfumées"
+  },
+  {
+    "id": "raisins",
+    "nameAr": "عنب أحمر/أبيض",
+    "nameFr": "Raisins rouges & blancs",
+    "category": "fruits",
+    "price": 18,
+    "unit": "Kg",
+    "image": "./images/products/raisins.webp",
+    "imageFallback": "https://images.unsplash.com/photo-1537640538966-79f369143f8f?auto=format&fit=crop&w=900&q=82",
+    "badgeAr": "طري",
+    "badgeFr": "Frais",
+    "descriptionAr": "عنب أحمر أو أبيض طازج",
+    "descriptionFr": "Raisins rouges ou blancs, frais"
+  },
+  {
+    "id": "poires",
+    "nameAr": "إجاص",
+    "nameFr": "Poires",
+    "category": "fruits",
+    "price": 20,
+    "unit": "Kg",
+    "image": "./images/products/poires.webp",
+    "imageFallback": "https://images.unsplash.com/photo-1770361516476-14a0046ce167?auto=format&fit=crop&w=900&q=82",
+    "badgeAr": "طرية",
+    "badgeFr": "Fraîches",
+    "descriptionAr": "إجاص طري ولذيذ",
+    "descriptionFr": "Poires fraîches et savoureuses"
+  },
+  {
+    "id": "peches-nectarines",
+    "nameAr": "خوخ وشهدية",
+    "nameFr": "Pêches & nectarines",
+    "category": "fruits",
+    "price": 22,
+    "unit": "Kg",
+    "image": "./images/products/peches-nectarines.webp",
+    "imageFallback": "https://images.unsplash.com/photo-1692561796478-3c43d6656e42?auto=format&fit=crop&w=900&q=82",
+    "badgeAr": "موسمية",
+    "badgeFr": "De saison",
+    "descriptionAr": "خوخ وشهدية طازجة حسب الموسم",
+    "descriptionFr": "Pêches et nectarines fraîches selon la saison"
+  },
+  {
+    "id": "pasteque",
+    "nameAr": "دلاح",
+    "nameFr": "Pastèque",
+    "category": "fruits",
+    "price": 5,
+    "unit": "Kg",
+    "image": "./images/products/pasteque.webp",
+    "imageFallback": "https://images.unsplash.com/photo-1629084092232-b7b3fa74cd4b?auto=format&fit=crop&w=900&q=82",
+    "badgeAr": "منعش",
+    "badgeFr": "Rafraîchissante",
+    "descriptionAr": "دلاح منعش وحلو",
+    "descriptionFr": "Pastèque fraîche et rafraîchissante"
+  },
+  {
+    "id": "melon",
+    "nameAr": "بطيخ أصفر",
+    "nameFr": "Melon",
+    "category": "fruits",
+    "price": 10,
+    "unit": "Kg",
+    "image": "./images/products/melon.webp",
+    "imageFallback": "https://images.unsplash.com/photo-1563288525-8f1ee0f874a8?auto=format&fit=crop&w=900&q=82",
+    "badgeAr": "حلو",
+    "badgeFr": "Sucré",
+    "descriptionAr": "بطيخ أصفر طري وحلو",
+    "descriptionFr": "Melon frais et sucré"
+  },
+  {
+    "id": "grenades",
+    "nameAr": "رمان",
+    "nameFr": "Grenades",
+    "category": "fruits",
+    "price": 12,
+    "unit": "Kg",
+    "image": "./images/products/grenades.webp",
+    "imageFallback": "https://images.unsplash.com/photo-1708986651402-7d21e616bd8a?auto=format&fit=crop&w=900&q=82",
+    "badgeAr": "طري",
+    "badgeFr": "Fraîches",
+    "descriptionAr": "رمان طازج وحلو",
+    "descriptionFr": "Grenades fraîches et savoureuses"
+  }
+]</script>
 <script>
 
   /* =========================
@@ -1158,6 +1572,8 @@
     address: "entry.710330222", slot: "entry.1442699908", note: "entry.1906243618",
     items: "entry.1554169127", total: "entry.94144248"
   };
+  // Configure only after the private Worker is deployed. Never place secrets here.
+  const ORDER_API_URL = "";
 
   /* =========================
      PRODUITS
@@ -1257,22 +1673,11 @@
     const product = products.find(item => item.id === productId);
     if (!product) return;
     const price = Number(product.price).toFixed(2);
-    const items = `${product.nameFr} / ${product.nameAr} x1 = ${price} DH`;
-    const whatsappWindow = window.open("about:blank", "_blank");
-    try {
-      await saveOrderToPrivateSheet({
-        name: "", phone: "", city: "", address: "", slot: "",
-        note: "Commande rapide WhatsApp — client à confirmer",
-        items, total: price + " DH"
-      });
-      const message = `Bonjour, je souhaite commander 1x ${product.nameFr} (${product.nameAr}) à ${price} DH. Merci.`;
-      const whatsappUrl = "https://api.whatsapp.com/send/?phone=" + WHATSAPP_NUMBER + "&text=" + encodeURIComponent(message);
-      if (whatsappWindow) whatsappWindow.location.href = whatsappUrl;
-      else window.location.href = whatsappUrl;
-    } catch (error) {
-      if (whatsappWindow) whatsappWindow.close();
-      alert("La commande n'a pas pu être enregistrée. Vérifiez votre connexion puis réessayez.");
-    }
+    const message = `Bonjour, je souhaite commander 1x ${product.nameFr} (${product.nameAr}) à ${price} DH. Merci.`;
+    const whatsappUrl = "https://api.whatsapp.com/send/?phone=" + WHATSAPP_NUMBER + "&text=" + encodeURIComponent(message);
+    // A quick WhatsApp message has no address or delivery slot, so it is only an
+    // order request and must not be saved as a complete order.
+    window.open(whatsappUrl, "_blank", "noopener");
   }
 
   function setCategory(category) {
@@ -1632,6 +2037,33 @@
     });
   }
 
+  async function getPendingOrderKey(payload) {
+    const bytes = new TextEncoder().encode(JSON.stringify(payload));
+    const digest = await crypto.subtle.digest("SHA-256", bytes);
+    const fingerprint = Array.from(new Uint8Array(digest), byte => byte.toString(16).padStart(2, "0")).join("");
+    let pending;
+    try { pending = JSON.parse(sessionStorage.getItem("freshsouk_pending_order") || "null"); } catch { pending = null; }
+    if (pending && pending.fingerprint === fingerprint && pending.key) return pending.key;
+    const randomId = crypto.randomUUID ? crypto.randomUUID() : "fs-" + Date.now() + "-" + Math.random().toString(36).slice(2);
+    const key = randomId + "-freshsouk";
+    sessionStorage.setItem("freshsouk_pending_order", JSON.stringify({ fingerprint, key }));
+    return key;
+  }
+
+  async function saveOrderThroughBackend(customer, items) {
+    if (!ORDER_API_URL) return null;
+    const payload = { customer, items: items.map(item => ({ productId: item.id, quantity: Number(item.quantity) })) };
+    const response = await fetch(ORDER_API_URL.replace(/\/$/, "") + "/api/orders", {
+      method: "POST",
+      headers: { "content-type": "application/json", "Idempotency-Key": await getPendingOrderKey(payload) },
+      body: JSON.stringify(payload)
+    });
+    const result = await response.json().catch(() => ({}));
+    if (!response.ok || !result.ok || !result.order) throw new Error(result.error || "Order save failed");
+    sessionStorage.removeItem("freshsouk_pending_order");
+    return result.order;
+  }
+
   document
     .getElementById("checkoutForm")
     .addEventListener("submit", async function(event) {
@@ -1649,6 +2081,7 @@
       const name = document.getElementById("customerName").value.trim();
       const phone = document.getElementById("customerPhone").value.trim();
       const city = document.getElementById("customerCity").value;
+      const neighborhood = document.getElementById("customerNeighborhood")?.value.trim() || "";
       const address = document.getElementById("customerAddress").value.trim();
       const slot = document.getElementById("deliverySlot").value;
       const note = document.getElementById("customerNote").value.trim();
@@ -1676,7 +2109,7 @@
       let message = emojiTokens.leaf + " *NOUVELLE COMMANDE FRESHSOUK*\n\n";
       message += emojiTokens.person + " Nom : " + name + "\n";
       message += emojiTokens.phone + " Téléphone : " + phone + "\n";
-      message += emojiTokens.location + " Ville : " + city + "\n";
+      message += emojiTokens.location + " Ville : " + city + (neighborhood ? " · Quartier : " + neighborhood : "") + "\n";
       message += emojiTokens.home + " Adresse : " + address + "\n";
       message += emojiTokens.clock + " Créneau : " + slot + "\n\n";
       message += emojiTokens.cart + " *Produits :*\n" + itemsText + "\n";
@@ -1706,15 +2139,38 @@
       const whatsappWindow = window.open("about:blank", "_blank");
 
       try {
-        await saveOrderToPrivateSheet({
-          name, phone, city, address, slot, note, items: itemsText, total: total + " DH"
-        });
+        const savedOrder = await saveOrderThroughBackend({ name, phone, city, neighborhood, address, slot, note }, cart);
+        if (ORDER_API_URL) {
+          if (!savedOrder) throw new Error("Order API is not configured correctly.");
+          const savedLines = JSON.parse(savedOrder.items_json || "[]");
+          const savedItemsText = savedLines.map(item => `${item.nameFr} x${item.quantity} = ${Number(item.lineTotal).toFixed(2)} DH`).join("\n");
+          const savedSubtotal = Number(savedOrder.subtotal).toFixed(2);
+          const savedDelivery = Number(savedOrder.delivery_fee).toFixed(2);
+          const savedTotal = Number(savedOrder.total).toFixed(2);
+          let confirmedMessage = emojiTokens.leaf + " *NOUVELLE COMMANDE FRESHSOUK*\n\n";
+          confirmedMessage += emojiTokens.person + " Nom : " + name + "\n" + emojiTokens.phone + " Téléphone : " + phone + "\n";
+          confirmedMessage += emojiTokens.location + " Ville : " + city + (neighborhood ? " · Quartier : " + neighborhood : "") + "\n";
+          confirmedMessage += emojiTokens.home + " Adresse : " + address + "\n" + emojiTokens.clock + " Créneau : " + slot + "\n\n";
+          confirmedMessage += emojiTokens.cart + " *Produits :*\n" + savedItemsText + "\n\nSous-total : " + savedSubtotal + " DH\n";
+          confirmedMessage += emojiTokens.delivery + " Livraison : " + savedDelivery + " DH\n\n" + emojiTokens.money + " *TOTAL : " + savedTotal + " DH*\n";
+          if (note) confirmedMessage += "\n" + emojiTokens.note + " Note : " + note;
+          confirmedMessage += "\n\nMerci pour votre confiance " + emojiTokens.thanks;
+          let confirmedEncoded = encodeURIComponent(confirmedMessage);
+          for (const [token, emojiBytes] of Object.entries(encodedEmojiBytes)) confirmedEncoded = confirmedEncoded.split(token).join(emojiBytes);
+          const confirmedUrl = "https://api.whatsapp.com/send/?phone=" + WHATSAPP_NUMBER + "&text=" + confirmedEncoded;
+          if (whatsappWindow) whatsappWindow.location.href = confirmedUrl;
+          else window.location.href = confirmedUrl;
+        } else {
+          // Legacy Google Forms cannot confirm its cross-origin saved row.
+          await saveOrderToPrivateSheet({ name, phone, city, address: (neighborhood ? neighborhood + " — " : "") + address, slot, note, items: itemsText, total: total + " DH" });
+          if (whatsappWindow) whatsappWindow.location.href = whatsappUrl;
+          else window.location.href = whatsappUrl;
+        }
         cart = [];
         saveCart();
         renderCart();
         closeCheckout();
-        if (whatsappWindow) whatsappWindow.location.href = whatsappUrl;
-        else window.location.href = whatsappUrl;
+        if (ORDER_API_URL) alert("تسجلات الطلبية فالنظام بنجاح. دابا كمل إرسالها فـ WhatsApp.");
       } catch (error) {
         if (whatsappWindow) whatsappWindow.close();
         submitButton.disabled = false;
@@ -1783,6 +2239,116 @@
     video.play().then(syncVideoButton).catch(() => showPoster("Aperçu FreshSOUK disponible • Appuyez sur Lire"));
   })();
 
+
+  const mealBasketRecipes = [
+    { id: "tajine", title: "طاجين الخضرة", sub: "Tajine de légumes", image: "./images/products/pack-couscous-vendredi.webp", alt: "سلة خضرة مغربية للطاجين", icon: "🍲", items: [["pomme-de-terre",1],["carottes",.5],["tomates",.5],["oignons-blancs",.25],["courgettes",.5],["herbes",1]] },
+    { id: "salade", title: "سلطة مغربية", sub: "Salade marocaine", image: "./images/products/tomates.webp", alt: "طماطم طازجة للسلطة المغربية", icon: "🥗", items: [["tomates",.5],["concombres",.5],["oignons-rouges",.25],["poivrons",.25],["carottes",.25]] },
+    { id: "couscous", title: "كسكس بالخضرة", sub: "Couscous aux légumes", image: "./images/products/pack-couscous-vendredi.webp", alt: "سلة خضرة مغربية للكسكس", icon: "🍛", items: [["tomates",.5],["carottes",.5],["courge-rouge",.5],["courgettes",.5],["navets",.5],["herbes",1]] },
+    { id: "jus", title: "عصير وفواكه", sub: "Jus & fruits", image: "./images/products/pack-jus-fruits.webp", alt: "سلة فواكه طازجة للعصير", icon: "🍊", items: [["oranges",3],["fraises",1],["bananes",2]] }
+  ];
+  const escapeMealText = value => String(value ?? "").replace(/[&<>"']/g, char => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[char]));
+  function renderMealBaskets() {
+    const host = document.getElementById("mealBasketGrid");
+    if (!host || !products.length) return;
+    const productById = id => products.find(product => product.id === id);
+    host.innerHTML = mealBasketRecipes.map(recipe => {
+      const rows = recipe.items.map((entry, index) => {
+        const product = productById(entry[0]);
+        if (!product) return "";
+        const options = products.map(item => '<option value="' + escapeMealText(item.id) + '" ' + (item.id === product.id ? "selected" : "") + '>' + escapeMealText(item.nameFr || item.nameAr) + '</option>').join("");
+        return '<div class="meal-ingredient"><select data-meal-product="' + recipe.id + '" data-index="' + index + '" aria-label="بدل المنتوج">' + options + '</select><input id="mb-' + recipe.id + '-' + index + '" type="number" min="0" max="100" step="0.25" value="' + entry[1] + '" data-meal-input="' + recipe.id + '" data-index="' + index + '" aria-label="الكمية ديال ' + escapeMealText(product.nameAr || product.nameFr) + '"><span class="meal-line-price" data-line="' + recipe.id + '-' + index + '">' + (Number(product.price) * entry[1]).toFixed(2) + ' DH</span><button class="meal-remove-btn" type="button" data-meal-remove="' + recipe.id + '" data-index="' + index + '" aria-label="حيد ' + escapeMealText(product.nameFr) + '">حيد</button></div>';
+      }).join("");
+      const available = products.filter(product => !recipe.items.some(item => item[0] === product.id));
+      const addOptions = available.map(product => '<option value="' + escapeMealText(product.id) + '">' + escapeMealText(product.nameFr || product.nameAr) + '</option>').join("");
+      return '<article class="meal-card"><div class="meal-card-top"><div><h3 lang="ar" dir="rtl">' + escapeMealText(recipe.title) + '</h3><p>' + escapeMealText(recipe.sub) + '</p><span class="meal-draft-badge">تقدير قابل للتغيير · باقي خاصو المصادقة</span></div><span class="meal-icon" aria-hidden="true">' + recipe.icon + '</span></div><img class="meal-photo" src="' + recipe.image + '" alt="' + escapeMealText(recipe.alt) + '" loading="lazy" decoding="async"><div class="meal-ingredients">' + rows + '</div><div class="meal-add-controls"><select data-meal-add-select="' + recipe.id + '" aria-label="اختار مكوّن باش تزيدو"><option value="">اختار منتوج</option>' + addOptions + '</select><button type="button" data-meal-add="' + recipe.id + '" ' + (available.length ? "" : "disabled") + '>+ زيد مكوّن</button></div><div class="meal-total"><span>المجموع التقديري</span><strong data-total="' + recipe.id + '">— DH</strong></div><button class="meal-add-btn" type="button" data-meal-cart="' + recipe.id + '">زيد المكونات للسلة</button></article>';
+    }).join("");
+    host.querySelectorAll("[data-meal-input]").forEach(input => input.addEventListener("input", () => {
+      const recipe = mealBasketRecipes.find(item => item.id === input.dataset.mealInput);
+      const index = Number(input.dataset.index);
+      if (recipe && recipe.items[index]) recipe.items[index][1] = Math.max(0, Math.min(100, Number(input.value) || 0));
+      updateMealTotals();
+    }));
+    host.querySelectorAll("[data-meal-product]").forEach(select => select.addEventListener("change", () => {
+      const recipe = mealBasketRecipes.find(item => item.id === select.dataset.mealProduct);
+      const index = Number(select.dataset.index);
+      if (recipe && recipe.items[index]) { recipe.items[index][0] = select.value; renderMealBaskets(); }
+    }));
+    host.querySelectorAll("[data-meal-remove]").forEach(button => button.addEventListener("click", () => {
+      const recipe = mealBasketRecipes.find(item => item.id === button.dataset.mealRemove);
+      if (recipe) { recipe.items.splice(Number(button.dataset.index), 1); renderMealBaskets(); }
+    }));
+    host.querySelectorAll("[data-meal-add]").forEach(button => button.addEventListener("click", () => {
+      const recipe = mealBasketRecipes.find(item => item.id === button.dataset.mealAdd);
+      const select = host.querySelector('[data-meal-add-select="' + button.dataset.mealAdd + '"]');
+      if (recipe && select && select.value) { recipe.items.push([select.value, .25]); renderMealBaskets(); }
+    }));
+    host.querySelectorAll("[data-meal-cart]").forEach(button => button.addEventListener("click", () => addMealToCart(button.dataset.mealCart)));
+    updateMealTotals();
+  }
+  function updateMealTotals() {
+    mealBasketRecipes.forEach(recipe => {
+      let total = 0;
+      recipe.items.forEach((entry, index) => {
+        const product = products.find(item => item.id === entry[0]);
+        const input = document.getElementById("mb-" + recipe.id + "-" + index);
+        if (!product || !input) return;
+        const quantity = Math.max(0, Math.min(100, Number(input.value) || 0));
+        entry[1] = quantity;
+        const lineTotal = Number(product.price) * quantity;
+        total += lineTotal;
+        const line = document.querySelector('[data-line="' + recipe.id + '-' + index + '"]');
+        if (line) line.textContent = lineTotal.toFixed(2) + " DH";
+      });
+      const target = document.querySelector('[data-total="' + recipe.id + '"]');
+      if (target) target.textContent = total.toFixed(2) + " DH";
+    });
+  }
+  function addMealToCart(id) {
+    const recipe = mealBasketRecipes.find(item => item.id === id);
+    if (!recipe) return;
+    recipe.items.forEach(entry => {
+      const product = products.find(item => item.id === entry[0]);
+      const quantity = Math.max(0, Math.min(100, Number(entry[1]) || 0));
+      if (!product || !quantity) return;
+      const existing = cart.find(item => item.id === product.id);
+      if (existing) existing.quantity = Number(existing.quantity) + quantity;
+      else cart.push({ ...product, quantity });
+    });
+    saveCart();
+    openCart();
+  }
+  function setupSubscriptionForm() {
+    const form = document.getElementById("subscriptionForm");
+    if (!form) return;
+    const packSelect = document.getElementById("subPack");
+    packSelect.innerHTML = '<option value="">اختار الباك</option>' + products.filter(item => item.category === "packs").map(item => '<option value="' + escapeMealText(item.id) + '">' + escapeMealText(item.nameAr) + ' · ' + escapeMealText(item.nameFr) + ' — ' + Number(item.price).toFixed(2) + ' DH</option>').join("");
+    const dateInput = document.getElementById("subDate");
+    const minDate = new Date(); minDate.setDate(minDate.getDate() + 1);
+    dateInput.min = [minDate.getFullYear(), String(minDate.getMonth() + 1).padStart(2, "0"), String(minDate.getDate()).padStart(2, "0")].join("-");
+    const weekday = document.getElementById("subWeekday");
+    const weekdayNames = ["الأحد", "الاثنين", "الثلاثاء", "الأربعاء", "الخميس", "الجمعة", "السبت"];
+    dateInput.addEventListener("change", () => {
+      if (!dateInput.value) { weekday.innerHTML = '<option>اختار التاريخ اللول</option>'; return; }
+      const day = new Date(dateInput.value + "T00:00:00.000Z").getUTCDay();
+      weekday.innerHTML = '<option value="' + day + '">' + weekdayNames[day] + '</option>';
+    });
+    form.addEventListener("submit", async event => {
+      event.preventDefault();
+      const message = document.getElementById("subscriptionMessage");
+      if (!ORDER_API_URL) { const quantity = Number(document.getElementById("subQuantity").value); const frequencyWeeks = Number(document.getElementById("subFrequency").value); const selectedPack = products.find(product => product.id === packSelect.value); if (!selectedPack || !Number.isFinite(quantity) || quantity < 1 || quantity > 20 || !dateInput.value || !weekday.value) { message.textContent = "عمر المعلومات كاملة واختار الباك والتاريخ باش نوجدولك رسالة WhatsApp."; return; } const customer = { name: document.getElementById("subName").value.trim(), phone: document.getElementById("subPhone").value.trim(), city: document.getElementById("subCity").value, neighborhood: document.getElementById("subNeighborhood").value.trim(), address: document.getElementById("subAddress").value.trim(), slot: document.getElementById("subSlot").value }; const frequencyLabel = frequencyWeeks === 2 ? "كل جوج سيمانات" : "كل سيمانة"; const nextDate = new Intl.DateTimeFormat("fr-MA", { dateStyle: "long", timeZone: "Africa/Casablanca" }).format(new Date(dateInput.value + "T12:00:00")); const requestText = ["Salam FreshSOUK 👋 بغيت نسول على الاشتراك الأسبوعي:", "الاسم: " + customer.name, "الهاتف: " + customer.phone, "المدينة: " + customer.city + " · الحي: " + customer.neighborhood, "العنوان: " + customer.address, "الباك: " + selectedPack.nameAr + " · " + selectedPack.nameFr, "الكمية: " + quantity + " × " + Number(selectedPack.price).toFixed(2) + " DH = " + (quantity * Number(selectedPack.price)).toFixed(2) + " DH", "التكرار: " + frequencyLabel, "أول توصيل: " + nextDate + " · " + weekday.options[weekday.selectedIndex].text, "الوقت: " + customer.slot, "هادشي غير استفسار؛ ما كاين حتى اشتراك أو توصيل حتى نتفاهمو ونأكدوه."].join(String.fromCharCode(10)); const whatsappUrl = "https://api.whatsapp.com/send/?phone=" + WHATSAPP_NUMBER + "&text=" + encodeURIComponent(requestText); const whatsappTab = window.open(whatsappUrl, "_blank"); if (whatsappTab) whatsappTab.opener = null; else window.location.href = whatsappUrl; message.textContent = "تحلّ WhatsApp برسالة جاهزة. صيفطها لينا باش نتفاهمو معاك؛ ما تسجّل حتى اشتراك دابا."; return; }
+      const submit = form.querySelector('button[type="submit"]'); submit.disabled = true; submit.textContent = "كنسجلو الطلب…"; message.textContent = "";
+      const customer = { name: document.getElementById("subName").value.trim(), phone: document.getElementById("subPhone").value.trim(), city: document.getElementById("subCity").value, neighborhood: document.getElementById("subNeighborhood").value.trim(), address: document.getElementById("subAddress").value.trim(), slot: document.getElementById("subSlot").value };
+      try {
+        const response = await fetch(ORDER_API_URL.replace(/\/$/, "") + "/api/subscriptions", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ customer, packProductId: packSelect.value, quantity: Number(document.getElementById("subQuantity").value), frequencyWeeks: Number(document.getElementById("subFrequency").value), deliveryWeekday: Number(weekday.value), nextDeliveryDate: dateInput.value, consent: document.getElementById("subConsent").checked }) });
+        const result = await response.json().catch(() => ({}));
+        if (!response.ok || !result.ok) throw new Error(result.error || "ما قدرناش نسجلو الاشتراك.");
+        message.textContent = "تسجل طلب الاشتراك بنجاح. غادي نتاصلو بيك قبل أول توصيل باش تأكد.";
+        form.reset(); packSelect.selectedIndex = 0; weekday.innerHTML = '<option>اختار التاريخ اللول</option>';
+      } catch (error) { message.textContent = error.message; }
+      finally { submit.disabled = false; submit.textContent = "طلب الاشتراك"; }
+    });
+  }
+  setTimeout(() => { renderMealBaskets(); setupSubscriptionForm(); }, 0);
 </script>
 
 </body>

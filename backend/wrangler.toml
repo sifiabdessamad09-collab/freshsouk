@@ -1,0 +1,25 @@
+name = "freshsouk-orders-api"
+main = "worker.js"
+compatibility_date = "2026-10-21"
+
+[assets]
+directory = ".."
+binding = "ASSETS"
+run_worker_first = true
+
+[[d1_databases]]
+binding = "DB"
+database_name = "freshsouk-orders"
+database_id = "REPLACE_WITH_D1_DATABASE_ID"
+
+[[ratelimits]]
+name = "ORDER_LIMITER"
+namespace_id = "1001"
+simple = { limit = 30, period = 60 }
+
+[vars]
+ALLOWED_ORIGIN = "https://sifiabdessamad09-collab.github.io"
+DELIVERY_FEE = "20"
+FREE_SHIPPING_THRESHOLD = "200"
+ACCESS_TEAM_DOMAIN = "REPLACE_WITH_TEAM.cloudflareaccess.com"
+ACCESS_AUD = "REPLACE_WITH_ACCESS_APPLICATION_AUD"
