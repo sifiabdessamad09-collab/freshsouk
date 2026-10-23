@@ -818,21 +818,6 @@
   </div>
 </section>
 
-<section class="brand-video-section" id="video-freshsouk" aria-labelledby="brandVideoTitle">
-  <div class="brand-video-heading">
-    <h2 id="brandVideoTitle">FreshSOUK en images | فرش سوق بالفيديو</h2>
-    <p>Découvrez notre sélection fraîche, avec l’image entière au format 16:9.</p>
-  </div>
-  <div class="brand-video-frame" id="brandVideoFrame">
-    <div class="brand-video-poster" aria-hidden="true"><img src="./freshsouk-logo.png" alt=""></div>
-    <video class="brand-video-player" id="brandVideo" autoplay muted loop playsinline preload="metadata" poster="./freshsouk-logo.png" aria-label="Présentation vidéo FreshSOUK">
-      <source src="./assets/videos/freshsouk-web.mp4" type="video/mp4">
-    </video>
-    <button class="brand-video-toggle" id="brandVideoToggle" type="button" aria-controls="brandVideo" aria-label="Mettre la vidéo en pause" aria-pressed="false">⏸ Pause</button>
-    <p class="brand-video-status" id="brandVideoStatus" role="status" aria-live="polite">Vidéo silencieuse • Lecture automatique</p>
-  </div>
-</section>
-
 <section class="features">
 
   <div class="feature">
@@ -861,15 +846,6 @@
 
 </section>
 
-<section class="trust-strip" aria-label="Nos engagements / التزاماتنا">
-  <div class="trust-item"><strong>Paiement à la livraison | الدفع عند الاستلام</strong><span>Vous réglez votre commande à la réception.</span></div>
-  <div class="trust-item"><strong>Zone de livraison | منطقة التوصيل</strong><span>الدار البيضاء فقط | Casablanca uniquement.</span></div>
-  <div class="trust-item"><strong>Frais à prix accessibles | خضرة وفواكه طريّة بأثمنة مناسبة</strong><span>Une sélection quotidienne pour votre panier.</span></div>
-</section>
-
-<section class="meal-section" id="paniers-repas"><div class="meal-heading"><div><span class="meal-kicker">اقتراحات FreshSOUK · Idées FreshSOUK</span><h2>شنو غادي طيب اليوم؟</h2><p>مقادير تقريبية لـ 4 أشخاص، قابلة للتغيير. الثمن كيتحسب بأثمنة المنتجات الحالية.</p></div><span class="meal-estimate-note">غيّر الكميات قبل الإضافة</span></div><div class="meal-grid" id="mealBasketGrid"></div><p class="meal-footnote">هاد الاقتراحات تقديرية وقابلة للتغيير، والثمن كيتحسب بأثمنة المنتجات الحالية. أثمنة الباكات الحالية ما كتبدلش.</p></section>
-<section class="meal-section" id="freshsouk-hebdo"><div class="meal-heading"><div><span class="meal-kicker">FreshSOUK Hebdo</span><h2>خلي سلّتك توصلك كل سيمانة</h2><p>اختار الباك والموعد. غادي نسولوك قبل كل توصيل، وما غاديش يتخلق الطلب حتى تأكد لينا.</p></div><span class="meal-estimate-note">بلا اقتطاع تلقائي</span></div><form id="subscriptionForm" class="subscription-form"><div class="form-grid"><div class="form-group"><label for="subName">الاسم الكامل</label><input id="subName" required maxlength="240"></div><div class="form-group"><label for="subPhone">الهاتف</label><input id="subPhone" type="tel" inputmode="tel" pattern="(0[567][0-9]{8}|\+212[567][0-9]{8})" placeholder="06XXXXXXXX" required></div><div class="form-group"><label for="subCity">المدينة</label><select id="subCity" required><option value="">اختار المدينة</option><option value="Casablanca">Casablanca</option></select></div><div class="form-group"><label for="subPack">الباك</label><select id="subPack" required><option value="">كنحمّلو السلات…</option></select></div><div class="form-group"><label for="subQuantity">عدد السلات</label><input id="subQuantity" type="number" min="1" max="20" value="1" required></div><div class="form-group"><label for="subFrequency">التكرار</label><select id="subFrequency" required><option value="1">كل سيمانة</option><option value="2">كل جوج سيمانات</option></select></div><div class="form-group"><label for="subDate">أول نهار للتوصيل</label><input id="subDate" type="date" required></div><div class="form-group"><label for="subWeekday">نهار التوصيل المتكرر</label><select id="subWeekday" disabled><option>اختار التاريخ اللول</option></select></div><div class="form-group"><label for="subSlot">الوقت المناسب</label><select id="subSlot" required><option value="">اختار</option><option>09h00 - 12h00</option><option>12h00 - 15h00</option><option>15h00 - 18h00</option><option>18h00 - 21h00</option></select></div><div class="form-group"><label for="subNeighborhood">الحي</label><input id="subNeighborhood" maxlength="240" required></div><div class="form-group full"><label for="subAddress">العنوان</label><input id="subAddress" maxlength="240" required></div><div class="form-group full"><label style="display:flex;gap:9px;align-items:flex-start"><input id="subConsent" type="checkbox" required style="width:auto;margin-top:3px"><span id="subConsentText">كنوافق يتسجلو معلوماتي باش نتواصلو معايا على الاشتراك. قبل كل طلب غادي نستناو تأكيدي، ونقدر نوقف أو نلغي الاشتراك.</span></label></div></div><p id="subscriptionMessage" role="status" aria-live="polite"></p><button class="meal-add-btn" type="submit">طلب الاشتراك</button></form></section>
-<section class="meal-section" id="freshsouk-club"><div class="meal-heading"><div><span class="meal-kicker">FreshSOUK Club</span><h2>قريباً: برنامج الوفاء ديال FreshSOUK</h2><p>كنحضّروه دابا. غادي نعلنو على الشروط والنقط من بعد ما نصادقو عليهم؛ حتى لداك الساعة ما كاين لا نقط لا تخفيضات مفعّلة.</p></div><span class="meal-estimate-note">مازال مطفي</span></div></section>
 <section class="section" id="produits">
 
   <div class="section-title">
@@ -892,6 +868,29 @@
 
   <div class="products" id="productsContainer"></div>
 
+</section>
+
+<section class="trust-strip" aria-label="Nos engagements / التزاماتنا">
+  <div class="trust-item"><strong>Paiement à la livraison | الدفع عند الاستلام</strong><span>Vous réglez votre commande à la réception.</span></div>
+  <div class="trust-item"><strong>Zone de livraison | منطقة التوصيل</strong><span>الدار البيضاء فقط | Casablanca uniquement.</span></div>
+  <div class="trust-item"><strong>Frais à prix accessibles | خضرة وفواكه طريّة بأثمنة مناسبة</strong><span>Une sélection quotidienne pour votre panier.</span></div>
+</section>
+
+<section class="meal-section" id="paniers-repas"><div class="meal-heading"><div><span class="meal-kicker">اقتراحات FreshSOUK · Idées FreshSOUK</span><h2>شنو غادي طيب اليوم؟</h2><p>مقادير تقريبية لـ 4 أشخاص، قابلة للتغيير. الثمن كيتحسب بأثمنة المنتجات الحالية.</p></div><span class="meal-estimate-note">غيّر الكميات قبل الإضافة</span></div><div class="meal-grid" id="mealBasketGrid"></div><p class="meal-footnote">هاد الاقتراحات تقديرية وقابلة للتغيير، والثمن كيتحسب بأثمنة المنتجات الحالية. أثمنة الباكات الحالية ما كتبدلش.</p></section>
+
+<section class="brand-video-section" id="video-freshsouk" aria-labelledby="brandVideoTitle">
+  <div class="brand-video-heading">
+    <h2 id="brandVideoTitle">FreshSOUK en images | فرش سوق بالفيديو</h2>
+    <p>Découvrez notre sélection fraîche, avec l’image entière au format 16:9.</p>
+  </div>
+  <div class="brand-video-frame" id="brandVideoFrame">
+    <div class="brand-video-poster" aria-hidden="true"><img src="./freshsouk-logo.png" alt=""></div>
+    <video class="brand-video-player" id="brandVideo" autoplay muted loop playsinline preload="metadata" poster="./freshsouk-logo.png" aria-label="Présentation vidéo FreshSOUK">
+      <source src="./assets/videos/freshsouk-web.mp4" type="video/mp4">
+    </video>
+    <button class="brand-video-toggle" id="brandVideoToggle" type="button" aria-controls="brandVideo" aria-label="Mettre la vidéo en pause" aria-pressed="false">⏸ Pause</button>
+    <p class="brand-video-status" id="brandVideoStatus" role="status" aria-live="polite">Vidéo silencieuse • Lecture automatique</p>
+  </div>
 </section>
 
 <section class="reviews-section" id="avis" aria-labelledby="reviewsTitle">
@@ -924,6 +923,8 @@
     </form>
   </div>
 </section>
+
+<section class="meal-section" id="freshsouk-hebdo"><div class="meal-heading"><div><span class="meal-kicker">FreshSOUK Hebdo</span><h2>خلي سلّتك توصلك كل سيمانة</h2><p>اختار الباك والموعد. غادي نسولوك قبل كل توصيل، وما غاديش يتخلق الطلب حتى تأكد لينا.</p></div><span class="meal-estimate-note">بلا اقتطاع تلقائي</span></div><form id="subscriptionForm" class="subscription-form"><div class="form-grid"><div class="form-group"><label for="subName">الاسم الكامل</label><input id="subName" required maxlength="240"></div><div class="form-group"><label for="subPhone">الهاتف</label><input id="subPhone" type="tel" inputmode="tel" pattern="(0[567][0-9]{8}|\+212[567][0-9]{8})" placeholder="06XXXXXXXX" required></div><div class="form-group"><label for="subCity">المدينة</label><select id="subCity" required><option value="">اختار المدينة</option><option value="Casablanca">Casablanca</option></select></div><div class="form-group"><label for="subPack">الباك</label><select id="subPack" required><option value="">كنحمّلو السلات…</option></select></div><div class="form-group"><label for="subQuantity">عدد السلات</label><input id="subQuantity" type="number" min="1" max="20" value="1" required></div><div class="form-group"><label for="subFrequency">التكرار</label><select id="subFrequency" required><option value="1">كل سيمانة</option><option value="2">كل جوج سيمانات</option></select></div><div class="form-group"><label for="subDate">أول نهار للتوصيل</label><input id="subDate" type="date" required></div><div class="form-group"><label for="subWeekday">نهار التوصيل المتكرر</label><select id="subWeekday" disabled><option>اختار التاريخ اللول</option></select></div><div class="form-group"><label for="subSlot">الوقت المناسب</label><select id="subSlot" required><option value="">اختار</option><option>09h00 - 12h00</option><option>12h00 - 15h00</option><option>15h00 - 18h00</option><option>18h00 - 21h00</option></select></div><div class="form-group"><label for="subNeighborhood">الحي</label><input id="subNeighborhood" maxlength="240" required></div><div class="form-group full"><label for="subAddress">العنوان</label><input id="subAddress" maxlength="240" required></div><div class="form-group full"><label style="display:flex;gap:9px;align-items:flex-start"><input id="subConsent" type="checkbox" required style="width:auto;margin-top:3px"><span id="subConsentText">كنوافق يتسجلو معلوماتي باش نتواصلو معايا على الاشتراك. قبل كل طلب غادي نستناو تأكيدي، ونقدر نوقف أو نلغي الاشتراك.</span></label></div></div><p id="subscriptionMessage" role="status" aria-live="polite"></p><button class="meal-add-btn" type="submit">طلب الاشتراك</button></form></section>
 
 </main>
 
