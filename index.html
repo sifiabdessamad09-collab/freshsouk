@@ -813,6 +813,36 @@
     @media(max-width:800px){.hero{min-height:0;padding:36px 24px 25px;grid-template-columns:1fr;gap:18px;background:linear-gradient(90deg,#fbf8edf7,#fbf8edb8),#f8f4e9}.hero-copy{max-width:680px}.hero-visual{position:absolute;width:70%;opacity:.38}.hero-visual:before{background:linear-gradient(90deg,#fbf8ed 0%,#fbf8ed99 35%,transparent 100%)}.hero-visual-note{display:none}.hero-welcome{font-size:52px}.category-shortcuts{padding-inline:18px}.category-shortcut{min-height:145px}.section#produits{padding:22px 18px 38px}.products{grid-template-columns:repeat(3,minmax(0,1fr))}}
     @media(max-width:600px){.hero{padding:28px 16px 21px;gap:12px}.hero .badge{font-size:10px}.hero-welcome{font-size:44px}.hero-sun{left:220px}.hero p{font-size:13px}.hero .hero-copy-ar{font-size:12px!important}.hero-search{height:48px;gap:7px;margin-top:12px;padding-left:12px}.hero-search input{font-size:11px}.hero-search .btn-primary{min-width:92px;padding:0 10px;font-size:11px}.hero-trust{gap:5px;margin-top:10px}.hero-trust span{min-height:30px;padding:6px 8px;font-size:9px}.category-shortcuts{gap:9px;padding:10px 14px 5px}.category-shortcut{min-height:120px;border-radius:12px}.category-shortcut span{left:11px;bottom:11px;font-size:12px}.category-shortcut small{font-size:10px}.category-shortcut small b{width:25px;height:25px;margin-top:-5px;font-size:19px}.section#produits{padding:18px 14px 32px}.section-title{gap:9px}.section-title h2{gap:7px;font-size:23px}.section-title h2 span{font-size:.58em}.section-title p{font-size:10px}.all-products-link{font-size:10px;gap:4px}.all-products-link span{font-size:16px}.catalog-tools{margin:10px 0}.category-tabs{overflow:auto;flex-wrap:nowrap;padding-bottom:3px;scrollbar-width:none}.category-tabs::-webkit-scrollbar{display:none}.category-tab{min-height:32px;padding-inline:13px;font-size:10px}.products{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.product-image{height:clamp(120px,38vw,165px)}.product-content{padding:9px}.product h3,.product-ar{font-size:11px}.product-description,.product-description-ar{font-size:8px}.product-price{font-size:13px}.product-actions{grid-template-columns:1fr 1fr}.product-actions button{font-size:8px;padding:8px 3px}}
     @media(max-width:380px){.hero-welcome{font-size:39px}.hero-sun{left:196px}.hero-search .btn-primary{min-width:76px;padding-inline:7px}.section-title{align-items:flex-start}.all-products-link{font-size:9px}}
+    /* Product cards matched to the selected catalog reference. */
+    .section#produits{max-width:1450px}
+    .products{grid-template-columns:repeat(6,minmax(0,1fr));gap:12px}
+    .product{border:1px solid #ecefeb;border-radius:13px;box-shadow:0 5px 18px #1b38210d;transition:transform .2s,box-shadow .2s}
+    .product:hover{transform:translateY(-2px);box-shadow:0 11px 25px #1b382119}
+    .product-image{height:clamp(128px,12vw,168px);background:#fff}
+    .product-image img{object-fit:contain;padding:8px}
+    .product-content{padding:10px 12px 12px}
+    .product-category,.product-description,.product-description-ar{display:none}
+    .product h3{display:inline;font-size:12px;line-height:1.35;min-height:0;color:#183728}
+    .product-ar{display:inline-block;min-height:0;margin:0 0 0 5px;font-size:12px;line-height:1.35;color:#355544;text-align:left;vertical-align:baseline}
+    .product-names{min-height:34px;display:flex;align-items:center;flex-wrap:wrap;gap:2px 5px}
+    .product-bottom{margin-top:4px;padding-top:0;gap:8px}
+    .product-purchase-row{display:flex;align-items:center;justify-content:space-between;gap:6px;min-width:0}
+    .product-badge{display:none}
+    .product-price{font-size:15px;color:#16803a;font-weight:850}
+    .product-price small{font-size:10px;color:#17643c;font-weight:700}
+    .quantity-picker{display:flex;align-items:center;justify-content:center;gap:0;width:max-content;max-width:100%;min-height:36px;padding:0;border:1px solid #dfe5e0;border-radius:9px;background:#fff;overflow:hidden}
+    .quantity-picker button{width:29px;height:34px;border:0;background:#fff;color:#27382e;font-size:16px;font-weight:700;cursor:pointer}
+    .quantity-picker button:hover{background:#f2f7f2;color:#16803a}
+    .quantity-picker output{display:grid;place-items:center;min-width:29px;height:34px;color:#1f3026;font-size:12px;font-weight:750}
+    .product-actions{display:flex;align-items:center;gap:5px;width:auto}
+    .product-actions button{min-height:36px;padding:8px 10px;border-radius:9px;font-size:10px}
+    .product-actions .add-btn{background:#078345;color:#fff}
+    .product-actions .whatsapp-btn{width:34px;min-width:34px;padding:0;background:#f1faf3;color:#128340;border:1px solid #d4ead8;font-size:15px}
+    .product[data-product-id="mandarines"] .product-image img{padding:8px}
+    @media(max-width:1150px){.products{grid-template-columns:repeat(4,minmax(0,1fr))}}
+    @media(max-width:800px){.products{grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}}
+    @media(max-width:600px){.products{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.product-image{height:clamp(120px,34vw,155px)}.product-content{padding:9px}.product-names{min-height:34px}.product h3,.product-ar{font-size:11px}.product-price{font-size:13px}.quantity-picker{min-height:33px}.quantity-picker button,.quantity-picker output{height:31px}.quantity-picker button{width:25px}.quantity-picker output{min-width:25px;font-size:11px}.product-bottom{gap:6px}.product-purchase-row{gap:4px}.product-actions{gap:4px}.product-actions button{min-height:33px;padding:7px 7px;font-size:9px}.product-actions .whatsapp-btn{width:31px;min-width:31px;padding:0;font-size:14px}}
+    @media(max-width:380px){.product-content{padding:8px}.product h3,.product-ar{font-size:10px}.product-price{font-size:12px}.quantity-picker button{width:22px}.quantity-picker output{min-width:22px}.product-actions button{padding-inline:5px}}
 </style>
 </head>
 
@@ -1712,13 +1742,11 @@
           ${(product.badgeFr || product.badgeAr) ? `<span class="product-badge ${product.category === "packs" ? "product-badge-gold" : "product-badge-green"}">${product.badgeFr || product.badgeAr}</span>` : ""}
         </div>
         <div class="product-content">
-          <div class="product-category">${product.categoryLabel}</div>
-          <h3>${product.nameFr}</h3>
-          <span class="product-ar" lang="ar" dir="rtl">${product.nameAr}</span>
+          <div class="product-names"><h3>${product.nameFr}</h3><span class="product-ar" lang="ar" dir="rtl">${product.nameAr}</span></div>
           ${product.category === "packs" ? `<details class="pack-details"><summary>شوف شنو فيها · Voir le contenu</summary><p>${product.descriptionFr || ""}</p><p class="pack-details-ar" lang="ar" dir="rtl">${product.descriptionAr || ""}</p></details>` : `<p class="product-description">${product.descriptionFr || "Produits frais du marché."}</p><p class="product-description product-description-ar" lang="ar" dir="rtl">${product.descriptionAr || ""}</p>`}
           <div class="product-bottom"><div class="product-price">${Number(product.price).toFixed(2)} DH <small>/ ${product.unit}</small></div>
-            ${product.unit === "Kg" ? `<div class="quantity-picker"><label for="qty-${product.id}">Quantité / الكمية</label><select id="qty-${product.id}" data-quantity-select aria-label="Choisir la quantité de ${product.nameFr}" onchange="updateProductSelection(this)"><option value="0.5">500 g / نص كيلو</option><option value="1" selected>1 Kg / كيلو</option><option value="2">2 Kg / جوج كيلو</option></select><output data-quantity-total>${Number(product.price).toFixed(2)} DH</output></div>` : ""}
-            <div class="product-actions"><button class="add-btn" onclick="addSelectedToCart('${product.id}', this)">+ Ajouter</button><button class="whatsapp-btn" onclick="quickOrderProduct('${product.id}', this)">💬 WhatsApp</button></div>
+            <div class="product-purchase-row"><div class="quantity-picker" aria-label="Quantité de ${product.nameFr}"><button type="button" aria-label="Diminuer la quantité" onclick="adjustProductQuantity(this, -1)">−</button><output data-quantity-value data-quantity="1" data-unit="${product.unit}" aria-live="polite">1</output><button type="button" aria-label="Augmenter la quantité" onclick="adjustProductQuantity(this, 1)">+</button></div>
+            <div class="product-actions"><button class="add-btn" onclick="addSelectedToCart('${product.id}', this)">🛒 Ajouter</button><button class="whatsapp-btn" aria-label="Commander ${product.nameFr} sur WhatsApp" title="Commander sur WhatsApp" onclick="quickOrderProduct('${product.id}', this)">💬</button></div></div>
           </div>
         </div>
       </article>
@@ -1730,17 +1758,19 @@
   }
 
   function selectedProductQuantity(button) {
-    const selector = button?.closest(".product")?.querySelector("[data-quantity-select]");
-    return selector ? Number(selector.value) : 1;
+    const quantity = button?.closest(".product")?.querySelector("[data-quantity-value]");
+    return quantity ? Number(quantity.dataset.quantity) || 1 : 1;
   }
 
-  function updateProductSelection(selector) {
-    const card = selector.closest(".product");
-    const product = products.find(item => item.id === card?.dataset.productId);
-    if (!product) return;
-    const quantity = Number(selector.value) || 1;
-    const total = card.querySelector("[data-quantity-total]");
-    if (total) total.textContent = `${(Number(product.price) * quantity).toFixed(2)} DH`;
+  function adjustProductQuantity(button, direction) {
+    const card = button.closest(".product");
+    const quantity = card?.querySelector("[data-quantity-value]");
+    if (!quantity) return;
+    const step = quantity.dataset.unit === "Kg" ? 0.5 : 1;
+    const next = Math.max(step, Number(quantity.dataset.quantity || 1) + direction * step);
+    quantity.dataset.quantity = String(next);
+    quantity.textContent = Number.isInteger(next) ? String(next) : next.toFixed(1);
+    quantity.setAttribute("aria-label", `${quantity.textContent} ${quantity.dataset.unit}`);
   }
 
   function addSelectedToCart(productId, button) {
