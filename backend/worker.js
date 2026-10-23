@@ -30,9 +30,29 @@ export default {
       if (url.pathname === "/api/orders" && request.method === "POST") return await createOrder(request, env, cors);
       if (url.pathname === "/api/subscriptions" && request.method === "POST") return await createSubscription(request, env, cors);
       if (url.pathname === "/api/catalog" && request.method === "GET") {
-        const response = await env.ASSETS.fetch(new Request(new URL("/products.json", request.url)));
-        if (!response.ok) throw new Error("Catalog unavailable");
-        return new Response(await response.text(), { status: 200, headers: { ...JSON_HEADERS, "access-control-allow-origin": cors["access-control-allow-origin"] || "", ...cors } });
+        return json(await getCatalog(env, new URL("/products.json", request.url)), 200, cors);
+      }
+      if (url.pathname === "/api/admin/products" && request.method === "GET") {
+        await requireAdmin(request, env);
+        return json({ products: await getCatalog(env, new URL("/products.json", request.url)) }, 200, cors);
+      }
+      const priceChange = url.pathname.match(/^\/api\/admin\/products\/([a-z0-9-]+)\/price$/i);
+      if (priceChange && request.method === "PATCH") {
+        const admin = await requireAdmin(request, env);
+        let body;
+        try { body = await request.json(); } catch { return json({ error: "Invalid JSON body" }, 400, cors); }
+        const price = Number(body.price);
+        if (!Number.isFinite(price) || price <= 0 || price > 10000000 || Math.abs(price * 100 - Math.round(price * 100)) > 1e-7) return json({ error: "الثمن خاصو يكون رقم موجب وبجوج أرقام كحد أقصى بعد الفاصلة." }, 400, cors);
+        const catalog = await getCatalog(env, new URL("/products.json", request.url));
+        const product = catalog.find(item => item.id === priceChange[1]);
+        if (!product) return json({ error: "Product not found" }, 404, cors);
+        const previousPrice = Number(product.price);
+        const now = new Date().toISOString();
+        await env.DB.batch([
+          env.DB.prepare("INSERT INTO product_price_overrides (product_id,price,updated_at,updated_by) VALUES (?,?,?,?) ON CONFLICT(product_id) DO UPDATE SET price=excluded.price,updated_at=excluded.updated_at,updated_by=excluded.updated_by").bind(product.id, price, now, admin.email),
+          env.DB.prepare("INSERT INTO product_price_history (product_id,old_price,new_price,changed_at,changed_by) VALUES (?,?,?,?,?)").bind(product.id, previousPrice, price, now, admin.email)
+        ]);
+        return json({ ok: true, productId: product.id, oldPrice: previousPrice, price, updatedAt: now }, 200, cors);
       }
       if (url.pathname === "/api/admin/dashboard" && request.method === "GET") {
         await requireAdmin(request, env);
@@ -73,9 +93,7 @@ export default {
         const packQuantity = body.packQuantity === undefined ? Number(current.pack_quantity) : Number(body.packQuantity);
         const frequencyWeeks = body.frequencyWeeks === undefined ? Number(current.frequency_weeks) : Number(body.frequencyWeeks);
         const nextDeliveryDate = body.nextDeliveryDate === undefined ? current.next_delivery_date : String(body.nextDeliveryDate);
-        const response = await env.ASSETS.fetch(new Request(new URL("/products.json", request.url)));
-        if (!response.ok) throw new Error("Catalog unavailable");
-        const catalog = await response.json();
+        const catalog = await getCatalog(env, new URL("/products.json", request.url));
         if (!catalog.some(item => item.id === packProductId && item.category === "packs") || !Number.isFinite(packQuantity) || packQuantity <= 0 || packQuantity > 20 || ![1, 2].includes(frequencyWeeks) || !isDateOnly(nextDeliveryDate) || (body.nextDeliveryDate !== undefined && nextDeliveryDate <= moroccoDay(new Date()))) return json({ error: "Invalid subscription update" }, 400, cors);
         const now = new Date().toISOString();
         const changedDate = nextDeliveryDate !== current.next_delivery_date;
@@ -118,6 +136,15 @@ export default {
   }
 };
 
+async function getCatalog(env, assetUrl) {
+  const response = await env.ASSETS.fetch(new Request(assetUrl));
+  if (!response.ok) throw new Error("Catalog unavailable");
+  const catalog = await response.json();
+  const result = await env.DB.prepare("SELECT product_id, price FROM product_price_overrides").all();
+  const overrides = new Map((result.results || []).map(row => [row.product_id, Number(row.price)]));
+  return catalog.map(product => overrides.has(product.id) ? { ...product, price: overrides.get(product.id) } : product);
+}
+
 async function createOrder(request, env, cors) {
   if (env.ORDER_LIMITER) {
     const key = request.headers.get("CF-Connecting-IP") || "unknown";
@@ -131,11 +158,10 @@ async function createOrder(request, env, cors) {
   for (const field of ["name", "phone", "city", "address", "slot"]) {
     if (typeof customer[field] !== "string" || !customer[field].trim() || customer[field].length > 240) return json({ error: "Missing or invalid customer details" }, 400, cors);
   }
+  if (customer.city.trim().toLocaleLowerCase("fr-MA") !== "casablanca") return json({ error: "Livraison disponible à Casablanca uniquement" }, 400, cors);
   if (!/^(?:0[567]\d{8}|\+212[567]\d{8})$/.test(customer.phone.trim())) return json({ error: "Invalid Moroccan phone number" }, 400, cors);
   if (!Array.isArray(body.items) || !body.items.length || body.items.length > 25) return json({ error: "Invalid order items" }, 400, cors);
-  const response = await env.ASSETS.fetch(new Request(new URL("/products.json", request.url)));
-  if (!response.ok) throw new Error("Catalog unavailable");
-  const catalog = await response.json();
+  const catalog = await getCatalog(env, new URL("/products.json", request.url));
   const items = [];
   for (const line of body.items) {
     const product = catalog.find(item => item.id === line.productId);
@@ -153,7 +179,7 @@ async function createOrder(request, env, cors) {
   const id = crypto.randomUUID();
   const now = new Date().toISOString();
   const sql = "INSERT OR IGNORE INTO orders (id,idempotency_key,created_at,updated_at,customer_name,phone,city,neighborhood,address,items_json,subtotal,delivery_fee,discount,total,delivery_slot,note,source,status) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,'pending')";
-  await env.DB.prepare(sql).bind(id, idem, now, now, customer.name.trim(), customer.phone.trim(), customer.city.trim(), String(customer.neighborhood || "").slice(0, 240), customer.address.trim(), JSON.stringify(items), subtotal, delivery, discount, total, customer.slot.trim(), String(customer.note || "").slice(0, 1000), "website").run();
+  await env.DB.prepare(sql).bind(id, idem, now, now, customer.name.trim(), customer.phone.trim(), "Casablanca", String(customer.neighborhood || "").slice(0, 240), customer.address.trim(), JSON.stringify(items), subtotal, delivery, discount, total, customer.slot.trim(), String(customer.note || "").slice(0, 1000), "website").run();
   const saved = await env.DB.prepare("SELECT * FROM orders WHERE idempotency_key = ?").bind(idem).first();
   if (saved?.id === id) await env.DB.prepare("INSERT INTO order_status_history (order_id,old_status,new_status,changed_at,changed_by) VALUES (?,'—','pending',?,?)").bind(id, now, "customer").run();
   return json({ ok: true, order: saved }, 201, cors);
@@ -170,19 +196,18 @@ async function createSubscription(request, env, cors) {
   for (const field of ["name", "phone", "city", "address", "slot"]) {
     if (typeof customer[field] !== "string" || !customer[field].trim() || customer[field].trim().length > 240) return json({ error: "Missing or invalid customer details" }, 400, cors);
   }
+  if (customer.city.trim().toLocaleLowerCase("fr-MA") !== "casablanca") return json({ error: "Livraison disponible à Casablanca uniquement" }, 400, cors);
   if (!/^(?:0[567]\d{8}|\+212[567]\d{8})$/.test(customer.phone.trim())) return json({ error: "Invalid Moroccan phone number" }, 400, cors);
   if (body.consent !== true) return json({ error: "Explicit subscription consent is required" }, 400, cors);
   const frequency = Number(body.frequencyWeeks), weekday = Number(body.deliveryWeekday), quantity = Number(body.quantity);
   const date = String(body.nextDeliveryDate || "");
   if (![1, 2].includes(frequency) || !Number.isInteger(weekday) || weekday < 0 || weekday > 6 || !Number.isFinite(quantity) || quantity <= 0 || quantity > 20 || !isDateOnly(date) || date <= moroccoDay(new Date()) || new Date(date + "T00:00:00.000Z").getUTCDay() !== weekday) return json({ error: "Invalid subscription schedule" }, 400, cors);
-  const catalogResponse = await env.ASSETS.fetch(new Request(new URL("/products.json", request.url)));
-  if (!catalogResponse.ok) throw new Error("Catalog unavailable");
-  const catalog = await catalogResponse.json();
+  const catalog = await getCatalog(env, new URL("/products.json", request.url));
   const pack = catalog.find(product => product.id === body.packProductId && product.category === "packs");
   if (!pack) return json({ error: "Invalid pack" }, 400, cors);
   const id = crypto.randomUUID(), now = new Date().toISOString();
   await env.DB.prepare("INSERT INTO subscriptions (id,created_at,updated_at,customer_name,phone,city,neighborhood,address,pack_product_id,pack_quantity,frequency_weeks,delivery_weekday,delivery_slot,next_delivery_date,consent_at,status) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,'active')")
-    .bind(id, now, now, customer.name.trim(), customer.phone.trim(), customer.city.trim(), String(customer.neighborhood || "").slice(0, 240), customer.address.trim(), pack.id, quantity, frequency, weekday, customer.slot.trim(), date, now).run();
+    .bind(id, now, now, customer.name.trim(), customer.phone.trim(), "Casablanca", String(customer.neighborhood || "").slice(0, 240), customer.address.trim(), pack.id, quantity, frequency, weekday, customer.slot.trim(), date, now).run();
   return json({ ok: true, subscription: { id, status: "active", nextDeliveryDate: date, frequencyWeeks: frequency } }, 201, cors);
 }
 
@@ -190,9 +215,7 @@ async function prepareSubscriptionReminder(id, env, cors) {
   const subscription = await env.DB.prepare("SELECT * FROM subscriptions WHERE id = ?").bind(id).first();
   if (!subscription) return json({ error: "Subscription not found" }, 404, cors);
   if (subscription.status !== "active") return json({ error: "Subscription is not active" }, 409, cors);
-  const catalogResponse = await env.ASSETS.fetch(new Request("https://assets.invalid/products.json"));
-  if (!catalogResponse.ok) throw new Error("Catalog unavailable");
-  const catalog = await catalogResponse.json();
+  const catalog = await getCatalog(env, new URL("https://assets.invalid/products.json"));
   const pack = catalog.find(product => product.id === subscription.pack_product_id);
   if (!pack) throw new Error("Subscription pack missing from catalog");
   const now = new Date().toISOString(), reminderId = crypto.randomUUID();
@@ -213,9 +236,7 @@ async function confirmSubscriptionOrder(id, env, cors) {
   if (subscription.status !== "active") return json({ error: "Subscription is not active" }, 409, cors);
   const reminder = await env.DB.prepare("SELECT * FROM subscription_reminders WHERE subscription_id = ? AND delivery_date = ?").bind(id, subscription.next_delivery_date).first();
   if (!reminder || reminder.status !== "prepared") return json({ error: "Prepare a reminder first, then confirm only after the client replies yes" }, 409, cors);
-  const catalogResponse = await env.ASSETS.fetch(new Request("https://assets.invalid/products.json"));
-  if (!catalogResponse.ok) throw new Error("Catalog unavailable");
-  const catalog = await catalogResponse.json();
+  const catalog = await getCatalog(env, new URL("https://assets.invalid/products.json"));
   const product = catalog.find(item => item.id === subscription.pack_product_id && item.category === "packs");
   if (!product) throw new Error("Subscription pack missing from catalog");
   const item = { id: product.id, nameFr: product.nameFr, nameAr: product.nameAr, unit: product.unit, quantity: Number(subscription.pack_quantity), unitPrice: Number(product.price), lineTotal: Number((Number(product.price) * Number(subscription.pack_quantity)).toFixed(2)) };
