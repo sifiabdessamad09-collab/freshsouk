@@ -753,6 +753,66 @@
     .product[data-product-id="mandarines"] .product-image{background:#fffaf0}
     .product[data-product-id="mandarines"] .product-image img{object-fit:contain;padding:4px}
     @media(max-width:700px){.product-image{height:clamp(125px,38vw,180px)}.product h3{min-height:2.6em}.product-description,.product-description-ar{min-height:3em}}
+
+    /* Selected FreshSOUK homepage: welcome hero, visual categories, catalog first */
+    .hero{position:relative;isolation:isolate;max-width:none;min-height:396px;margin:0;padding:30px max(calc((100% - 1320px)/2),clamp(22px,5.5vw,88px));grid-template-columns:minmax(0,1.03fr) minmax(0,.97fr);gap:34px;overflow:hidden;align-items:center;background:linear-gradient(90deg,#fbf8ed 0%,#fbf8edf2 38%,#fbf8ed10 64%),#f8f4e9}
+    .hero-copy{position:relative;z-index:2;max-width:660px}
+    .hero .badge{margin-bottom:11px;padding:7px 12px;border-radius:999px;background:#eaf3e4;color:#4b8a4c}
+    .hero-welcome{position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:0;margin:0 0 12px;color:#143b28;font-family:Georgia,'Times New Roman',serif;font-size:clamp(43px,5.2vw,64px);font-weight:900;line-height:.98;letter-spacing:-1.7px}
+    .hero-welcome span[lang="ar"]{font-family:Arial,sans-serif;font-size:.88em;letter-spacing:0;color:#25833f;margin-top:4px}
+    .hero-sun{position:absolute;left:clamp(220px,22vw,310px);top:0;color:#e88118;font-family:Arial,sans-serif;font-size:.9em;line-height:1}
+    .hero p{max-width:530px;margin:5px 0;color:#59635b;font-size:clamp(13px,1.25vw,16px);line-height:1.65}
+    .hero .hero-copy-ar{font-size:14px!important;color:#687268!important}
+    .hero-search{display:flex;align-items:center;gap:10px;width:min(100%,650px);height:54px;margin-top:16px;padding:5px 7px 5px 16px;border:1px solid #e4e2d8;border-radius:14px;background:#fff;box-shadow:0 8px 24px #293b2012}
+    .hero-search>span{color:#17643c;font-size:25px;font-weight:800;line-height:1}
+    .hero-search input{min-width:0;flex:1;border:0;outline:0;background:transparent;color:#34463a;font-size:13px}
+    .hero-search input::placeholder{color:#82867f}
+    .hero-search .btn-primary{height:100%;min-width:130px;padding:0 18px;border-radius:10px;font-size:13px}
+    .hero-trust{gap:8px;margin-top:14px}
+    .hero-trust span{display:inline-flex;align-items:center;min-height:35px;padding:7px 10px;border-color:#e2e8da;background:#fffffff0;color:#305b3a;font-size:10px;box-shadow:none}
+    .hero-visual{position:absolute;z-index:-1;top:0;right:0;bottom:0;width:54%;overflow:hidden;background:linear-gradient(135deg,#e8efd9,#f4e7ca)}
+    .hero-visual:before{position:absolute;z-index:1;inset:0;content:"";background:linear-gradient(90deg,#fbf8ed 0%,#fbf8ed7d 13%,transparent 42%),linear-gradient(0deg,#172a201c,transparent 45%)}
+    .hero-visual img{width:100%;height:100%;object-fit:cover;object-position:center 55%;mix-blend-mode:multiply}
+    .hero-visual-note{position:absolute;right:clamp(18px,4vw,60px);bottom:20px;display:grid;gap:4px;color:#fff;text-align:right;text-shadow:0 2px 8px #132b17aa}
+    .hero-visual-note span{font-size:11px;font-weight:750;letter-spacing:.3px}
+    .hero-visual-note strong{font-size:24px;letter-spacing:-.5px}
+    .category-shortcuts{max-width:1400px;padding:14px 24px 8px;gap:14px}
+    .category-shortcut{min-height:170px;border-radius:14px}
+    .category-shortcut:after{inset:42% 0 0;background:linear-gradient(transparent,#16271dd9)}
+    .category-shortcut span{left:17px;bottom:15px;font-size:15px;gap:4px}
+    .category-shortcut small{font-size:12px}
+    .category-shortcut small b{float:right;display:grid;place-items:center;width:30px;height:30px;margin-top:-7px;border-radius:50%;background:#fff;color:#17452c;font-size:23px;line-height:1}
+    .section#produits{max-width:1450px;margin:0 auto;padding:22px 24px 48px}
+    .section-title{align-items:end;margin-bottom:12px}
+    .section-title h2{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin:0;font-size:clamp(25px,2.3vw,34px);font-weight:900}
+    .section-title h2 span{font-family:Arial,sans-serif;color:#3e7952;font-size:.62em}
+    .section-title p{margin:5px 0 2px;color:#718077;font-size:12px}
+    .all-products-link{display:inline-flex;align-items:center;gap:10px;margin-bottom:3px;color:#e65d12;font-size:13px;font-weight:800;text-decoration:underline;text-underline-offset:4px;white-space:nowrap}
+    .all-products-link span{font-size:20px;text-decoration:none}
+    .catalog-tools{justify-content:flex-start;margin:12px 0 14px}
+    .catalog-tools>.catalog-search,.catalog-tools>.catalog-sort{display:none}
+    .category-tabs{gap:8px}
+    .category-tab{min-height:34px;padding-inline:16px;border:0;border-radius:999px;background:#f0f5ef;color:#355744;font-size:11px}
+    .category-tab.active{background:#2d9554;border-color:#2d9554}
+    .products{grid-template-columns:repeat(6,minmax(0,1fr));gap:12px}
+    .product{overflow:hidden;border-radius:14px;background:#fff;box-shadow:0 6px 20px #203f2910}
+    .product-image{height:clamp(140px,15vw,200px);background:#fff}
+    .product-image img{object-fit:contain;padding:7px}
+    .product-content{padding:12px}
+    .product h3{font-size:12px}
+    .product-ar{font-size:12px}
+    .product-description,.product-description-ar{font-size:9px}
+    .product-bottom{gap:7px}
+    .quantity-picker{grid-template-columns:minmax(0,1fr) auto;gap:5px;padding:6px}
+    .quantity-picker label{grid-column:1/-1}
+    .quantity-picker select{padding:6px 5px}
+    .quantity-picker output{font-size:9px}
+    .product-actions{gap:5px}
+    .product-actions button{padding:9px 4px;font-size:9px}
+    @media(max-width:1150px){.products{grid-template-columns:repeat(4,minmax(0,1fr))}.hero{padding-inline:34px}.hero-visual{width:53%}}
+    @media(max-width:800px){.hero{min-height:0;padding:36px 24px 25px;grid-template-columns:1fr;gap:18px;background:linear-gradient(90deg,#fbf8edf7,#fbf8edb8),#f8f4e9}.hero-copy{max-width:680px}.hero-visual{position:absolute;width:70%;opacity:.38}.hero-visual:before{background:linear-gradient(90deg,#fbf8ed 0%,#fbf8ed99 35%,transparent 100%)}.hero-visual-note{display:none}.hero-welcome{font-size:52px}.category-shortcuts{padding-inline:18px}.category-shortcut{min-height:145px}.section#produits{padding:22px 18px 38px}.products{grid-template-columns:repeat(3,minmax(0,1fr))}}
+    @media(max-width:600px){.hero{padding:28px 16px 21px;gap:12px}.hero .badge{font-size:10px}.hero-welcome{font-size:44px}.hero-sun{left:220px}.hero p{font-size:13px}.hero .hero-copy-ar{font-size:12px!important}.hero-search{height:48px;gap:7px;margin-top:12px;padding-left:12px}.hero-search input{font-size:11px}.hero-search .btn-primary{min-width:92px;padding:0 10px;font-size:11px}.hero-trust{gap:5px;margin-top:10px}.hero-trust span{min-height:30px;padding:6px 8px;font-size:9px}.category-shortcuts{gap:9px;padding:10px 14px 5px}.category-shortcut{min-height:120px;border-radius:12px}.category-shortcut span{left:11px;bottom:11px;font-size:12px}.category-shortcut small{font-size:10px}.category-shortcut small b{width:25px;height:25px;margin-top:-5px;font-size:19px}.section#produits{padding:18px 14px 32px}.section-title{gap:9px}.section-title h2{gap:7px;font-size:23px}.section-title h2 span{font-size:.58em}.section-title p{font-size:10px}.all-products-link{font-size:10px;gap:4px}.all-products-link span{font-size:16px}.catalog-tools{margin:10px 0}.category-tabs{overflow:auto;flex-wrap:nowrap;padding-bottom:3px;scrollbar-width:none}.category-tabs::-webkit-scrollbar{display:none}.category-tab{min-height:32px;padding-inline:13px;font-size:10px}.products{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.product-image{height:clamp(120px,38vw,165px)}.product-content{padding:9px}.product h3,.product-ar{font-size:11px}.product-description,.product-description-ar{font-size:8px}.product-price{font-size:13px}.product-actions{grid-template-columns:1fr 1fr}.product-actions button{font-size:8px;padding:8px 3px}}
+    @media(max-width:380px){.hero-welcome{font-size:39px}.hero-sun{left:196px}.hero-search .btn-primary{min-width:76px;padding-inline:7px}.section-title{align-items:flex-start}.all-products-link{font-size:9px}}
 </style>
 </head>
 
@@ -785,95 +845,53 @@
 <main>
 
 <section class="hero" id="accueil">
-  <div>
+  <div class="hero-copy">
     <div class="badge">🌱 Frais • Local • Livré chez vous</div>
 
-    <h1 lang="ar" dir="rtl">قفتك الطرية، حتى لباب دارك <span lang="fr" dir="ltr">· Le frais chez vous</span></h1>
+    <h1 class="hero-welcome"><span lang="fr" dir="ltr">Bonjour,</span><span lang="ar" dir="rtl">مرحبا بكم</span><span class="hero-sun" aria-hidden="true">☼</span></h1>
 
-    <p class="hero-copy-ar" lang="ary" dir="rtl">اختار خضرتك وفواكهك على خاطرك، وخلّص غير ملي توصلك الطلبية.</p>
-    <p class="hero-copy-fr" lang="fr" dir="ltr">Composez votre panier de fruits et légumes frais. Paiement à la livraison.</p>
+    <p class="hero-copy-fr" lang="fr" dir="ltr">Des fruits et légumes frais, sélectionnés avec soin, et livrés chez vous à Casablanca.</p>
+    <p class="hero-copy-ar" lang="ary" dir="rtl">فواكه وخضر طازجة مختارة بعناية، وكنوصلوها حتى لباب دارك فالدار البيضاء.</p>
 
-    <div class="hero-buttons">
-      <a href="#produits" class="btn-primary">
-        🧺 دير قفتك | Composer mon panier
-      </a>
-
-      <button class="btn-secondary" onclick="openWhatsApp()">
-        💬 Commander sur WhatsApp
-      </button>
-    </div>
+    <form class="hero-search" role="search" onsubmit="event.preventDefault(); document.getElementById('produits').scrollIntoView({behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth'});">
+      <span aria-hidden="true">⌕</span>
+      <input id="heroSearch" type="search" placeholder="Rechercher un fruit, un légume, ou un produit..." oninput="syncSearch(this.value)" aria-label="Rechercher un produit">
+      <button type="submit" class="btn-primary">Rechercher</button>
+    </form>
     <div class="hero-trust" aria-label="Nos garanties"><span>✓ 100% طري وبلدي</span><span>✓ الدفع عند الاستلام (Paiement à la livraison)</span><span>✓ ضمان الجودة</span></div>
   </div>
 
-  <div class="hero-slider-container" id="heroSlider" aria-label="Packs à la une">
-    <div class="slider-dots" role="tablist" aria-label="Choisir un pack">
-      <button type="button" class="slider-dot active" aria-label="Pack familial" aria-selected="true" onclick="currentSlide(0)"></button>
-      <button type="button" class="slider-dot" aria-label="Pack couscous" aria-selected="false" onclick="currentSlide(1)"></button>
-      <button type="button" class="slider-dot" aria-label="Pack jus et fruits" aria-selected="false" onclick="currentSlide(2)"></button>
-    </div>
-    <div class="hero-slide active" style="background-image:url('./images/products/pack-semaine-familial.webp')">
-      <div class="hero-slide-content"><span class="hero-slide-badge" data-pack-price="pack-semaine-familial">Choix familial · 180 DH</span><h3 lang="ar" dir="rtl">سلة السيمانة العائلية</h3><p>5kg بطاطس، 3kg طماطم، 2kg بصل وخضرة وفواكه طازجة.</p><button type="button" class="btn-primary" style="padding:8px 14px;font-size:11px" onclick="addToCart('pack-semaine-familial')">+ Ajouter au panier</button></div>
-    </div>
-    <div class="hero-slide" style="background-image:url('./images/products/pack-couscous-vendredi.webp')">
-      <div class="hero-slide-content"><span class="hero-slide-badge" data-pack-price="pack-couscous-vendredi">Spécial couscous · 45 DH</span><h3 lang="ar" dir="rtl">سلة الكسكس الجمعة</h3><p>طماطم، جزر، قرعة، لفت، خيار، قزبور ومعدنوس.</p><button type="button" class="btn-primary" style="padding:8px 14px;font-size:11px" onclick="addToCart('pack-couscous-vendredi')">+ Ajouter au panier</button></div>
-    </div>
-    <div class="hero-slide" style="background-image:url('./images/products/pack-jus-fruits.webp')">
-      <div class="hero-slide-content"><span class="hero-slide-badge" data-pack-price="pack-jus-fruits">Plein de vitamines · 95 DH</span><h3 lang="ar" dir="rtl">سلة العصائر والفواكه</h3><p>برتقال للعصير، فراولة، كيوي وبنان طري.</p><button type="button" class="btn-primary" style="padding:8px 14px;font-size:11px" onclick="addToCart('pack-jus-fruits')">+ Ajouter au panier</button></div>
-    </div>
+  <div class="hero-visual" aria-label="قفة FreshSOUK عامرة بالخضر والفواكه الطازجة">
+    <img src="./images/products/pack-semaine-familial.webp" alt="قفة عامرة بالخضر والفواكه الطازجة من FreshSOUK" fetchpriority="high">
+    <div class="hero-visual-note"><span>🌿 Frais • Local • Chaque jour</span><strong>FreshSOUK</strong></div>
   </div>
 </section>
 
 <nav class="category-shortcuts" aria-label="الوصول السريع للأصناف">
-  <a class="category-shortcut" href="#produits" onclick="openCatalogShortcut('legumes')"><img src="./images/products/tomates.webp" alt=""><span>الخضرة <small>Légumes frais</small></span></a>
-  <a class="category-shortcut" href="#produits" onclick="openCatalogShortcut('fruits')"><img src="./images/products/bananes.webp" alt=""><span>الفواكه <small>Fruits de saison</small></span></a>
-  <a class="category-shortcut" href="#produits" onclick="openCatalogShortcut('all','Herbes')"><img src="./images/products/herbes.webp" alt=""><span>الأعشاب <small>Herbes fraîches</small></span></a>
-  <a class="category-shortcut" href="#produits" onclick="openCatalogShortcut('packs')"><img src="./images/products/pack-semaine-familial.webp" alt=""><span>الپانييات <small>Packs pour la semaine</small></span></a>
+  <a class="category-shortcut" href="#produits" onclick="openCatalogShortcut('legumes')"><img src="./images/products/tomates.webp" alt="طماطم وخضر طازجة" loading="lazy"><span>الخضرة <small>Légumes frais <b aria-hidden="true">›</b></small></span></a>
+  <a class="category-shortcut" href="#produits" onclick="openCatalogShortcut('fruits')"><img src="./images/products/bananes.webp" alt="موز وفواكه الموسم" loading="lazy"><span>الفواكه <small>Fruits de saison <b aria-hidden="true">›</b></small></span></a>
+  <a class="category-shortcut" href="#produits" onclick="openCatalogShortcut('all','Herbes')"><img src="./images/products/herbes.webp" alt="أعشاب طازجة" loading="lazy"><span>الأعشاب <small>Herbes fraîches <b aria-hidden="true">›</b></small></span></a>
+  <a class="category-shortcut" href="#produits" onclick="openCatalogShortcut('packs')"><img src="./images/products/pack-semaine-familial.webp" alt="قفة FreshSOUK الأسبوعية" loading="lazy"><span>الپانييات <small>Packs pour la semaine <b aria-hidden="true">›</b></small></span></a>
 </nav>
-
-<section class="features">
-
-  <div class="feature">
-    <div class="feature-icon">🥬</div>
-      <h3>100% Frais & Local</h3>
-    <p>
-      Fruits et légumes sélectionnés pour votre quotidien.
-    </p>
-  </div>
-
-  <div class="feature">
-    <div class="feature-icon">🚚</div>
-    <h3>Livraison</h3>
-    <p>
-      Casablanca فقط | Livraison disponible à Casablanca uniquement.
-    </p>
-  </div>
-
-  <div class="feature">
-    <div class="feature-icon">💬</div>
-    <h3>Commande simple</h3>
-    <p>
-      Via le site ou WhatsApp en un clic.
-    </p>
-  </div>
-
-</section>
 
 <section class="section" id="produits">
 
   <div class="section-title">
     <div>
-      <h2>Nos produits</h2>
-      <p>Une sélection fraîche pour votre panier.</p>
+      <h2>🌱 Nos produits frais <span lang="ar" dir="rtl">منتجاتنا الطازجة</span></h2>
+      <p>اختار اللي بغيتي وزيدو لقفتك | Composez votre panier frais.</p>
       <span class="product-count" id="productCount" aria-live="polite">Chargement des produits…</span>
     </div>
+    <a class="all-products-link" href="#produits" onclick="openCatalogShortcut('all')">Voir tous les produits <span aria-hidden="true">→</span></a>
   </div>
 
   <div class="catalog-tools">
     <div class="category-tabs" role="tablist" aria-label="Catégories">
       <button class="category-tab active" data-category="all" onclick="setCategory('all')">Tous</button>
-      <button class="category-tab" data-category="packs" id="packs" onclick="setCategory('packs')">Packs</button>
       <button class="category-tab" data-category="legumes" onclick="setCategory('legumes')">Légumes</button>
       <button class="category-tab" data-category="fruits" onclick="setCategory('fruits')">Fruits</button>
+      <button class="category-tab" data-category="herbes" onclick="openCatalogShortcut('all','Herbes')">Herbes fraîches</button>
+      <button class="category-tab" data-category="packs" id="packs" onclick="setCategory('packs')">Packs</button>
     </div>
     <label class="catalog-search"><span>⌕</span><input id="catalogSearch" type="search" placeholder="Un produit en tête ?" oninput="syncSearch(this.value)"></label>
     <select id="catalogSort" class="catalog-sort" aria-label="Trier les produits" onchange="setProductSort(this.value)"><option value="default">Ordre du catalogue</option><option value="price-asc">Prix : du moins cher</option><option value="price-desc">Prix : du plus cher</option><option value="name">Nom : A à Z</option></select>
@@ -1750,11 +1768,12 @@
 
   function openCatalogShortcut(category, query = "") {
     searchQuery = query;
-    [document.getElementById("headerSearch"), document.getElementById("catalogSearch")].forEach(input => { if (input) input.value = query; });
+    [document.getElementById("headerSearch"), document.getElementById("catalogSearch"), document.getElementById("heroSearch")].forEach(input => { if (input) input.value = query; });
     selectedSort = "default";
     const sort = document.getElementById("catalogSort");
     if (sort) sort.value = selectedSort;
     setCategory(category);
+    if (query) document.querySelectorAll(".category-tab").forEach(button => button.classList.toggle("active", button.dataset.category === "herbes"));
   }
 
   function setProductSort(sort) {
@@ -1766,8 +1785,11 @@
     searchQuery = value;
     const header = document.getElementById("headerSearch");
     const catalog = document.getElementById("catalogSearch");
+    const hero = document.getElementById("heroSearch");
     if (header && header.value !== value) header.value = value;
     if (catalog && catalog.value !== value) catalog.value = value;
+    if (hero && hero.value !== value) hero.value = value;
+    if (document.activeElement?.id !== "heroSearch") document.querySelectorAll(".category-tab").forEach(button => button.classList.toggle("active", button.dataset.category === "all"));
     renderProducts();
   }
   /* =========================
