@@ -308,6 +308,19 @@
     "descriptionFr": "Bananes fraîches au goût doux"
   },
   {
+    "id": "kiwi",
+    "nameAr": "كيوي طازج",
+    "nameFr": "Kiwis frais",
+    "category": "fruits",
+    "price": 20,
+    "unit": "Kg",
+    "image": "./images/products/kiwi.jpg",
+    "badgeAr": "طري",
+    "badgeFr": "Frais",
+    "descriptionAr": "كيوي طازج ومذاقو منعش",
+    "descriptionFr": "Kiwis frais au goût délicieusement acidulé"
+  },
+  {
     "id": "oranges",
     "nameAr": "برتقال العصير",
     "nameFr": "Oranges à jus",
@@ -328,7 +341,7 @@
     "category": "fruits",
     "price": 9,
     "unit": "Kg",
-    "image": "./images/products/mandarines.webp",
+    "image": "./images/products/mandarines.webp?v=20261023",
     "imageFallback": "https://images.unsplash.com/photo-1547514701-42782101795e?auto=format&fit=crop&w=900&q=82",
     "badgeAr": "حلوة",
     "badgeFr": "Sucrées",
