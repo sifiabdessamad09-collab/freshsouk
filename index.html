@@ -836,8 +836,8 @@
     .quantity-picker output{display:grid;place-items:center;min-width:29px;height:34px;color:#1f3026;font-size:12px;font-weight:750}
     .product-actions{display:flex;align-items:center;gap:5px;width:auto}
     .product-actions button{min-height:36px;padding:8px 10px;border-radius:9px;font-size:10px}
-    .product-actions .add-btn{background:#078345;color:#fff}
-    .product-actions .whatsapp-btn{width:34px;min-width:34px;padding:0;background:#f1faf3;color:#128340;border:1px solid #d4ead8;font-size:15px}
+    .product-actions .add-btn{width:auto;min-width:0;flex:1;background:#078345;color:#fff}
+    .product-actions .whatsapp-btn{width:32px;min-width:32px;flex:0 0 32px;padding:0;background:#f1faf3;color:#128340;border:1px solid #d4ead8;font-size:15px}
     .product[data-product-id="mandarines"] .product-image img{padding:8px}
     @media(max-width:1150px){.products{grid-template-columns:repeat(4,minmax(0,1fr))}}
     @media(max-width:800px){.products{grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}}
@@ -1734,6 +1734,17 @@
     if (selectedSort === "name") visible.sort((a, b) => a.nameFr.localeCompare(b.nameFr, "fr"));
     const productCount = document.getElementById("productCount");
     if (productCount) productCount.textContent = `${products.length} produits au catalogue · ${visible.length} affichés`;
+    const featuredIds = ["tomates", "pomme-de-terre", "bananes", "oranges", "carottes", "courgettes"];
+    const catalogOrder = [...featuredIds, ...products.filter(product => !featuredIds.includes(product.id) && product.category !== "packs").map(product => product.id), ...products.filter(product => product.category === "packs").map(product => product.id)];
+    const cardNames = {
+      tomates: { fr: "Tomates", ar: "طماطم" },
+      "pomme-de-terre": { fr: "Pommes de terre", ar: "بطاطس" },
+      bananes: { fr: "Bananes", ar: "موز" },
+      oranges: { fr: "Oranges", ar: "برتقال" },
+      carottes: { fr: "Carottes", ar: "جزر" },
+      courgettes: { fr: "Courgettes", ar: "كوسة" }
+    };
+    if (selectedSort === "default") visible.sort((a, b) => catalogOrder.indexOf(a.id) - catalogOrder.indexOf(b.id));
       container.innerHTML = visible.length ? visible.map(product => `
       <article class="product" data-product-id="${product.id}">
         <div class="product-image">
@@ -1742,7 +1753,7 @@
           ${(product.badgeFr || product.badgeAr) ? `<span class="product-badge ${product.category === "packs" ? "product-badge-gold" : "product-badge-green"}">${product.badgeFr || product.badgeAr}</span>` : ""}
         </div>
         <div class="product-content">
-          <div class="product-names"><h3>${product.nameFr}</h3><span class="product-ar" lang="ar" dir="rtl">${product.nameAr}</span></div>
+          <div class="product-names"><h3>${cardNames[product.id]?.fr || product.nameFr}</h3><span class="product-ar" lang="ar" dir="rtl">${cardNames[product.id]?.ar || product.nameAr}</span></div>
           ${product.category === "packs" ? `<details class="pack-details"><summary>شوف شنو فيها · Voir le contenu</summary><p>${product.descriptionFr || ""}</p><p class="pack-details-ar" lang="ar" dir="rtl">${product.descriptionAr || ""}</p></details>` : `<p class="product-description">${product.descriptionFr || "Produits frais du marché."}</p><p class="product-description product-description-ar" lang="ar" dir="rtl">${product.descriptionAr || ""}</p>`}
           <div class="product-bottom"><div class="product-price">${Number(product.price).toFixed(2)} DH <small>/ ${product.unit}</small></div>
             <div class="product-purchase-row"><div class="quantity-picker" aria-label="Quantité de ${product.nameFr}"><button type="button" aria-label="Diminuer la quantité" onclick="adjustProductQuantity(this, -1)">−</button><output data-quantity-value data-quantity="1" data-unit="${product.unit}" aria-live="polite">1</output><button type="button" aria-label="Augmenter la quantité" onclick="adjustProductQuantity(this, 1)">+</button></div>
