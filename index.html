@@ -734,6 +734,20 @@
     .review-form{display:grid;gap:12px}.review-fields{display:grid;grid-template-columns:1fr 1fr;gap:12px}.review-form label{display:grid;gap:6px;color:#35533d;font-size:13px;font-weight:750}.review-form input,.review-form select,.review-form textarea{width:100%;padding:11px;border:1px solid #dce8de;border-radius:11px;background:#fff;color:var(--dark);font:inherit;font-size:13px}.review-form textarea{min-height:95px;resize:vertical}.review-message{grid-column:1/-1}.review-form .reviews-contact{justify-self:start}
     @media(max-width:640px){.reviews-panel{grid-template-columns:1fr}.review-fields{grid-template-columns:1fr}.review-message{grid-column:auto}.review-form .reviews-contact{width:100%}}
     .meal-section{max-width:1180px;margin:10px auto 30px;padding:42px 20px;background:linear-gradient(135deg,#f4faf3,#fff9ec);border:1px solid #e4eee2;border-radius:24px}.meal-heading{display:flex;justify-content:space-between;align-items:end;gap:16px;margin-bottom:20px}.meal-kicker{color:#bd861f;font-size:12px;font-weight:800}.meal-heading h2{font-size:clamp(24px,3vw,34px);color:#193d29;margin:5px 0}.meal-heading p,.meal-footnote{font-size:13px;line-height:1.7;color:#718077}.meal-estimate-note{border:1px solid #e6d7ad;background:#fffdf6;padding:8px 12px;border-radius:99px;color:#82651f;font-size:11px;font-weight:700;white-space:nowrap}.meal-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.meal-card{background:#fff;border:1px solid #e7ede6;border-radius:18px;padding:17px;box-shadow:0 8px 25px #203f2909}.meal-card-top{display:flex;justify-content:space-between;gap:12px;align-items:start}.meal-card h3{font-size:16px;color:#284333}.meal-card p{font-size:12px;color:#77857b;margin-top:3px}.meal-icon{font-size:24px}.meal-photo{display:block;width:100%;height:170px;margin:12px 0;border-radius:13px;object-fit:cover;background:#f1f6f0}.meal-draft-badge{display:inline-flex;margin-top:7px;padding:4px 8px;border-radius:99px;background:#fff6df;color:#80611b;font-size:10px;font-weight:800}.meal-ingredients{display:grid;gap:8px;margin:14px 0}.meal-ingredient{display:grid;grid-template-columns:minmax(110px,1fr) 88px 78px auto;align-items:center;gap:7px;font-size:12px;color:#3b5543}.meal-ingredient select,.meal-add-controls select{min-width:0;padding:8px 7px;border:1px solid #dfe8df;border-radius:9px;background:#fff;font-size:11px}.meal-ingredient input{min-width:0;padding:7px 6px;text-align:center;border-radius:9px}.meal-line-price{font-size:11px;color:#718077;min-width:58px;text-align:right}.meal-remove-btn,.meal-add-controls button{border:1px solid #dbe7dc;border-radius:9px;padding:8px 9px;background:#f6faf6;color:#315b3b;font-weight:700;cursor:pointer}.meal-remove-btn{color:#a33b33;background:#fff8f7;border-color:#f0dedc}.meal-add-controls{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:7px;margin:8px 0 12px}.meal-add-controls button{white-space:nowrap}.meal-add-controls button:disabled{opacity:.5;cursor:not-allowed}.meal-total{display:flex;align-items:center;justify-content:space-between;border-top:1px solid #edf1ed;padding-top:12px;font-weight:800;color:#254a31}.meal-add-btn{width:100%;border:0;border-radius:10px;background:#287b46;color:white;font-size:12px;font-weight:800;padding:10px 13px;cursor:pointer}.meal-footnote{margin-top:16px}@media(max-width:700px){.meal-section{margin:6px 12px 25px;padding:25px 14px;border-radius:18px}.meal-heading{display:block}.meal-estimate-note{display:inline-block;margin-top:12px}.meal-grid{grid-template-columns:1fr}.meal-ingredient{grid-template-columns:minmax(0,1fr) 72px 65px auto;gap:5px}.meal-card{padding:14px}.meal-photo{height:150px}.meal-ingredient select,.meal-add-controls select{font-size:10px;padding:7px 4px}.meal-ingredient input{font-size:11px;padding:7px 3px}.meal-line-price{min-width:50px;font-size:10px}.meal-remove-btn{padding:7px 5px;font-size:10px}.meal-add-controls button{font-size:10px;padding:7px 8px}}
+    /* Keep product cards aligned even when names and descriptions differ. */
+    .products{align-items:stretch}
+    .product{display:flex;flex-direction:column;height:100%;min-width:0}
+    .product-image{height:clamp(150px,18vw,205px);flex:0 0 auto}
+    .product-image img{object-position:center}
+    .product-content{display:flex;flex:1;flex-direction:column;min-width:0}
+    .product h3{min-height:2.6em;line-height:1.3}
+    .product-ar{min-height:1.4em}
+    .product-description{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;min-height:3em}
+    .product-description-ar{min-height:3em}
+    .product-bottom{margin-top:auto;padding-top:10px}
+    .product[data-product-id="mandarines"] .product-image{background:#fffaf0}
+    .product[data-product-id="mandarines"] .product-image img{object-fit:contain;padding:4px}
+    @media(max-width:700px){.product-image{height:clamp(125px,38vw,180px)}.product h3{min-height:2.6em}.product-description,.product-description-ar{min-height:3em}}
 </style>
 </head>
 
@@ -1459,7 +1473,7 @@
     "category": "fruits",
     "price": 9,
     "unit": "Kg",
-    "image": "./images/products/mandarines.webp?v=20261023",
+    "image": "./images/products/mandarines-wide.jpg?v=20261023b",
     "imageFallback": "https://images.unsplash.com/photo-1547514701-42782101795e?auto=format&fit=crop&w=900&q=82",
     "badgeAr": "حلوة",
     "badgeFr": "Sucrées",
@@ -1655,7 +1669,7 @@
     const productCount = document.getElementById("productCount");
     if (productCount) productCount.textContent = `${products.length} produits au catalogue · ${visible.length} affichés`;
     container.innerHTML = visible.length ? visible.map(product => `
-      <article class="product">
+      <article class="product" data-product-id="${product.id}">
         <div class="product-image">
           <img src="${product.image}" data-fallback="${product.imageFallback || ''}" alt="${product.nameFr}" loading="lazy" decoding="async" onerror="if(this.dataset.fallback){this.src=this.dataset.fallback;this.dataset.fallback='';}else{this.style.display='none';this.nextElementSibling.style.display='grid'}">
           <span class="product-emoji" style="display:none">${product.emoji}</span>

@@ -341,7 +341,7 @@
     "category": "fruits",
     "price": 9,
     "unit": "Kg",
-    "image": "./images/products/mandarines.webp?v=20261023",
+    "image": "./images/products/mandarines-wide.jpg?v=20261023b",
     "imageFallback": "https://images.unsplash.com/photo-1547514701-42782101795e?auto=format&fit=crop&w=900&q=82",
     "badgeAr": "حلوة",
     "badgeFr": "Sucrées",
