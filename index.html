@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 
   <title>FreshSOUK — Fruits et légumes frais livrés à Casablanca</title>
   <meta name="description" content="Commandez des fruits et légumes frais à Casablanca avec FreshSOUK. Produits sélectionnés, commande simple et paiement à la livraison.">
@@ -845,9 +845,20 @@
     @media(max-width:380px){.product-content{padding:8px}.product h3,.product-ar{font-size:10px}.product-price{font-size:12px}.quantity-picker button{width:22px}.quantity-picker output{min-width:22px}.product-actions button{padding-inline:5px}}
 </style>
 <link rel="stylesheet" href="redesign.css?v=baskets-20261027">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#073c30">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="FRESHSOUK">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="app-icon-192.png">
+<link rel="stylesheet" href="pwa.css?v=app1-20261027">
+<script defer src="pwa.js?v=app1-20261027"></script>
 </head>
 
 <body>
+<div id="pwaConnection" class="pwa-connection" role="status" aria-live="polite" tabindex="-1" hidden>Hors connexion : les prix peuvent avoir changé. Reconnectez-vous pour commander.<br><span lang="ary" dir="rtl">ما كاينش الإنترنت، الأثمنة تقدر تكون تبدّلات. رجّع الاتصال باش تصيفط الطلب.</span></div>
 
 <header class="fs-header">
   <nav class="fs-nav" aria-label="Navigation principale / القائمة الرئيسية">
@@ -892,7 +903,7 @@
 <section class="fs-delivery" aria-label="Livraison / التوصيل"><div><i data-lucide="truck" aria-hidden="true"></i><strong>Casablanca<small lang="ar" dir="rtl">التوصيل فالدار البيضاء</small></strong></div><div><i data-lucide="banknote" aria-hidden="true"></i><strong>Paiement à la livraison<small lang="ar" dir="rtl">خلّص ملي توصلك الطلبية</small></strong></div><div><i data-lucide="package-check" aria-hidden="true"></i><strong>Livraison offerte dès 200 DH<small lang="ar" dir="rtl">التوصيل مجاني من 200 درهم</small></strong></div></section>
 </main>
 
-<footer id="contact" class="fs-footer"><div class="fs-footer-inner"><div><a class="fs-footer-brand" href="#accueil">FRESHSOUK</a><p>Le goût du Maroc, chez vous.</p><p lang="ar" dir="rtl">مذاق المغرب، عندكم</p></div><div><h2>Parlons fraîcheur · تواصل معانا</h2><a href="https://wa.me/212643880485" target="_blank" rel="noopener">WhatsApp · 06 43 88 04 85</a><p>Casablanca · الدار البيضاء</p></div><div><h2>Votre marché · السوق ديالك</h2><a href="#qoffas">Nos qoffas · القفف ديالنا</a><a href="#produits" onclick="fsCategory('all')">Tous les produits · جميع المنتجات</a></div></div><div class="fs-copyright">© 2026 FRESHSOUK <span>Frais, tout simplement. · الطراوة بكل بساطة</span></div></footer>
+<footer id="contact" class="fs-footer"><div class="fs-footer-inner"><div><a class="fs-footer-brand" href="#accueil">FRESHSOUK</a><p>Le goût du Maroc, chez vous.</p><p lang="ar" dir="rtl">مذاق المغرب، عندكم</p></div><div><h2>Parlons fraîcheur · تواصل معانا</h2><a href="https://wa.me/212643880485" target="_blank" rel="noopener">WhatsApp · 06 43 88 04 85</a><p>Casablanca · الدار البيضاء</p></div><div><h2>Votre marché · السوق ديالك</h2><a href="#qoffas">Nos qoffas · القفف ديالنا</a><a href="#produits" onclick="fsCategory('all')">Tous les produits · جميع المنتجات</a><button class="pwa-footer-button" type="button" data-pwa-install><i data-lucide="download" aria-hidden="true"></i>Installer l’application · ثبّت التطبيق</button></div></div><div class="fs-copyright">© 2026 FRESHSOUK <span>Frais, tout simplement. · الطراوة بكل بساطة</span></div></footer>
 
 <!-- OVERLAY -->
 
@@ -2385,6 +2396,18 @@
   setTimeout(() => { renderMealBaskets(); setupSubscriptionForm(); }, 0);
 </script>
 
+
+<aside id="pwaInstallBar" class="pwa-installbar" aria-label="Installer FRESHSOUK / ثبّت التطبيق" hidden>
+ <img src="app-icon-192.png" alt="" width="52" height="52"><div><strong>FRESHSOUK</strong><small>Votre marché, en un geste.<br><span lang="ary" dir="rtl">السوق ديالك فالتلفون</span></small></div><button type="button" class="pwa-bar-install" data-pwa-install>Installer<br><span lang="ar">ثبّت</span></button><button type="button" class="pwa-dismiss" id="pwaDismiss" aria-label="Plus tard / من بعد"><i data-lucide="x" aria-hidden="true"></i></button>
+</aside>
+<aside id="pwaUpdateBar" class="pwa-updatebar" role="status" hidden><span>Une nouvelle version est prête.<small lang="ary" dir="rtl">كاينة نسخة جديدة واجدة</small></span><button type="button" id="pwaUpdate">Mettre à jour · حدّث</button></aside>
+<dialog id="pwaInstallDialog" class="pwa-dialog" aria-labelledby="pwaDialogTitle">
+ <div class="pwa-dialog-header"><h2 id="pwaDialogTitle">FRESHSOUK sur votre téléphone<span lang="ary" dir="rtl">فرش سوق فالتلفون ديالك</span></h2><button type="button" class="pwa-dismiss" id="pwaDialogClose" aria-label="Fermer / سد"><i data-lucide="x" aria-hidden="true"></i></button></div>
+ <p class="pwa-dialog-intro">Retrouvez vos produits, vos qoffas et votre panier depuis l’écran d’accueil.<br><span lang="ary" dir="rtl">لقا المنتجات والقفف والسلة ديالك مباشرة من الشاشة الرئيسية.</span></p>
+ <section class="pwa-platform"><h3>Android · Chrome</h3><p>Ouvrez le menu ⋮, choisissez « Installer l’application » ou « Ajouter à l’écran d’accueil », puis confirmez.</p><p lang="ary" dir="rtl">حلّ القائمة ⋮ فـChrome، اختار «تثبيت التطبيق» ولا «إضافة للشاشة الرئيسية»، وأكّد.</p></section>
+ <section class="pwa-platform"><h3>iPhone · Safari</h3><p>Touchez Partager, puis « Sur l’écran d’accueil ». Activez « Ouvrir comme app web » si proposé, puis touchez Ajouter.</p><p lang="ary" dir="rtl">فـSafari، ضغط على «مشاركة»، ومن بعد «إضافة للشاشة الرئيسية». فعّل «فتح كتطبيق ويب» إلا بانت، وضغط «إضافة».</p></section>
+ <section class="pwa-platform"><h3>Sur ordinateur · فالحاسوب</h3><p>Dans Chrome ou Edge, choisissez Installer dans le menu du navigateur.</p><p lang="ary" dir="rtl">فـChrome ولا Edge، اختار «تثبيت» من قائمة المتصفح.</p></section>
+</dialog>
 </body>
 </html>
 

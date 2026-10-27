@@ -1,0 +1,23 @@
+{
+  "id": "./",
+  "name": "FRESHSOUK",
+  "short_name": "FRESHSOUK",
+  "description": "Votre marché frais à Casablanca · خضر وفواكه طرية حتى لباب دارك",
+  "lang": "fr",
+  "dir": "ltr",
+  "start_url": "./?source=app",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#fff9ed",
+  "theme_color": "#073c30",
+  "categories": ["shopping", "food"],
+  "icons": [
+    { "src": "app-icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "app-icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "app-icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    { "name": "Nos produits · المنتجات", "short_name": "Produits", "url": "./?source=app#produits" },
+    { "name": "Nos qoffas · القفف", "short_name": "Qoffas", "url": "./?source=app#qoffas" }
+  ]
+}
