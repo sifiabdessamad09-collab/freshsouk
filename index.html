@@ -844,185 +844,55 @@
     @media(max-width:600px){.products{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.product-image{height:clamp(120px,34vw,155px)}.product-content{padding:9px}.product-names{min-height:34px}.product h3,.product-ar{font-size:11px}.product-price{font-size:13px}.quantity-picker{min-height:33px}.quantity-picker button,.quantity-picker output{height:31px}.quantity-picker button{width:25px}.quantity-picker output{min-width:25px;font-size:11px}.product-bottom{gap:6px}.product-purchase-row{gap:4px}.product-actions{gap:4px}.product-actions button{min-height:33px;padding:7px 7px;font-size:9px}.product-actions .whatsapp-btn{width:31px;min-width:31px;padding:0;font-size:14px}}
     @media(max-width:380px){.product-content{padding:8px}.product h3,.product-ar{font-size:10px}.product-price{font-size:12px}.quantity-picker button{width:22px}.quantity-picker output{min-width:22px}.product-actions button{padding-inline:5px}}
 </style>
+<link rel="stylesheet" href="redesign.css">
 </head>
 
 <body>
 
-<header>
-  <div class="announcement-bar" id="announcementBar"><span>🚚 التوصيل مجاني في الدار البيضاء للطلبات فوق 200 درهم! | Livraison gratuite dès 200 DH</span><button type="button" aria-label="Fermer l’annonce" onclick="closeAnnouncement()">×</button></div>
-  <nav class="nav">
-    <a href="#" class="logo">
-      <img class="logo-image" src="./freshsouk-logo.png" alt="FreshSOUK">
-      FreshSOUK
-    </a>
-
-    <div class="nav-links">
-      <a href="#accueil">Accueil</a>
-      <a href="#produits">Nos Produits</a>
-      <a href="#packs" onclick="setCategory('packs')">Packs Semaine</a>
-      <a href="#contact">Contact</a>
+<header class="fs-header">
+  <nav class="fs-nav" aria-label="Navigation principale / القائمة الرئيسية">
+    <a class="fs-brand" href="#" aria-label="FreshSOUK — Accueil / الرئيسية"><strong>FRESHSOUK</strong><span>LE GOÛT DU MAROC, CHEZ VOUS</span><small lang="ar" dir="rtl">مذاق المغرب، عندكم</small></a>
+    <div class="fs-nav-links">
+      <a href="#produits" onclick="fsCategory('legumes')"><span>Légumes</span><small lang="ar" dir="rtl">الخضر</small></a>
+      <a href="#produits" onclick="fsCategory('fruits')"><span>Fruits</span><small lang="ar" dir="rtl">الفواكه</small></a>
+      <a href="#produits" onclick="fsCategory('herbes')"><span>Herbes</span><small lang="ar" dir="rtl">الأعشاب</small></a>
+      <a href="#qoffas"><span>Paniers</span><small lang="ar" dir="rtl">القفف</small></a>
     </div>
-
-    <label class="top-search" aria-label="Rechercher un produit"><span>⌕</span><input id="headerSearch" type="search" placeholder="Rechercher un produit..." oninput="syncSearch(this.value)"></label>
-
-    <button class="cart-btn" onclick="openCart()">
-      🛒 Panier
-      <span class="cart-count" id="cartCount">0</span>
-    </button>
+    <form class="fs-search" role="search" onsubmit="event.preventDefault(); document.getElementById('produits').scrollIntoView({behavior:'smooth'})"><i data-lucide="search" aria-hidden="true"></i><input id="headerSearch" type="search" placeholder="Rechercher / قلب على منتوج" aria-label="Rechercher un produit / قلب على منتوج" oninput="syncSearch(this.value)"></form>
+    <button class="fs-cart" onclick="openCart()" aria-label="Ouvrir le panier / حل السلة"><i data-lucide="shopping-cart" aria-hidden="true"></i><span>Panier<small lang="ar" dir="rtl">السلة</small></span><b id="cartCount" class="cart-count">0</b></button>
   </nav>
 </header>
 
 <main>
-
-<section class="hero" id="accueil">
-  <div class="hero-copy">
-    <div class="badge">🌱 Frais • Local • Livré chez vous</div>
-
-    <h1 class="hero-welcome"><span lang="fr" dir="ltr">Bonjour,</span><span lang="ar" dir="rtl">مرحبا بكم</span><span class="hero-sun" aria-hidden="true">☼</span></h1>
-
-    <p class="hero-copy-fr" lang="fr" dir="ltr">Des fruits et légumes frais, sélectionnés avec soin, et livrés chez vous à Casablanca.</p>
-    <p class="hero-copy-ar" lang="ary" dir="rtl">فواكه وخضر طازجة مختارة بعناية، وكنوصلوها حتى لباب دارك فالدار البيضاء.</p>
-
-    <form class="hero-search" role="search" onsubmit="event.preventDefault(); document.getElementById('produits').scrollIntoView({behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth'});">
-      <span aria-hidden="true">⌕</span>
-      <input id="heroSearch" type="search" placeholder="Rechercher un fruit, un légume, ou un produit..." oninput="syncSearch(this.value)" aria-label="Rechercher un produit">
-      <button type="submit" class="btn-primary">Rechercher</button>
-    </form>
-    <div class="hero-trust" aria-label="Nos garanties"><span>✓ 100% طري وبلدي</span><span>✓ الدفع عند الاستلام (Paiement à la livraison)</span><span>✓ ضمان الجودة</span></div>
-  </div>
-
-  <div class="hero-visual" aria-label="قفة FreshSOUK عامرة بالخضر والفواكه الطازجة">
-    <img src="./images/products/pack-semaine-familial.webp" alt="قفة عامرة بالخضر والفواكه الطازجة من FreshSOUK" fetchpriority="high">
-    <div class="hero-visual-note"><span>🌿 Frais • Local • Chaque jour</span><strong>FreshSOUK</strong></div>
+<section class="fs-hero" id="accueil" aria-labelledby="fsHeroTitle">
+  <img class="fs-hero-image" src="assets/hero.webp" alt="قفة مغربية بالخضر الطرية / Une qoffa marocaine de légumes frais" fetchpriority="high">
+  <div class="fs-hero-copy">
+    <h1 id="fsHeroTitle">La fraîcheur<br>se partage.</h1>
+    <p class="fs-hero-ar" lang="ary" dir="rtl">الطراوة كتجمعنا</p>
+    <div class="fs-hero-description"><p>Fruits et légumes frais, livrés chez vous.</p><p lang="ary" dir="rtl">خضر وفواكه طرية حتى لباب دارك</p></div>
+    <a href="#qoffas" class="fs-button fs-hero-button"><span>Composer ma qoffa<small lang="ary" dir="rtl">وجد قفتك</small></span><i data-lucide="arrow-right" aria-hidden="true"></i></a>
   </div>
 </section>
-
-<nav class="category-shortcuts" aria-label="الوصول السريع للأصناف">
-  <a class="category-shortcut" href="#produits" onclick="openCatalogShortcut('legumes')"><img src="./images/products/tomates.webp" alt="طماطم وخضر طازجة" loading="lazy"><span>الخضرة <small>Légumes frais <b aria-hidden="true">›</b></small></span></a>
-  <a class="category-shortcut" href="#produits" onclick="openCatalogShortcut('fruits')"><img src="./images/products/bananes.webp" alt="موز وفواكه الموسم" loading="lazy"><span>الفواكه <small>Fruits de saison <b aria-hidden="true">›</b></small></span></a>
-  <a class="category-shortcut" href="#produits" onclick="openCatalogShortcut('all','Herbes')"><img src="./images/products/herbes.webp" alt="أعشاب طازجة" loading="lazy"><span>الأعشاب <small>Herbes fraîches <b aria-hidden="true">›</b></small></span></a>
-  <a class="category-shortcut" href="#produits" onclick="openCatalogShortcut('packs')"><img src="./images/products/pack-semaine-familial.webp" alt="قفة FreshSOUK الأسبوعية" loading="lazy"><span>الپانييات <small>Packs pour la semaine <b aria-hidden="true">›</b></small></span></a>
-</nav>
-
-<section class="section" id="produits">
-
-  <div class="section-title">
-    <div>
-      <h2>🌱 Nos produits frais <span lang="ar" dir="rtl">منتجاتنا الطازجة</span></h2>
-      <p>اختار اللي بغيتي وزيدو لقفتك | Composez votre panier frais.</p>
-      <span class="product-count" id="productCount" aria-live="polite">Chargement des produits…</span>
-    </div>
-    <a class="all-products-link" href="#produits" onclick="openCatalogShortcut('all')">Voir tous les produits <span aria-hidden="true">→</span></a>
-  </div>
-
-  <div class="catalog-tools">
-    <div class="category-tabs" role="tablist" aria-label="Catégories">
-      <button class="category-tab active" data-category="all" onclick="setCategory('all')">Tous</button>
-      <button class="category-tab" data-category="legumes" onclick="setCategory('legumes')">Légumes</button>
-      <button class="category-tab" data-category="fruits" onclick="setCategory('fruits')">Fruits</button>
-      <button class="category-tab" data-category="herbes" onclick="openCatalogShortcut('all','Herbes')">Herbes fraîches</button>
-      <button class="category-tab" data-category="packs" id="packs" onclick="setCategory('packs')">Packs</button>
-    </div>
-    <label class="catalog-search"><span>⌕</span><input id="catalogSearch" type="search" placeholder="Un produit en tête ?" oninput="syncSearch(this.value)"></label>
-    <select id="catalogSort" class="catalog-sort" aria-label="Trier les produits" onchange="setProductSort(this.value)"><option value="default">Ordre du catalogue</option><option value="price-asc">Prix : du moins cher</option><option value="price-desc">Prix : du plus cher</option><option value="name">Nom : A à Z</option></select>
-  </div>
-
-  <div class="products" id="productsContainer"></div>
-
+<section id="qoffas" class="fs-qoffas" aria-label="Nos qoffas / القفف ديالنا"><div id="qoffaGrid" class="fs-qoffa-grid"></div></section>
+<section class="fs-additions" aria-labelledby="fsAdditionsTitle">
+ <div class="fs-additions-copy"><h2 id="fsAdditionsTitle">À ajouter à votre panier <span lang="ary" dir="rtl">زيد لقفتك</span></h2><p>Complétez votre qoffa avec vos produits préférés.</p><p lang="ary" dir="rtl">كمّل قفتك بالمنتجات اللي كتعجبك</p></div>
+ <div class="fs-quick-products" id="quickProducts"></div>
 </section>
-
-<section class="trust-strip" aria-label="Nos engagements / التزاماتنا">
-  <div class="trust-item"><strong>Paiement à la livraison | الدفع عند الاستلام</strong><span>Vous réglez votre commande à la réception.</span></div>
-  <div class="trust-item"><strong>Zone de livraison | منطقة التوصيل</strong><span>الدار البيضاء فقط | Casablanca uniquement.</span></div>
-  <div class="trust-item"><strong>Frais à prix accessibles | خضرة وفواكه طريّة بأثمنة مناسبة</strong><span>Une sélection quotidienne pour votre panier.</span></div>
+<section class="section fs-catalog" id="produits" aria-labelledby="fsCatalogTitle">
+ <div class="fs-catalog-heading"><div><p class="fs-eyebrow">LE MARCHÉ FRESHSOUK · سوق الطراوة</p><h2 id="fsCatalogTitle">Les frais du marché <span lang="ar" dir="rtl">خيرات السوق</span></h2></div><span id="productCount" aria-live="polite"></span></div>
+ <div class="fs-catalog-tools"><div class="category-tabs" aria-label="Catégories / الأصناف">
+ <button class="category-tab active" data-category="all" onclick="fsCategory('all')">Tous <small lang="ar">الكل</small></button>
+ <button class="category-tab" data-category="legumes" onclick="fsCategory('legumes')">Légumes <small lang="ar">الخضر</small></button>
+ <button class="category-tab" data-category="fruits" onclick="fsCategory('fruits')">Fruits <small lang="ar">الفواكه</small></button>
+ <button class="category-tab" data-category="herbes" onclick="fsCategory('herbes')">Herbes <small lang="ar">الأعشاب</small></button>
+ <button class="category-tab" data-category="packs" id="packs" onclick="fsCategory('packs')">Packs <small lang="ar">السلال</small></button></div>
+ <label class="fs-sort"><span>Trier / ترتيب</span><select id="catalogSort" onchange="setProductSort(this.value)"><option value="default">Notre sélection / اختيارنا</option><option value="price-asc">Prix croissant / الثمن طالع</option><option value="price-desc">Prix décroissant / الثمن نازل</option><option value="name">Nom A–Z / الاسم</option></select></label></div>
+ <div class="products" id="productsContainer"></div>
 </section>
-
-<section class="meal-section" id="paniers-repas"><div class="meal-heading"><div><span class="meal-kicker">اقتراحات FreshSOUK · Idées FreshSOUK</span><h2>شنو غادي طيب اليوم؟</h2><p>مقادير تقريبية لـ 4 أشخاص، قابلة للتغيير. الثمن كيتحسب بأثمنة المنتجات الحالية.</p></div><span class="meal-estimate-note">غيّر الكميات قبل الإضافة</span></div><div class="meal-grid" id="mealBasketGrid"></div><p class="meal-footnote">هاد الاقتراحات تقديرية وقابلة للتغيير، والثمن كيتحسب بأثمنة المنتجات الحالية. أثمنة الباكات الحالية ما كتبدلش.</p></section>
-
-<section class="brand-video-section" id="video-freshsouk" aria-labelledby="brandVideoTitle">
-  <div class="brand-video-heading">
-    <h2 id="brandVideoTitle">FreshSOUK en images | فرش سوق بالفيديو</h2>
-    <p>Découvrez notre sélection fraîche, avec l’image entière au format 16:9.</p>
-  </div>
-  <div class="brand-video-frame" id="brandVideoFrame">
-    <div class="brand-video-poster" aria-hidden="true"><img src="./freshsouk-logo.png" alt=""></div>
-    <video class="brand-video-player" id="brandVideo" autoplay muted loop playsinline preload="metadata" poster="./freshsouk-logo.png" aria-label="Présentation vidéo FreshSOUK">
-      <source src="./assets/videos/freshsouk-web.mp4" type="video/mp4">
-    </video>
-    <button class="brand-video-toggle" id="brandVideoToggle" type="button" aria-controls="brandVideo" aria-label="Mettre la vidéo en pause" aria-pressed="false">⏸ Pause</button>
-    <p class="brand-video-status" id="brandVideoStatus" role="status" aria-live="polite">Vidéo silencieuse • Lecture automatique</p>
-  </div>
-</section>
-
-<section class="reviews-section" id="avis" aria-labelledby="reviewsTitle">
-  <div class="reviews-panel">
-    <div class="reviews-copy">
-      <h2 id="reviewsTitle">Avis de nos clients | آراء زبنائنا</h2>
-      <p>Votre avis nous aide à améliorer FreshSOUK. Donnez une note et partagez votre expérience.</p>
-      <span class="reviews-note">Votre message s’ouvrira dans WhatsApp. Il sera affiché sur le site après vérification.</span>
-    </div>
-    <form class="review-form" id="reviewForm" onsubmit="submitReview(event)">
-      <div class="review-fields">
-        <label for="reviewName">Nom (facultatif)
-          <input id="reviewName" name="name" maxlength="50" autocomplete="name" placeholder="Votre prénom">
-        </label>
-        <label for="reviewRating">Votre note
-          <select id="reviewRating" name="rating" required>
-            <option value="">Choisissez une note</option>
-            <option value="5">★★★★★ — Excellent</option>
-            <option value="4">★★★★☆ — Très bien</option>
-            <option value="3">★★★☆☆ — Bien</option>
-            <option value="2">★★☆☆☆ — Moyen</option>
-            <option value="1">★☆☆☆☆ — À améliorer</option>
-          </select>
-        </label>
-        <label class="review-message" for="reviewText">Votre avis
-          <textarea id="reviewText" name="review" maxlength="500" required placeholder="Racontez votre expérience (500 caractères maximum)…"></textarea>
-        </label>
-      </div>
-      <button class="reviews-contact" type="submit">💬 Envoyer mon avis sur WhatsApp</button>
-    </form>
-  </div>
-</section>
-
-<section class="meal-section" id="freshsouk-hebdo"><div class="meal-heading"><div><span class="meal-kicker">FreshSOUK Hebdo</span><h2>خلي سلّتك توصلك كل سيمانة</h2><p>اختار الباك والموعد. غادي نسولوك قبل كل توصيل، وما غاديش يتخلق الطلب حتى تأكد لينا.</p></div><span class="meal-estimate-note">بلا اقتطاع تلقائي</span></div><form id="subscriptionForm" class="subscription-form"><div class="form-grid"><div class="form-group"><label for="subName">الاسم الكامل</label><input id="subName" required maxlength="240"></div><div class="form-group"><label for="subPhone">الهاتف</label><input id="subPhone" type="tel" inputmode="tel" pattern="(0[567][0-9]{8}|\+212[567][0-9]{8})" placeholder="06XXXXXXXX" required></div><div class="form-group"><label for="subCity">المدينة</label><select id="subCity" required><option value="">اختار المدينة</option><option value="Casablanca">Casablanca</option></select></div><div class="form-group"><label for="subPack">الباك</label><select id="subPack" required><option value="">كنحمّلو السلات…</option></select></div><div class="form-group"><label for="subQuantity">عدد السلات</label><input id="subQuantity" type="number" min="1" max="20" value="1" required></div><div class="form-group"><label for="subFrequency">التكرار</label><select id="subFrequency" required><option value="1">كل سيمانة</option><option value="2">كل جوج سيمانات</option></select></div><div class="form-group"><label for="subDate">أول نهار للتوصيل</label><input id="subDate" type="date" required></div><div class="form-group"><label for="subWeekday">نهار التوصيل المتكرر</label><select id="subWeekday" disabled><option>اختار التاريخ اللول</option></select></div><div class="form-group"><label for="subSlot">الوقت المناسب</label><select id="subSlot" required><option value="">اختار</option><option>09h00 - 12h00</option><option>12h00 - 15h00</option><option>15h00 - 18h00</option><option>18h00 - 21h00</option></select></div><div class="form-group"><label for="subNeighborhood">الحي</label><input id="subNeighborhood" maxlength="240" required></div><div class="form-group full"><label for="subAddress">العنوان</label><input id="subAddress" maxlength="240" required></div><div class="form-group full"><label style="display:flex;gap:9px;align-items:flex-start"><input id="subConsent" type="checkbox" required style="width:auto;margin-top:3px"><span id="subConsentText">كنوافق يتسجلو معلوماتي باش نتواصلو معايا على الاشتراك. قبل كل طلب غادي نستناو تأكيدي، ونقدر نوقف أو نلغي الاشتراك.</span></label></div></div><p id="subscriptionMessage" role="status" aria-live="polite"></p><button class="meal-add-btn" type="submit">طلب الاشتراك</button></form></section>
-
+<section class="fs-delivery" aria-label="Livraison / التوصيل"><div><i data-lucide="truck" aria-hidden="true"></i><strong>Casablanca<small lang="ar" dir="rtl">التوصيل فالدار البيضاء</small></strong></div><div><i data-lucide="banknote" aria-hidden="true"></i><strong>Paiement à la livraison<small lang="ar" dir="rtl">خلّص ملي توصلك الطلبية</small></strong></div><div><i data-lucide="package-check" aria-hidden="true"></i><strong>Livraison offerte dès 200 DH<small lang="ar" dir="rtl">التوصيل مجاني من 200 درهم</small></strong></div></section>
 </main>
 
-<footer id="contact">
-
-  <div class="footer-inner">
-
-    <div>
-      <div class="logo" style="color:white;">
-        <img class="logo-image" src="./freshsouk-logo.png" alt="FreshSOUK">
-        FreshSOUK
-      </div>
-
-      <p>
-        Fruits et légumes frais livrés chez vous.
-      </p>
-    </div>
-
-    <div>
-      <h3>Contact</h3>
-      <p>WhatsApp : 06 43 88 04 85</p>
-      <p>Casablanca uniquement | الدار البيضاء فقط</p>
-    </div>
-
-    <div>
-      <h3>Commande</h3>
-      <p>Disponible via le site</p>
-      <p>ou directement sur WhatsApp</p>
-    </div>
-
-  </div>
-
-  <div class="copyright">
-    © 2026 FreshSOUK — Tous droits réservés.
-  </div>
-
-</footer>
+<footer id="contact" class="fs-footer"><div class="fs-footer-inner"><div><a class="fs-footer-brand" href="#accueil">FRESHSOUK</a><p>Le goût du Maroc, chez vous.</p><p lang="ar" dir="rtl">مذاق المغرب، عندكم</p></div><div><h2>Parlons fraîcheur · تواصل معانا</h2><a href="https://wa.me/212643880485" target="_blank" rel="noopener">WhatsApp · 06 43 88 04 85</a><p>Casablanca · الدار البيضاء</p></div><div><h2>Votre marché · السوق ديالك</h2><a href="#qoffas">Nos qoffas · القفف ديالنا</a><a href="#produits" onclick="fsCategory('all')">Tous les produits · جميع المنتجات</a></div></div><div class="fs-copyright">© 2026 FRESHSOUK <span>Frais, tout simplement. · الطراوة بكل بساطة</span></div></footer>
 
 <!-- OVERLAY -->
 
@@ -1033,8 +903,8 @@
 <aside class="cart-panel" id="cartPanel">
 
   <div class="cart-header">
-    <h2>🛒 Mon panier</h2>
-    <button class="close-btn" onclick="closeCart()">✕</button>
+    <h2>Mon panier <small lang="ar" dir="rtl">القفة ديالي</small></h2>
+    <button class="close-btn" onclick="closeCart()" aria-label="Fermer / سد"><i data-lucide="x" aria-hidden="true"></i></button>
   </div>
 
   <div class="cart-items" id="cartItems"></div>
@@ -1043,14 +913,14 @@
 
     <div class="shipping-progress"><div id="shippingText">Ajoutez des produits pour profiter de la livraison gratuite dès 200 DH.</div><div class="shipping-progress-track"><div class="shipping-progress-bar" id="shippingProgressBar"></div></div></div>
 
-    <div class="cart-breakdown" aria-live="polite"><div><span>Sous-total</span><strong id="cartSubtotal">0,00 DH</strong></div><div><span>Livraison</span><strong id="cartShipping">0,00 DH</strong></div><div class="grand-total"><span>Total</span><strong id="cartTotal">0,00 DH</strong></div></div>
+    <div class="cart-breakdown" aria-live="polite"><div><span>Sous-total · المنتجات</span><strong id="cartSubtotal">0,00 DH</strong></div><div><span>Livraison · التوصيل</span><strong id="cartShipping">0,00 DH</strong></div><div class="grand-total"><span>Total · المجموع</span><strong id="cartTotal">0,00 DH</strong></div></div>
 
     <button
       class="btn-primary"
       style="width:100%;"
       onclick="openCheckout()"
     >
-      Commander
+      Commander · كمّل الطلب
     </button>
 
   </div>
@@ -1065,20 +935,20 @@
 
     <button
       class="close-btn"
-      onclick="closeCheckout()"
+      onclick="closeCheckout()" aria-label="Fermer / سد"
       style="position:absolute;right:18px;top:18px;"
     >
       ✕
     </button>
 
-    <h2>📦 Finaliser ma commande</h2>
+    <h2>Finaliser ma commande <small lang="ar" dir="rtl">كمّل الطلب ديالك</small></h2>
 
     <form id="checkoutForm">
 
       <div class="form-grid">
 
         <div class="form-group">
-          <label>Nom complet</label>
+          <label for="customerName">Nom complet · الاسم الكامل</label>
           <input
             id="customerName"
             type="text"
@@ -1088,7 +958,7 @@
         </div>
 
         <div class="form-group">
-          <label>Téléphone</label>
+          <label for="customerPhone">Téléphone · الهاتف</label>
           <input
             id="customerPhone"
             type="tel"
@@ -1101,7 +971,7 @@
         </div>
 
         <div class="form-group">
-          <label>Ville</label>
+          <label for="customerCity">Ville · المدينة</label>
 
           <select id="customerCity" required>
             <option value="">Choisir</option>
@@ -1111,7 +981,7 @@
         </div>
 
         <div class="form-group">
-          <label>Créneau</label>
+          <label for="deliverySlot">Créneau · وقت التوصيل</label>
 
           <select id="deliverySlot" required>
             <option value="">Choisir</option>
@@ -1125,7 +995,7 @@
 
         <div class="form-group full">
 
-          <label for="customerNeighborhood">Quartier</label>
+          <label for="customerNeighborhood">Quartier · الحي</label>
 
           <input id="customerNeighborhood" type="text" maxlength="240" placeholder="Votre quartier">
 
@@ -1133,7 +1003,7 @@
 
         <div class="form-group full">
 
-          <label>Adresse</label>
+          <label for="customerAddress">Adresse · العنوان</label>
 
           <input
             id="customerAddress"
@@ -1146,7 +1016,7 @@
 
         <div class="form-group full">
 
-          <label>Note</label>
+          <label for="customerNote">Note · ملاحظة</label>
 
           <textarea
             id="customerNote"
@@ -1159,10 +1029,10 @@
 
       <div class="checkout-total">
 
-        <div class="cart-breakdown"><div><span>Sous-total</span><strong id="checkoutSubtotal">0,00 DH</strong></div><div><span>Livraison</span><strong id="checkoutShipping">0,00 DH</strong></div><div class="grand-total"><span>Total commande</span><strong id="checkoutTotal">0,00 DH</strong></div></div>
+        <div class="cart-breakdown"><div><span>Sous-total · المنتجات</span><strong id="checkoutSubtotal">0,00 DH</strong></div><div><span>Livraison · التوصيل</span><strong id="checkoutShipping">0,00 DH</strong></div><div class="grand-total"><span>Total · المجموع</span><strong id="checkoutTotal">0,00 DH</strong></div></div>
 
         <small>
-          Le paiement sera confirmé lors du traitement de votre commande.
+          Paiement à la livraison · الدفع عند الاستلام
         </small>
 
       </div>
@@ -1172,7 +1042,7 @@
         class="btn-primary"
         style="width:100%;"
       >
-        💬 Confirmer sur WhatsApp
+        Confirmer sur WhatsApp · أكد عبر واتساب
       </button>
 
     </form>
@@ -1183,15 +1053,10 @@
 
 <!-- WHATSAPP FLOATING BUTTON -->
 
-<a
-  class="whatsapp-float"
-  href="#"
-  onclick="openWhatsApp(); return false;"
-  title="Commander sur WhatsApp"
->
-  💬
-</a>
 
+
+<script src="assets/icons.js"></script>
+<script src="redesign.js"></script>
 <script type="application/json" id="productData">[
   {
     "id": "pack-semaine-familial",
@@ -1734,34 +1599,14 @@
     if (selectedSort === "name") visible.sort((a, b) => a.nameFr.localeCompare(b.nameFr, "fr"));
     const productCount = document.getElementById("productCount");
     if (productCount) productCount.textContent = `${products.length} produits au catalogue · ${visible.length} affichés`;
-    const featuredIds = ["tomates", "pomme-de-terre", "bananes", "oranges", "carottes", "courgettes"];
-    const catalogOrder = [...featuredIds, ...products.filter(product => !featuredIds.includes(product.id) && product.category !== "packs").map(product => product.id), ...products.filter(product => product.category === "packs").map(product => product.id)];
-    const cardNames = {
-      tomates: { fr: "Tomates", ar: "طماطم" },
-      "pomme-de-terre": { fr: "Pommes de terre", ar: "بطاطس" },
-      bananes: { fr: "Bananes", ar: "موز" },
-      oranges: { fr: "Oranges", ar: "برتقال" },
-      carottes: { fr: "Carottes", ar: "جزر" },
-      courgettes: { fr: "Courgettes", ar: "كوسة" }
-    };
-    if (selectedSort === "default") visible.sort((a, b) => catalogOrder.indexOf(a.id) - catalogOrder.indexOf(b.id));
-      container.innerHTML = visible.length ? visible.map(product => `
-      <article class="product" data-product-id="${product.id}">
-        <div class="product-image">
-          <img src="${product.image}" data-fallback="${product.imageFallback || ''}" alt="${product.nameFr}" loading="lazy" decoding="async" onerror="if(this.dataset.fallback){this.src=this.dataset.fallback;this.dataset.fallback='';}else{this.style.display='none';this.nextElementSibling.style.display='grid'}">
-          <span class="product-emoji" style="display:none">${product.emoji}</span>
-          ${(product.badgeFr || product.badgeAr) ? `<span class="product-badge ${product.category === "packs" ? "product-badge-gold" : "product-badge-green"}">${product.badgeFr || product.badgeAr}</span>` : ""}
-        </div>
-        <div class="product-content">
-          <div class="product-names"><h3>${cardNames[product.id]?.fr || product.nameFr}</h3><span class="product-ar" lang="ar" dir="rtl">${cardNames[product.id]?.ar || product.nameAr}</span></div>
-          ${product.category === "packs" ? `<details class="pack-details"><summary>شوف شنو فيها · Voir le contenu</summary><p>${product.descriptionFr || ""}</p><p class="pack-details-ar" lang="ar" dir="rtl">${product.descriptionAr || ""}</p></details>` : `<p class="product-description">${product.descriptionFr || "Produits frais du marché."}</p><p class="product-description product-description-ar" lang="ar" dir="rtl">${product.descriptionAr || ""}</p>`}
-          <div class="product-bottom"><div class="product-price">${Number(product.price).toFixed(2)} DH <small>/ ${product.unit}</small></div>
-            <div class="product-purchase-row"><div class="quantity-picker" aria-label="Quantité de ${product.nameFr}"><button type="button" aria-label="Diminuer la quantité" onclick="adjustProductQuantity(this, -1)">−</button><output data-quantity-value data-quantity="1" data-unit="${product.unit}" aria-live="polite">1</output><button type="button" aria-label="Augmenter la quantité" onclick="adjustProductQuantity(this, 1)">+</button></div>
-            <div class="product-actions"><button class="add-btn" onclick="addSelectedToCart('${product.id}', this)">🛒 Ajouter</button><button class="whatsapp-btn" aria-label="Commander ${product.nameFr} sur WhatsApp" title="Commander sur WhatsApp" onclick="quickOrderProduct('${product.id}', this)">💬</button></div></div>
-          </div>
-        </div>
-      </article>
-    `).join("") : `<div class="empty">Aucun produit trouvé.</div>`;
+    const featuredIds = ["tomates", "carottes", "oranges", "oignons-rouges", "herbes", "pomme-de-terre"];
+    if (selectedSort === "default") visible.sort((a,b) => {
+      const rank = p => featuredIds.includes(p.id) ? featuredIds.indexOf(p.id) : (p.category === "packs" ? 1000 : 20) + products.indexOf(p);
+      return rank(a) - rank(b);
+    });
+    container.innerHTML = visible.length ? visible.map(fsProductMarkup).join("") : '<div class="fs-empty"><h3>Aucun produit trouvé · ما لقينا حتى منتوج</h3><p>Essayez un autre mot ou une autre catégorie. · جرّب كلمة ولا صنف آخر</p><button class="fs-button" onclick="fsResetSearch()">Tout voir · شوف الكل</button></div>';
+    if (productCount) productCount.textContent = visible.length + " produits · " + visible.length + " منتوج";
+    fsRenderQoffas(); fsRenderQuickProducts(); fsIcons();
   }
 
   function closeAnnouncement() {
@@ -1823,6 +1668,7 @@
   }
 
   function syncSearch(value) {
+    selectedCategory = "all";
     searchQuery = value;
     const header = document.getElementById("headerSearch");
     const catalog = document.getElementById("catalogSearch");
@@ -1863,6 +1709,7 @@
     saveCart();
 
     openCart();
+    fsIcons();
 
   }
 
@@ -1952,11 +1799,12 @@
     const cartTotal = getCartTotal();
     const remainingForFreeShipping = Math.max(0, FREE_SHIPPING_THRESHOLD - cartTotal);
     shippingText.textContent = remainingForFreeShipping === 0
-      ? "🎉 Livraison gratuite ! / التوصيل مجاني"
-      : `🚚 Plus que ${remainingForFreeShipping.toFixed(2)} DH pour la livraison gratuite dès 200 DH.`;
+      ? "Livraison offerte / التوصيل مجاني"
+      : `Encore ${remainingForFreeShipping.toFixed(2)} DH pour la livraison offerte. / باقي ${remainingForFreeShipping.toFixed(2)} درهم للتوصيل المجاني.`;
     shippingProgressBar.style.width = Math.min(100, (cartTotal / FREE_SHIPPING_THRESHOLD) * 100) + "%";
 
-    count.textContent = getCartCount();
+    count.textContent = cart.length;
+    count.closest("button").setAttribute("aria-label", "Panier / السلة — " + cart.length + " produits");
 
     document.getElementById("cartSubtotal").textContent = getCartTotal().toFixed(2) + " DH";
     document.getElementById("cartShipping").textContent = getDeliveryFee().toFixed(2) + " DH";
@@ -1966,9 +1814,9 @@
 
       container.innerHTML = `
         <div class="empty">
-          <div style="font-size:50px;">🛒</div>
-          <h3>Votre panier est vide</h3>
-          <p>Ajoutez des produits pour commencer.</p>
+          
+          <h3>Votre panier est vide</h3><p lang="ar" dir="rtl">القفة ديالك باقية خاوية</p>
+          <p>Ajoutez des produits pour commencer.</p><button class="fs-button" onclick="closeCart();document.getElementById('produits').scrollIntoView()">Faire mon marché · نتقضّى</button>
         </div>
       `;
 
@@ -1982,7 +1830,7 @@
         <div class="cart-item">
 
           <div class="cart-item-image">
-            ${item.emoji}
+            <img src="${fsImage(item)}" alt="" loading="lazy">
           </div>
 
           <div class="cart-item-info">
@@ -2013,7 +1861,7 @@
                 onclick="removeFromCart('${item.id}')"
                 style="margin-left:auto;color:#dc2626;"
               >
-                🗑
+                Retirer · حذف
               </button>
 
             </div>
@@ -2062,7 +1910,7 @@
 
     if (cart.length === 0) {
 
-      alert("Votre panier est vide.");
+      alert("Votre panier est vide. / القفة ديالك خاوية");
 
       return;
 
@@ -2220,7 +2068,7 @@
     .addEventListener("submit", async function(event) {
       event.preventDefault();
       if (cart.length === 0) {
-        alert("Votre panier est vide.");
+        alert("Votre panier est vide. / القفة ديالك خاوية");
         return;
       }
 
@@ -2467,6 +2315,7 @@
     });
     saveCart();
     openCart();
+    fsIcons();
   }
   function setupSubscriptionForm() {
     const form = document.getElementById("subscriptionForm");
