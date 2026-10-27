@@ -6,7 +6,7 @@ const ROOT=new URL('./',self.registration.scope);
 const ROOT_KEY=ROOT.href;
 const OFFLINE=new URL('offline.html',ROOT).href;
 const SHELL_FILES=[
- './','./index.html','./offline.html','./manifest.json',
+ './','./index.html','./offline.html','./manifest.json','./products.json',
  './pwa.js?v=app1-20261027','./pwa.css?v=app1-20261027',
  './redesign.js?v=baskets-20261027','./redesign.css?v=baskets-20261027',
  './assets/icons.js','./app-icon-192.png','./app-icon-512.png',
@@ -47,7 +47,7 @@ async function catalogue(request){
   if(response.ok)await cache.put(key,response.clone());
   return response;
  }catch{
-  const previous=await cache.match(key);
+  const previous=(await cache.match(key))||(await caches.match(key));
   if(previous)return previous;
   throw new Error('Catalogue unavailable offline');
  }
