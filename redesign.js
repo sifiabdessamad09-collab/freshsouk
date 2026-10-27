@@ -37,7 +37,15 @@ const fsQoffas = [
 ];
 function fsEscape(value){return String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 function fsMoney(value){return new Intl.NumberFormat('fr-MA',{maximumFractionDigits:2}).format(value);}
-function fsImage(p){return fsAssetImages[p.id] ? 'assets/'+fsAssetImages[p.id]+'-transparent.webp' : p.image;}
+const fsPackImages = {
+ 'pack-semaine-familial':'family',
+ 'pack-couscous-vendredi':'solo',
+ 'pack-jus-fruits':'fruits'
+};
+function fsImage(p){
+ if(fsPackImages[p.id])return 'assets/'+fsPackImages[p.id]+'-transparent.webp';
+ return fsAssetImages[p.id] ? 'assets/'+fsAssetImages[p.id]+'-transparent.webp' : p.image;
+}
 function fsIcons(){if(window.lucide) lucide.createIcons({attrs:{'stroke-width':1.6}});}
 function fsCategory(category){
  searchQuery=''; document.getElementById('headerSearch').value='';
