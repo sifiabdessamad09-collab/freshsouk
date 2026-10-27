@@ -1,5 +1,35 @@
 /* Visual redesign: original order and cart functions remain in index.html. */
-const fsAssetImages = {tomates:'tomates',carottes:'carottes',oranges:'oranges','oignons-rouges':'oignons',herbes:'menthe','pomme-de-terre':'pommes-de-terre'};
+const fsAssetImages = {
+  "tomates": "tomates",
+  "carottes": "carottes",
+  "oranges": "oranges",
+  "oignons-rouges": "oignons",
+  "herbes": "menthe",
+  "pomme-de-terre": "pommes-de-terre",
+  "oignons-blancs": "catalog-oignons-blancs",
+  "concombres": "catalog-concombres",
+  "poivrons": "catalog-poivrons",
+  "courgettes": "catalog-courgettes",
+  "courge-rouge": "catalog-courge-rouge",
+  "navets": "catalog-navets",
+  "chou": "catalog-chou",
+  "brocoli": "catalog-brocoli",
+  "chou-fleur": "catalog-chou-fleur",
+  "aubergines": "catalog-aubergines",
+  "haricots-verts": "catalog-haricots-verts",
+  "petits-pois": "catalog-petits-pois",
+  "pommes-rouges": "catalog-pommes-rouges",
+  "bananes": "catalog-bananes",
+  "kiwi": "catalog-kiwi",
+  "mandarines": "catalog-mandarines",
+  "fraises": "catalog-fraises",
+  "raisins": "catalog-raisins",
+  "poires": "catalog-poires",
+  "peches-nectarines": "catalog-peches-nectarines",
+  "pasteque": "catalog-pasteque",
+  "melon": "catalog-melon",
+  "grenades": "catalog-grenades"
+};
 const fsQoffas = [
  {id:'solo',fr:'Qoffa Solo',ar:'قفة فردية',description:'L’essentiel de la semaine pour une personne.',descriptionAr:'قفة فيها الأساسيات ديال السيمانة لشخص واحد.',items:[['pomme-de-terre',1],['tomates',.5],['oignons-rouges',.5],['carottes',.5],['courgettes',.5],['herbes',1]]},
  {id:'family',fr:'Qoffa Famille',ar:'قفة العائلة',description:'Une sélection généreuse pour toute la famille.',descriptionAr:'تشكيلة سخية من الخضر الطرية للعائلة كاملة.',items:[['pomme-de-terre',2],['tomates',1],['oignons-rouges',1],['carottes',1],['courgettes',1],['aubergines',.5],['poivrons',.5],['herbes',2]]},
