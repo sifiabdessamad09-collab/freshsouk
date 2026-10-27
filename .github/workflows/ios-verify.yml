@@ -1,0 +1,31 @@
+name: FRESHSOUK iPhone build
+on:
+  push:
+    branches: [codex/ios-native]
+    paths: [FRESHSOUK-iPhone-source.zip, .github/workflows/ios-verify.yml]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: macos-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - name: Unpack native source
+        run: |
+          mkdir -p work/ios
+          unzip -q FRESHSOUK-iPhone-source.zip -d work/ios
+      - name: Verify models and build iPhone simulator app
+        run: |
+          set -o pipefail
+          bash work/ios/Scripts/verify-on-mac.sh 2>&1 | tee ios-build.log
+      - name: Save build evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: FRESHSOUK-iPhone-build-evidence
+          path: |
+            ios-build.log
+            work/ios/.build/ios-simulator/Build/Products/Debug-iphonesimulator/FreshSouk.app
+          retention-days: 14
