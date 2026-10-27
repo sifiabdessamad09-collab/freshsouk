@@ -15,11 +15,23 @@ jobs:
       - name: Unpack native source
         run: |
           mkdir -p work/ios
-          unzip -q FRESHSOUK-iPhone-source.zip -d work/ios
+          unzip -qo FRESHSOUK-iPhone-source.zip -d work/ios
       - name: Verify models and build iPhone simulator app
         run: |
           set -o pipefail
           bash work/ios/Scripts/verify-on-mac.sh 2>&1 | tee ios-build.log
+      - name: Launch app on an iPhone simulator
+        run: |
+          set -euo pipefail
+          xcrun simctl list devices available -j > devices.json
+          DEVICE=$(python3 -c 'import json; d=json.load(open("devices.json")); print(next(v["udid"] for group in d["devices"].values() for v in group if v.get("isAvailable") and v["name"].startswith("iPhone")))')
+          xcrun simctl boot "$DEVICE" || true
+          xcrun simctl bootstatus "$DEVICE" -b
+          xcrun simctl install "$DEVICE" work/ios/.build/ios-simulator/Build/Products/Debug-iphonesimulator/FreshSouk.app
+          xcrun simctl status_bar "$DEVICE" override --time '9:41' --batteryState charged --batteryLevel 100
+          xcrun simctl launch "$DEVICE" com.freshsouk.shop
+          sleep 5
+          xcrun simctl io "$DEVICE" screenshot freshsouk-iphone.png
       - name: Save build evidence
         if: always()
         uses: actions/upload-artifact@v4
@@ -27,5 +39,6 @@ jobs:
           name: FRESHSOUK-iPhone-build-evidence
           path: |
             ios-build.log
+            freshsouk-iphone.png
             work/ios/.build/ios-simulator/Build/Products/Debug-iphonesimulator/FreshSouk.app
           retention-days: 14
