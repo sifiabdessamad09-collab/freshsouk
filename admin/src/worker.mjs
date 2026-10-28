@@ -130,7 +130,7 @@ async function verifyTurnstile(request,env,token) {
   const ip=request.headers.get('CF-Connecting-IP');if(ip)body.set('remoteip',ip);
   let data;
   try {
-    const response=await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify',{method:'POST',body,signal:AbortSignal.timeout(5000),redirect:'error'});
+    const response=await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify',{method:'POST',body,signal:AbortSignal.timeout(5000),redirect:'manual'});
     if(!response.ok)throw new Error();data=await response.json();
   } catch { throw fault(503,'Vérification anti-abus indisponible.'); }
   if(data.success!==true||data.hostname!==env.TURNSTILE_HOSTNAME||data.action!=='freshsouk-order')throw fault(400,'Vérification anti-abus refusée.');

@@ -11,7 +11,7 @@ async function keys(team, force = false) {
   const previous = cache.get(team);
   if (previous && ((!force && previous.expires > Date.now()) || (force && previous.fetched > Date.now()-60000))) return previous.keys;
   let response;
-  try { response = await fetch(`https://${team}/cdn-cgi/access/certs`, { signal: AbortSignal.timeout(5000), redirect: 'error' }); }
+  try { response = await fetch(`https://${team}/cdn-cgi/access/certs`, { signal: AbortSignal.timeout(5000), redirect: 'manual' }); }
   catch { throw fault(503, 'Service d’authentification indisponible.'); }
   if (!response.ok) throw fault(503, 'Service d’authentification indisponible.');
   let data;try { data=await response.json(); } catch { throw fault(503,'Service d’authentification indisponible.'); }
@@ -37,7 +37,8 @@ export async function requireAdmin(request, env) {
     claims = JSON.parse(new TextDecoder().decode(decode(parts[1])));
   } catch { throw fault(401, 'Authentification requise.'); }
   const now = Date.now() / 1000;
-  if (header.alg !== 'RS256' || header.typ!=='JWT' || header.crit!==undefined || typeof header.kid !== 'string' || !header.kid || header.kid.length>200 ||
+  // Cloudflare Access may omit the optional JOSE typ header. All signed app claims remain mandatory.
+  if (header.alg !== 'RS256' || (header.typ!==undefined && header.typ!=='JWT') || header.crit!==undefined || typeof header.kid !== 'string' || !header.kid || header.kid.length>200 ||
       claims.iss !== `https://${team}` || !Array.isArray(claims.aud) || !claims.aud.includes(audience) ||
       claims.type !== 'app' || typeof claims.email !== 'string' || typeof claims.sub !== 'string' || !claims.sub ||
       !Number.isFinite(claims.exp) || claims.exp <= now || !Number.isFinite(claims.iat) || claims.iat > now + 60 ||
