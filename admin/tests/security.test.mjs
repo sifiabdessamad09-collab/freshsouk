@@ -24,6 +24,11 @@ test('real RSA signatures, issuer, audience, expiry, app identity and allowlist 
   const cases=[[{email:'outsider@example.invalid'},403],[{aud:['another-app']},401],[{iss:'https://evil.invalid'},401],[{exp:1},401],[{nbf:Date.now()/1000+3600},401],[{iat:Date.now()/1000+3600},401],[{type:'service'},401],[{email:undefined},401]];
   for(const [claims,status]of cases)assert.equal((await f.request('/api/admin/session',{headers:{'Cf-Access-Jwt-Assertion':await token(claims)}})).status,status);
   for(const header of [{alg:'none'},{alg:'HS256'},{kid:'unknown'},{crit:['unsupported']},{typ:'not-a-JWT'}])assert.equal((await f.request('/api/admin/session',{headers:{'Cf-Access-Jwt-Assertion':await token({},header)}})).status,401);
+  // Real Access app tokens omit typ; omission must retain every signature and claim check.
+  assert.equal((await f.request('/api/admin/session',{headers:{'Cf-Access-Jwt-Assertion':await token({},{typ:undefined})}})).status,200);
+  for(const [claims,status]of cases)assert.equal((await f.request('/api/admin/session',{headers:{'Cf-Access-Jwt-Assertion':await token(claims,{typ:undefined})}})).status,status);
+  const withoutTyp=await token({},{typ:undefined});
+  assert.equal((await f.request('/api/admin/session',{headers:{'Cf-Access-Jwt-Assertion':withoutTyp.slice(0,-20)+'A'.repeat(20)}})).status,401);
   const forged=f.jwt.slice(0,-20)+'A'.repeat(20);assert.equal((await f.request('/api/admin/session',{headers:{'Cf-Access-Jwt-Assertion':forged}})).status,401);
   assert.equal((await f.request('/api/admin/session',{headers:{'Cf-Access-Jwt-Assertion':'malformed'}})).status,401);
   const data=await(await f.request('/api/admin/session')).json();assert.equal(data.email,EMAIL);assert(!JSON.stringify(data).includes(f.jwt));f.db.close();
@@ -63,7 +68,7 @@ test('captcha hostname and action mismatches never store an order',async()=>{
   Object.assign(f.env,{PUBLIC_ORDER_INTAKE_ENABLED:'true',TURNSTILE_SECRET:'test-only-placeholder',TURNSTILE_HOSTNAME:'sifiabdessamad09-collab.github.io',ORDER_LIMITER:{limit:async()=>({success:true})}});
   try{
     for(const validation of [{success:false},{success:true,hostname:'attacker.invalid',action:'freshsouk-order'},{success:true,hostname:f.env.TURNSTILE_HOSTNAME,action:'other-form'}]){
-      globalThis.fetch=async(url,options)=>String(url).includes('/turnstile/')?Response.json(validation):previous(url,options);
+      globalThis.fetch=async(url,options)=>{assert.equal(options.redirect,'manual');return String(url).includes('/turnstile/')?Response.json(validation):previous(url,options);};
       const result=await f.request('/api/orders',{auth:false,body:{...orderBody,turnstileToken:'test-only-token'},headers:{Origin:f.env.ALLOWED_ORIGIN,'Idempotency-Key':crypto.randomUUID()}});
       assert.equal(result.status,400);
     }
@@ -73,9 +78,9 @@ test('captcha hostname and action mismatches never store an order',async()=>{
 test('unavailable or malformed signing-key service fails closed',async()=>{
   const f=await fixture(),previous=globalThis.fetch;
   try{
-    for(const [team,response]of [['unavailable-keys.cloudflareaccess.com',new Response('',{status:503})],['malformed-keys.cloudflareaccess.com',Response.json({keys:'not-an-array'})]]){
+    for(const [team,response]of [['unavailable-keys.cloudflareaccess.com',new Response('',{status:503})],['redirect-keys.cloudflareaccess.com',new Response('',{status:302,headers:{Location:'https://attacker.invalid'}})],['malformed-keys.cloudflareaccess.com',Response.json({keys:'not-an-array'})]]){
       f.env.ACCESS_TEAM_DOMAIN=team;
-      globalThis.fetch=async()=>response.clone();
+      globalThis.fetch=async(url,options)=>{assert.equal(options.redirect,'manual');return response.clone();};
       const jwt=await token({iss:'https://'+team});
       const result=await f.request('/api/admin/orders',{headers:{'Cf-Access-Jwt-Assertion':jwt}});
       assert.equal(result.status,503);
