@@ -1,0 +1,14 @@
+{
+  "name": "freshsouk-private-admin",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=24" },
+  "devDependencies": { "wrangler": "4.154.0" },
+  "scripts": {
+    "build": "node scripts/build-assets.mjs",
+    "test": "node --test --test-isolation=none tests/*.test.mjs",
+    "preview": "node scripts/preview.mjs",
+    "check": "node --check src/worker.mjs && node --check ui/app.js && node scripts/verify-public.mjs"
+  }
+}
