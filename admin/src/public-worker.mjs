@@ -5,7 +5,7 @@ import worker from './worker.mjs';
 export default {
   fetch(request, env) {
     const path = new URL(request.url).pathname;
-    if (!['/api/catalog', '/api/orders', '/api/health'].includes(path)) {
+    if (!['/api/catalog', '/api/orders', '/api/health'].includes(path) && !/^\/api\/track\/[^/]+$/.test(path)) {
       return Promise.resolve(Response.json({error:'Ressource introuvable.'}, {
         status:404, headers:{'cache-control':'no-store','x-content-type-options':'nosniff'}
       }));
