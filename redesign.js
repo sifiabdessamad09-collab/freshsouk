@@ -84,7 +84,20 @@ function fsRenderQuickProducts(){
  host.innerHTML=['tomates','carottes','oranges','oignons-rouges','herbes','pomme-de-terre'].map(id=>{const p=products.find(p=>p.id===id);return p?`<button onclick="fsFindProduct('${id}')" aria-label="Voir ${fsEscape(p.nameFr)} / ${fsEscape(p.nameAr)}"><img src="${fsEscape(fsImage(p))}" alt="${fsEscape(p.nameFr)}" loading="lazy"><span>${fsEscape(p.nameFr.replace(' premium','').replace(' fraîches','').replace(' locales','').replace(' à jus','').replace('Herbes (coriandre, persil, céleri, menthe)','Herbes'))}</span><small lang="ar" dir="rtl">${fsEscape(p.nameAr)}</small></button>`:''}).join('');
 }
 function fsFindProduct(id){fsCategory('all');const card=document.querySelector(`[data-product-id="${id}"]`);if(card){card.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'center'});card.classList.add('fs-highlight');setTimeout(()=>card.classList.remove('fs-highlight'),1600);}}
+function fsSyncViewport(){
+ const viewport=window.visualViewport;
+ if(viewport&&viewport.scale!==1)return;
+ const height=viewport?.height||window.innerHeight;
+ if(!Number.isFinite(height)||height<=0)return;
+ document.documentElement.style.setProperty('--fs-viewport-height',height+'px');
+ document.documentElement.style.setProperty('--fs-viewport-top',(viewport?.offsetTop||0)+'px');
+}
 document.addEventListener('DOMContentLoaded',()=>{
+ fsSyncViewport();
+ window.addEventListener('resize',fsSyncViewport,{passive:true});
+ window.addEventListener('pageshow',fsSyncViewport,{passive:true});
+ window.visualViewport?.addEventListener('resize',fsSyncViewport,{passive:true});
+ window.visualViewport?.addEventListener('scroll',fsSyncViewport,{passive:true});
  fsIcons();
  document.addEventListener('keydown',e=>{
   if(e.key==='Escape'){closeCart();closeCheckout();document.querySelector('.fs-cart')?.focus();}
