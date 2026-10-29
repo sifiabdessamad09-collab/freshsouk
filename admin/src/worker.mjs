@@ -45,7 +45,7 @@ export default {
           if(request.method!=='GET')throw fault(405,'Méthode non autorisée.');
           return secured(await asset(env,request,path));
         }
-        if(path==='/api/admin/session'&&request.method==='GET')return secured(json({...admin,role:'administrator'}));
+        if(path==='/api/admin/session'&&request.method==='GET')return secured(json({...admin,role:'administrator',storeConnected:env.SHOP_SYNC_ENABLED==='true'}));
         if(path==='/api/admin/dashboard'&&request.method==='GET')return secured(json(await dashboard(env)));
         if(path==='/api/admin/products') {
           if(request.method==='GET') {
