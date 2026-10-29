@@ -855,6 +855,18 @@
 <link rel="icon" type="image/png" sizes="192x192" href="app-icon-192.png">
 <link rel="stylesheet" href="pwa.css?v=app1-20261027">
 <script defer src="pwa.js?v=app1-20261027"></script>
+<style>
+  :root{--fs-viewport-height:100vh;--fs-viewport-top:0px}
+  @supports(height:100dvh){:root{--fs-viewport-height:100dvh}}
+  #cartPanel{top:var(--fs-viewport-top);height:var(--fs-viewport-height);padding-top:env(safe-area-inset-top,0px);padding-inline:env(safe-area-inset-left,0px) env(safe-area-inset-right,0px);overflow:hidden}
+  #cartPanel .cart-header{flex-shrink:0}
+  #cartPanel .cart-items{min-height:0;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+  #cartPanel .cart-footer{flex:0 1 auto;max-height:70%;overflow-y:auto;padding-bottom:calc(16px + env(safe-area-inset-bottom,0px));overscroll-behavior:contain}
+  #cartPanel .cart-footer>.btn-primary{position:sticky;bottom:0}
+  #checkoutModal{top:var(--fs-viewport-top);bottom:auto;height:var(--fs-viewport-height);padding:max(12px,env(safe-area-inset-top,0px)) max(12px,env(safe-area-inset-right,0px)) max(12px,env(safe-area-inset-bottom,0px)) max(12px,env(safe-area-inset-left,0px));overflow:hidden}
+  #checkoutModal .modal-box{max-height:100%;min-height:0;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+  #checkoutForm input,#checkoutForm select,#checkoutForm textarea{font-size:16px}
+</style>
 </head>
 
 <body>
@@ -1072,7 +1084,7 @@
 
 
 <script src="assets/icons.js"></script>
-<script src="redesign.js?v=sync1-20261028"></script>
+<script src="redesign.js?v=viewport-20261029"></script>
 <script src="storefront.js?v=whatsapp-20261029"></script>
 <script type="application/json" id="productData">[
   {
