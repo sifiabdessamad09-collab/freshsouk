@@ -1,11 +1,11 @@
 name: FreshSOUK private admin checks
 on:
   push:
-    branches: [codex/freshsouk-admin, codex/freshsouk-boutique-sync]
-    paths: [admin/**, docs/admin/**, .github/workflows/admin-ci.yml, .gitignore, index.html, redesign.js, sw.js, storefront.js]
+    branches: [codex/freshsouk-admin, codex/freshsouk-boutique-sync, codex/freshsouk-order-tracking]
+    paths: [admin/**, docs/admin/**, .github/workflows/admin-ci.yml, .gitignore, index.html, redesign.js, sw.js, storefront.js, track.*]
   pull_request:
     branches: [main]
-    paths: [admin/**, docs/admin/**, .github/workflows/admin-ci.yml, .gitignore, index.html, redesign.js, sw.js, storefront.js]
+    paths: [admin/**, docs/admin/**, .github/workflows/admin-ci.yml, .gitignore, index.html, redesign.js, sw.js, storefront.js, track.*]
 permissions:
   contents: read
 jobs:
@@ -31,6 +31,8 @@ jobs:
           node scripts/check-assets.mjs
       - name: Authentication, private orders and transactional stock tests
         run: npm test
+      - name: Check public tracking script syntax
+        run: node --check ../track.js
       - name: Compile Worker without deploying or creating remote resources
         run: npx wrangler deploy --dry-run --outdir .dry-run
       - name: Compile public entry point without deploying
