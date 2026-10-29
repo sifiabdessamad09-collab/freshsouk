@@ -5,6 +5,7 @@ admin/.wrangler/
 admin/.local/
 admin/test-results/
 admin/.dry-run/
+admin/.dry-run-public/
 .env
 .env.*
 !.env.example

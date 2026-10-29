@@ -1,5 +1,5 @@
 'use strict';
-const VERSION='freshsouk-pwa-v1-20261027';
+const VERSION='freshsouk-pwa-sync1-20261028';
 const SHELL=VERSION+'-shell';
 const MEDIA=VERSION+'-media';
 const ROOT=new URL('./',self.registration.scope);
@@ -7,12 +7,13 @@ const ROOT_KEY=ROOT.href;
 const OFFLINE=new URL('offline.html',ROOT).href;
 const SHELL_FILES=[
  './','./index.html','./offline.html','./manifest.json','./products.json',
+ './storefront.js?v=sync1-20261028',
  './pwa.js?v=app1-20261027','./pwa.css?v=app1-20261027',
- './redesign.js?v=baskets-20261027','./redesign.css?v=baskets-20261027',
+ './redesign.js?v=sync1-20261028','./redesign.css?v=baskets-20261027',
  './assets/icons.js','./app-icon-192.png','./app-icon-512.png',
  './app-icon-maskable-512.png','./apple-touch-icon.png'
 ].map(file=>new URL(file,ROOT).href);
-const SAFE_FILES=new Set(['pwa.js','pwa.css','redesign.js','redesign.css','manifest.json','app-icon-192.png','app-icon-512.png','app-icon-maskable-512.png','apple-touch-icon.png','freshsouk-logo.png','kiwi.jpg']);
+const SAFE_FILES=new Set(['storefront.js','pwa.js','pwa.css','redesign.js','redesign.css','manifest.json','app-icon-192.png','app-icon-512.png','app-icon-maskable-512.png','apple-touch-icon.png','freshsouk-logo.png','kiwi.jpg']);
 
 self.addEventListener('install',event=>{
  // One atomic shell installation; a missing file must not leave a partial app.
