@@ -127,9 +127,12 @@ async function submitForm(event,action){event.preventDefault();const form=event.
 
 async function orderDetail(id) {
   const data=await(await api('/api/admin/orders/'+encodeURIComponent(id))).json(),o=data.order;
+  const tracking=state.session.trackingEnabled?await(await api('/api/admin/orders/'+encodeURIComponent(id)+'/tracking')).json():null;
   openDialog('Commande #'+o.id.slice(0,8).toUpperCase(),`<div class="detail-grid"><div><label>Client · الزبون</label><p>${e(o.customer_name)}</p></div><div><label>Téléphone · الهاتف</label><p>${e(o.phone)}</p></div><div class="full"><label>Adresse · العنوان</label><p>${e(o.address)}<br>Casablanca</p></div><div><label>Créneau · وقت التوصيل</label><p>${e(o.delivery_slot)}</p></div><div><label>Statut · الحالة</label>${badge(o.status)}</div>${o.note?`<div class="full"><label>Note · ملاحظة</label><p>${e(o.note)}</p></div>`:''}</div><div class="table-wrap"><table><thead><tr><th>Produit</th><th>Quantité</th><th>Total</th></tr></thead><tbody>${data.items.map(i=>`<tr><td>${e(i.name_fr)}<small lang="ar" dir="rtl">${e(i.name_ar)}</small></td><td>${quantity(i.quantity_milli)} ${e(i.unit)}</td><td>${money(i.line_cents)}</td></tr>`).join('')}</tbody></table></div><div class="totals"><div><span>Produits · المنتجات</span><span>${money(o.subtotal_cents)}</span></div><div><span>Livraison · التوصيل</span><span>${money(o.delivery_cents)}</span></div><div><span>Total · المجموع</span><span>${money(o.total_cents)}</span></div></div>
   ${data.allowedStatuses.length?`<form id="statusForm"><label class="field">Prochaine étape · المرحلة الجاية<select name="status">${data.allowedStatuses.map(s=>`<option value="${s}">${e(statuses[s][0])} · ${e(statuses[s][1])}</option>`).join('')}</select></label><div id="cancelNotice" class="notice" hidden><label><input type="checkbox" name="confirmCancel"> Je confirme l’annulation et la restitution du stock réservé. · كنأكد إلغاء الطلب وإرجاع المخزون المحجوز.</label></div><p class="form-error" role="status"></p><div class="form-actions"><button class="btn" type="submit">Enregistrer le statut · حفظ الحالة</button></div></form>`:'<div class="notice">Cette commande est terminée. Son historique est conservé. · هاد الطلب سالا والتاريخ ديالو باقي محفوظ.</div>'}
+  ${tracking?`<section class="history" id="trackingTools"><h3>Suivi client · تتبع الزبون</h3><p id="trackingState"></p><div class="form-actions"><button type="button" class="btn" id="generateTracking"></button><button type="button" class="btn secondary" id="revokeTracking">Révoquer le lien · وقف الرابط</button></div><div id="trackingShare" hidden><label class="field">Lien personnel · رابط خاص<input id="trackingLink" readonly autocomplete="off"></label><div class="form-actions"><button type="button" class="btn secondary" id="copyTracking">Copier le lien · نسخ الرابط</button><a class="btn secondary" id="whatsappTracking" target="_blank" rel="noopener noreferrer">Envoyer sur WhatsApp · واتساب</a></div></div><p class="muted">Le lien apparaît seulement à sa création. En le régénérant, l’ancien est invalidé. WhatsApp ouvre un message prérempli : appuyez sur Envoyer. · الرابط كيبان غير ملي كيتصايب. الجديد كيلغي القديم، وفواتساب خاص الضغط على إرسال.</p><p id="trackingFeedback" class="form-error" role="status"></p></section>`:''}
   <section class="history"><h3>Historique · تاريخ الطلب</h3>${data.history.map(h=>{const detail=JSON.parse(h.details);return `<div class="history-item">${h.action==='created'?'Commande enregistrée':e(statuses[detail.from]?.[0]||detail.from)+' → '+e(statuses[detail.to]?.[0]||detail.to)}<small>${e(date(h.created_at))} · ${e(h.actor)}</small></div>`;}).join('')}</section>`);
+  if(tracking)trackingTools(o,tracking);
   const form=$('#statusForm');
   if(form)form.elements.status.addEventListener('change',()=>{const cancel=form.elements.status.value==='cancelled';$('#cancelNotice').hidden=!cancel;form.elements.confirmCancel.required=cancel;form.elements.confirmCancel.checked=false;});
   if(form)form.addEventListener('submit',event=>submitForm(event,async()=>{
@@ -138,6 +141,30 @@ async function orderDetail(id) {
     await api(`/api/admin/orders/${encodeURIComponent(id)}/status`,{method:'PATCH',body:JSON.stringify({status,version:o.version})});
     closeDialog();toast('Statut enregistré · تحفظات الحالة');await loadPage();await orderDetail(id);
   }));
+}
+function trackingTools(order,meta) {
+ const host=$('#trackingTools'),generate=$('#generateTracking'),revoke=$('#revokeTracking'),share=$('#trackingShare'),link=$('#trackingLink'),feedback=$('#trackingFeedback');
+ function update(){generate.textContent=meta.version?'Régénérer le lien (invalide l’ancien) · جدّد الرابط':'Générer un lien de suivi · صايب رابط التتبع';revoke.disabled=!meta.active;$('#trackingState').textContent=meta.active?'Lien actif jusqu’au '+date(meta.expiresAt)+' · الرابط خدام':'Aucun lien actif · ما كاين رابط خدام';}
+ async function mutate(method){
+  generate.disabled=true;revoke.disabled=true;feedback.textContent='';share.hidden=true;link.value='';$('#whatsappTracking').removeAttribute('href');
+  try{
+   const result=await(await api('/api/admin/orders/'+encodeURIComponent(order.id)+'/tracking',{method,body:JSON.stringify({version:meta.version})})).json();
+   if(!host.isConnected||state.locked)return;
+   meta={...result,active:method==='POST'};
+   if(result.token){
+    if(!/^[A-Za-z0-9_-]{43}$/.test(result.token))throw new Error('Lien invalide. Rechargez les détails.');
+    link.value='https://sifiabdessamad09-collab.github.io/freshsouk/track.html#'+result.token;
+    const phone=order.phone.startsWith('+212')?order.phone.slice(1):'212'+order.phone.slice(1);
+    const message='FreshSOUK 🌿\nطلبك #'+order.id.slice(0,8).toUpperCase()+' تسجل عندنا. تقدر تبع الحالة ديالو من هاد الرابط الخاص:\n'+link.value+'\nSuivez votre commande avec ce lien personnel. شكراً على الثقة!';
+    if(/^212[567]\d{8}$/.test(phone))$('#whatsappTracking').href='https://wa.me/'+phone+'?text='+encodeURIComponent(message);
+    share.hidden=false;feedback.textContent='Lien créé, à conserver et à partager uniquement avec le client. · الرابط واجد، شاركو غير مع صاحب الطلب.';
+   }else feedback.textContent='Lien révoqué · الرابط توقف';
+  }catch(error){if(host.isConnected&&!state.locked)feedback.textContent=error.message;}
+  finally{if(host.isConnected&&!state.locked){generate.disabled=false;update();}}
+ }
+ generate.addEventListener('click',()=>mutate('POST'));revoke.addEventListener('click',()=>mutate('DELETE'));
+ $('#copyTracking').addEventListener('click',async()=>{try{await navigator.clipboard.writeText(link.value);if(host.isConnected)feedback.textContent='Lien copié · تنسخ الرابط';}catch{link.focus();link.select();feedback.textContent='Copiez le lien sélectionné. · نسخ الرابط المحدد.';}});
+ update();
 }
 async function productHistory(id){const data=await(await api(`/api/admin/products/${encodeURIComponent(id)}/history`)).json();openDialog('Historique produit · تاريخ المنتوج',data.history.length?`<div>${data.history.map(h=>{const d=JSON.parse(h.details);return `<div class="history-item"><strong>${e(h.action==='created'?'Création du produit':d.reason||'Mise à jour')}</strong>${d.old_stock_milli!==undefined?`<div>Stock : ${quantity(d.old_stock_milli)} → ${quantity(d.stock_milli)}</div>`:''}${d.old_price_cents!==undefined&&d.old_price_cents!==d.price_cents?`<div>Prix : ${money(d.old_price_cents)} → ${money(d.price_cents)}</div>`:''}<small>${e(date(h.created_at))} · ${e(h.actor)}</small></div>`;}).join('')}</div>`:empty('Aucun changement enregistré.'));}
 

@@ -36,6 +36,7 @@ export function sqliteAdapter(db) {
 export async function fixture() {
   const db=new DatabaseSync(':memory:');
   db.exec(await readFile(new URL('../db/0001_admin.sql',import.meta.url),'utf8'));
+  db.exec(await readFile(new URL('../db/0003_order_tracking.sql',import.meta.url),'utf8'));
   const catalog=await sourceCatalog();db.exec(seedStatements(catalog));
   const env={DB:sqliteAdapter(db),ACCESS_TEAM_DOMAIN:TEAM,ACCESS_AUD:AUD,ADMIN_EMAILS:EMAIL,
     ALLOWED_ORIGIN:'https://sifiabdessamad09-collab.github.io',PUBLIC_ORDER_INTAKE_ENABLED:'false',

@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="referrer" content="no-referrer">
+  <meta name="robots" content="noindex,nofollow,noarchive">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none';script-src 'self';style-src 'self';connect-src https://freshsouk-shop-api.freshsouk.workers.dev;img-src 'self';base-uri 'none';form-action 'none'">
+  <title>Suivre ma commande · تتبع الطلب — FreshSOUK</title>
+  <link rel="stylesheet" href="track.css">
+  <script src="track.js" defer></script>
+</head>
+<body>
+  <header><a class="brand" href="./">FRESHSOUK<small>LE GOÛT DU MAROC, CHEZ VOUS · مذاق المغرب عندكم</small></a></header>
+  <main>
+    <p class="eyebrow">DE NOTRE MARCHÉ À VOTRE PORTE · من السوق حتى لباب دارك</p>
+    <h1>Suivre ma commande<span lang="ar" dir="rtl">تبع الطلب ديالك</span></h1>
+    <p class="intro">Retrouvez ici les étapes de votre livraison.<br><span lang="ar" dir="rtl">شوف فين وصل الطلب ديالك، بلا حساب.</span></p>
+    <p id="feedback" class="notice" role="status" aria-live="polite">Chargement… · كنقلبو على الطلب…</p>
+    <section id="order" aria-label="Suivi du colis · تتبع الطلب" hidden>
+      <div class="summary"><div><small>Commande · الطلب</small><h2 id="reference"></h2></div><span id="currentStatus" class="badge"></span></div>
+      <div class="dates"><p>Créée le · تسجل نهار <time id="created"></time></p><p>Mise à jour · آخر تحديث <time id="updated"></time></p></div>
+      <p id="cancelled" class="cancelled" hidden>Cette commande a été annulée.<br><span lang="ar" dir="rtl">هاد الطلب تلغى. تواصل مع FreshSOUK إلا بغيتي شي توضيح.</span></p>
+      <ol id="steps" class="steps" aria-label="Étapes de livraison · مراحل التوصيل"></ol>
+      <h3>Historique · مراحل الطلب</h3><ol id="history" class="history"></ol>
+    </section>
+    <div class="actions"><button id="refresh" type="button">Actualiser · حدّث الحالة</button><a href="./">Retour au marché · رجع للسوق</a></div>
+    <p class="privacy">Ce lien est personnel. Partagez-le uniquement avec une personne de confiance.<br><span lang="ar" dir="rtl">هاد الرابط خاص بالطلب ديالك. ما تشاركو غير مع شي حد كاتيق فيه.</span></p>
+    <p class="privacy">Actualisation automatique toutes les 30 secondes quand cette page est ouverte.<br><span lang="ar" dir="rtl">الحالة كتتحدّث كل 30 ثانية ملي الصفحة محلولة.</span></p>
+  </main>
+  <footer>FRESHSOUK · Casablanca / الدار البيضاء</footer>
+</body>
+</html>

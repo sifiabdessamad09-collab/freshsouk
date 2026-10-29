@@ -1,6 +1,7 @@
 import { requireAdmin, requireSameOrigin, fault } from './auth.mjs';
 import { readBody,fields,text,integer,productInput,adminProduct,publicProduct,statement,rows,now,ID,TRANSITIONS } from './domain.mjs';
 import { createOrder,listOrders,dashboard,exportOrders } from './orders.mjs';
+import {publicTracking,trackingMetadata,generateTracking,revokeTracking} from './tracking.mjs';
 
 const SECURITY = {
   'cache-control':'no-store, max-age=0','cdn-cache-control':'no-store','pragma':'no-cache',
@@ -19,6 +20,19 @@ export default {
     let cors={};
     try {
       if(path==='/api/health'&&request.method==='GET')return secured(json({ok:true}));
+      if(path.startsWith('/api/track/')) {
+        cors={'vary':'Origin'};
+        const origin=request.headers.get('Origin');
+        if(origin&&origin!==env.ALLOWED_ORIGIN&&origin!==url.origin)throw fault(403,'Origine refusée.');
+        if(origin===env.ALLOWED_ORIGIN)cors['access-control-allow-origin']=origin;
+        if(env.ORDER_TRACKING_ENABLED!=='true')throw fault(404,'Lien de suivi indisponible. · رابط التتبع ما متوفرش.');
+        if(request.method==='OPTIONS')return secured(new Response(null,{status:204,headers:{...cors,'access-control-allow-methods':'GET, OPTIONS','access-control-allow-headers':'Accept'}}));
+        if(request.method!=='GET')throw fault(405,'Méthode non autorisée.');
+        const limiter=env.TRACK_LIMITER||env.ORDER_LIMITER;
+        if(!limiter)throw fault(503,'Suivi temporairement indisponible.');
+        if(!(await limiter.limit({key:'track:'+(request.headers.get('CF-Connecting-IP')||'unknown')})).success)throw fault(429,'Réessayez dans une minute.');
+        return secured(json(await publicTracking(env,path.slice('/api/track/'.length)),200,cors));
+      }
       if(path==='/api/catalog'||path==='/api/orders') {
         const origin=request.headers.get('Origin');
         if(origin&&origin!==env.ALLOWED_ORIGIN&&origin!==url.origin)throw fault(403,'Origine refusée.');
@@ -45,7 +59,7 @@ export default {
           if(request.method!=='GET')throw fault(405,'Méthode non autorisée.');
           return secured(await asset(env,request,path));
         }
-        if(path==='/api/admin/session'&&request.method==='GET')return secured(json({...admin,role:'administrator',storeConnected:env.SHOP_SYNC_ENABLED==='true'}));
+        if(path==='/api/admin/session'&&request.method==='GET')return secured(json({...admin,role:'administrator',storeConnected:env.SHOP_SYNC_ENABLED==='true',trackingEnabled:env.ORDER_TRACKING_ENABLED==='true'}));
         if(path==='/api/admin/dashboard'&&request.method==='GET')return secured(json(await dashboard(env)));
         if(path==='/api/admin/products') {
           if(request.method==='GET') {
@@ -78,6 +92,16 @@ export default {
         if(path==='/api/admin/orders') {
           if(request.method==='GET')return secured(json(await listOrders(env,url.searchParams)));
           if(request.method==='POST')return secured(json({ok:true,order:await createOrder(request,env,await readBody(request),admin.email,'admin')},201));
+        }
+        const tracking=path.match(/^\/api\/admin\/orders\/([^/]+)\/tracking$/);
+        if(tracking) {
+          if(env.ORDER_TRACKING_ENABLED!=='true')throw fault(404,'Suivi non activé.');
+          if(!uuid.test(tracking[1]))throw fault(400,'Identifiant invalide.');
+          if(!await statement(env,'SELECT id FROM orders WHERE id=?',tracking[1]).first())throw fault(404,'Commande introuvable.');
+          if(request.method==='GET')return secured(json(await trackingMetadata(env,tracking[1])));
+          if(!['POST','DELETE'].includes(request.method))throw fault(405,'Méthode non autorisée.');
+          const body=await readBody(request);fields(body,['version']);const version=integer(body.version,'version',0);
+          return secured(json(request.method==='POST'?await generateTracking(env,tracking[1],version,admin.email):await revokeTracking(env,tracking[1],version,admin.email)));
         }
         const order=path.match(/^\/api\/admin\/orders\/([^/]+)$/);
         if(order&&request.method==='GET') {
