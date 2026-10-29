@@ -904,7 +904,7 @@
 <section class="fs-delivery" aria-label="Livraison / التوصيل"><div><i data-lucide="truck" aria-hidden="true"></i><strong>Casablanca<small lang="ar" dir="rtl">التوصيل فالدار البيضاء</small></strong></div><div><i data-lucide="banknote" aria-hidden="true"></i><strong>Paiement à la livraison<small lang="ar" dir="rtl">خلّص ملي توصلك الطلبية</small></strong></div><div><i data-lucide="package-check" aria-hidden="true"></i><strong>Livraison offerte dès 200 DH<small lang="ar" dir="rtl">التوصيل مجاني من 200 درهم</small></strong></div></section>
 </main>
 
-<p id="orderReceipt" class="fs-empty" tabindex="-1" role="status" hidden></p>
+<div id="orderReceipt" class="fs-empty" tabindex="-1" role="status" hidden></div>
 <footer id="contact" class="fs-footer"><div class="fs-footer-inner"><div><a class="fs-footer-brand" href="#accueil">FRESHSOUK</a><p>Le goût du Maroc, chez vous.</p><p lang="ar" dir="rtl">مذاق المغرب، عندكم</p></div><div><h2>Parlons fraîcheur · تواصل معانا</h2><a href="https://wa.me/212643880485" target="_blank" rel="noopener">WhatsApp · 06 43 88 04 85</a><p>Casablanca · الدار البيضاء</p></div><div><h2>Votre marché · السوق ديالك</h2><a href="#qoffas">Nos qoffas · القفف ديالنا</a><a href="#produits" onclick="fsCategory('all')">Tous les produits · جميع المنتجات</a><button class="pwa-footer-button" type="button" data-pwa-install><i data-lucide="download" aria-hidden="true"></i>Installer l’application · ثبّت التطبيق</button></div></div><div class="fs-copyright">© 2026 FRESHSOUK <span>Frais, tout simplement. · الطراوة بكل بساطة</span></div></footer>
 
 <!-- OVERLAY -->
@@ -1052,12 +1052,13 @@
       </div>
 
       <div id="orderChallenge" style="margin:12px 0;min-height:65px"></div>
+      <p>Votre commande sera enregistrée, puis WhatsApp s’ouvrira avec vos coordonnées et le récapitulatif. Appuyez sur Envoyer pour nous le transmettre. · الطلب كيتسجل فالإدارة، ومن بعد كيتحل واتساب بمعلوماتك والطلب واجد. ضغط على إرسال باش يوصل لينا.</p>
       <button
         type="submit"
         class="btn-primary"
         style="width:100%;"
       >
-        Confirmer ma commande · أكد الطلب
+        Enregistrer et continuer sur WhatsApp · سجل وكمل فواتساب
       </button>
 
     </form>
@@ -1072,7 +1073,7 @@
 
 <script src="assets/icons.js"></script>
 <script src="redesign.js?v=sync1-20261028"></script>
-<script src="storefront.js?v=sync1-20261028"></script>
+<script src="storefront.js?v=whatsapp-20261029"></script>
 <script type="application/json" id="productData">[
   {
     "id": "pack-semaine-familial",
@@ -2107,11 +2108,17 @@
       if(expectedTotal!==getOrderTotal()||previousItems!==JSON.stringify(cart.map(p=>[p.id,p.quantity])))throw new Error('Le panier a été actualisé. Vérifiez-le puis confirmez à nouveau. · تبدل الثمن ولا المخزون، راجع القفة وأكد من جديد.');
       const customer={name:document.getElementById('customerName').value.trim(),phone:document.getElementById('customerPhone').value.trim(),city:document.getElementById('customerCity').value,neighborhood:document.getElementById('customerNeighborhood')?.value.trim()||'',address:document.getElementById('customerAddress').value.trim(),slot:document.getElementById('deliverySlot').value,note:document.getElementById('customerNote').value.trim()};
       const receipt=await saveOrderThroughBackend(customer,cart);
+      const submittedItems=cart.map(p=>({...p}));
       cart=[];saveCart();renderCart();closeCheckout();
       const confirmation=document.getElementById('orderReceipt');
       confirmation.textContent='Commande enregistrée, à confirmer · تسجل الطلب وباقي التأكيد. Référence : '+receipt.id.slice(0,8).toUpperCase()+' · Total : '+new Intl.NumberFormat('fr-MA').format(receipt.totalCents/100)+' DH. Paiement à la livraison · الخلاص عند التوصيل.';
+      const hint=document.createElement('p');hint.textContent='Envoyez aussi le récapitulatif sur WhatsApp. Votre commande reste enregistrée si vous revenez sans envoyer. · صيفط نفس الطلب فواتساب. الطلب كيبقى مسجل حتى إلا رجعتي بلا إرسال.';confirmation.append(hint);
+      const whatsapp=document.createElement('a');whatsapp.className='btn-primary';whatsapp.textContent='Ouvrir WhatsApp et envoyer · حل واتساب وصيفط';whatsapp.rel='noreferrer';
+      try{whatsapp.href=FreshsoukStore.whatsappUrl(customer,submittedItems,receipt,WHATSAPP_NUMBER);confirmation.append(whatsapp);}catch{hint.textContent='Commande enregistrée. WhatsApp indisponible pour le moment. · الطلب تسجل، واتساب ما متوفرش دابا.';}
       confirmation.hidden=false;confirmation.scrollIntoView({behavior:'smooth',block:'center'});confirmation.focus();
-      document.getElementById('checkoutForm').reset();await refreshCatalogue();
+      document.getElementById('checkoutForm').reset();
+      // Same-tab handoff avoids asynchronous popup blockers; the receipt link remains on Back.
+      if(whatsapp.hasAttribute('href')){try{window.location.assign(whatsapp.href);}catch{/* Saved receipt and retry link stay visible. */}}
     }catch(error){feedback.textContent=error.message;await FreshsoukStore.prepareChallenge().catch(()=>{});}
     finally{submit.disabled=false;submit.textContent=oldText;}
   });

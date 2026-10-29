@@ -14,6 +14,25 @@ window.FreshsoukStore = (() => {
     return {customer:{name:customer.name,phone:customer.phone,city:customer.city,address:[customer.neighborhood,customer.address].filter(Boolean).join(' — '),slot:customer.slot},
       items:items.map(p=>({productId:p.id,quantity:Number(p.quantity)})),note:customer.note||''};
   }
+  function whatsappUrl(customer,items,receipt,number) {
+    if(!receipt?.id||!Number.isSafeInteger(receipt.totalCents)||!/^[1-9]\d{7,14}$/.test(number))throw new Error('Confirmation WhatsApp indisponible');
+    const lines=items.map(p=>`${Number(p.quantity)} ${p.unit} — ${p.nameFr||p.name} / ${p.nameAr||''}`);
+    const message=[
+      'Bonjour FreshSOUK 👋 / السلام عليكم',
+      'Commande déjà enregistrée / الطلب تسجل فالموقع : #'+receipt.id.slice(0,8).toUpperCase(),
+      'Merci de traiter cette référence une seule fois / نفس الطلب، ماشي طلب جديد.',
+      '',...lines,'',
+      'Total / المجموع : '+(receipt.totalCents/100).toFixed(2)+' DH',
+      'Paiement à la livraison / الخلاص عند التوصيل',
+      'Nom / الاسم : '+customer.name,
+      'Téléphone / الهاتف : '+customer.phone,
+      'Ville / المدينة : '+customer.city,
+      'Adresse / العنوان : '+[customer.neighborhood,customer.address].filter(Boolean).join(' — '),
+      'Créneau / وقت التوصيل : '+customer.slot,
+      ...(customer.note?['Note / ملاحظة : '+customer.note]:[])
+    ].join('\n');
+    return 'https://wa.me/'+number+'?text='+encodeURIComponent(message);
+  }
   function prepareChallenge() {
     const host=document.getElementById('orderChallenge');
     if (!host) return;
@@ -35,5 +54,5 @@ window.FreshsoukStore = (() => {
     if(!response.ok||!result.ok||!result.order?.id||!Number.isSafeInteger(result.order.totalCents))throw new Error(result.error||'Enregistrement impossible · ما تسجلش الطلب');
     return result.order;
   }
-  return {apiUrl,catalogue,payload,prepareChallenge,save};
+  return {apiUrl,catalogue,payload,prepareChallenge,save,whatsappUrl};
 })();
