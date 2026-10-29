@@ -43,6 +43,7 @@ const fsPackImages = {
  'pack-jus-fruits':'fruits'
 };
 function fsImage(p){
+ if(p.catalogSource==='live')return p.image;
  if(fsPackImages[p.id])return 'assets/'+fsPackImages[p.id]+'-transparent.webp';
  return fsAssetImages[p.id] ? 'assets/'+fsAssetImages[p.id]+'-transparent.webp' : p.image;
 }
@@ -59,8 +60,8 @@ function fsProductMarkup(p){
  <div class="product-image"><img src="${fsEscape(fsImage(p))}" alt="${fsEscape(p.nameFr)} / ${fsEscape(p.nameAr)}" loading="lazy" decoding="async"></div>
  <div class="product-content"><div class="product-names"><h3>${fsEscape(p.nameFr)}</h3><span class="product-ar" lang="ar" dir="rtl">${fsEscape(p.nameAr)}</span></div>
  ${p.category==='packs'?`<details class="pack-details"><summary>Composition · شنو فيها</summary><p>${fsEscape(p.descriptionFr)}</p><p lang="ar" dir="rtl">${fsEscape(p.descriptionAr)}</p></details>`:''}
- <div class="product-bottom"><div class="product-price">${fsMoney(Number(p.price))} DH <small>/ ${fsEscape(p.unit==='Kg'?'kg':p.unit)}</small></div>
- <div class="product-purchase-row"><div class="quantity-picker" aria-label="Quantité / الكمية"><button type="button" aria-label="Diminuer / نقص" onclick="adjustProductQuantity(this,-1)"><i data-lucide="minus" aria-hidden="true"></i></button><output data-quantity-value data-quantity="1" data-unit="${fsEscape(p.unit)}" aria-live="polite">1</output><button type="button" aria-label="Augmenter / زيد" onclick="adjustProductQuantity(this,1)"><i data-lucide="plus" aria-hidden="true"></i></button></div><button class="fs-product-add" onclick="addSelectedToCart('${fsEscape(p.id)}',this)" aria-label="Ajouter ${fsEscape(p.nameFr)} / زيد ${fsEscape(p.nameAr)}"><i data-lucide="plus" aria-hidden="true"></i></button></div></div></div></article>`;
+ <div class="product-bottom"><div class="product-price">${p.available===false?'<span>Indisponible · سالا المخزون</span><br>':''}${fsMoney(Number(p.price))} DH <small>/ ${fsEscape(p.unit==='Kg'?'kg':p.unit)}</small></div>
+ <div class="product-purchase-row"><div class="quantity-picker" aria-label="Quantité / الكمية"><button type="button" aria-label="Diminuer / نقص" onclick="adjustProductQuantity(this,-1)"><i data-lucide="minus" aria-hidden="true"></i></button><output data-quantity-value data-quantity="1" data-unit="${fsEscape(p.unit)}" aria-live="polite">1</output><button type="button" aria-label="Augmenter / زيد" onclick="adjustProductQuantity(this,1)"><i data-lucide="plus" aria-hidden="true"></i></button></div><button class="fs-product-add" ${p.available===false?'disabled':''} onclick="addSelectedToCart('${fsEscape(p.id)}',this)" aria-label="Ajouter ${fsEscape(p.nameFr)} / زيد ${fsEscape(p.nameAr)}"><i data-lucide="plus" aria-hidden="true"></i></button></div></div></div></article>`;
 }
 function fsRenderQoffas(){
  const target=document.getElementById('qoffaGrid'); if(!target)return;
@@ -74,7 +75,7 @@ function fsRenderQoffas(){
 function fsAddQoffa(id){
  const q=fsQoffas.find(q=>q.id===id);if(!q)return;
  const lines=q.items.map(([productId,quantity])=>({product:products.find(p=>p.id===productId),quantity}));
- if(lines.some(l=>!l.product))return;
+ if(lines.some(l=>!l.product||l.product.available===false))return;
  for(const {product,quantity} of lines){const previous=cart.find(item=>item.id===product.id);if(previous)previous.quantity=Number((Number(previous.quantity)+quantity).toFixed(2));else cart.push({...product,quantity});}
  saveCart();openCart();fsIcons();
 }

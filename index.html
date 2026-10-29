@@ -898,11 +898,13 @@
  <button class="category-tab" data-category="herbes" onclick="fsCategory('herbes')">Herbes <small lang="ar">الأعشاب</small></button>
  <button class="category-tab" data-category="packs" id="packs" onclick="fsCategory('packs')">Packs <small lang="ar">السلال</small></button></div>
  <label class="fs-sort"><span>Trier / ترتيب</span><select id="catalogSort" onchange="setProductSort(this.value)"><option value="default">Notre sélection / اختيارنا</option><option value="price-asc">Prix croissant / الثمن طالع</option><option value="price-desc">Prix décroissant / الثمن نازل</option><option value="name">Nom A–Z / الاسم</option></select></label></div>
- <div class="products" id="productsContainer"></div>
+ <p id="catalogueFeedback" role="status" hidden></p>
+<div class="products" id="productsContainer"></div>
 </section>
 <section class="fs-delivery" aria-label="Livraison / التوصيل"><div><i data-lucide="truck" aria-hidden="true"></i><strong>Casablanca<small lang="ar" dir="rtl">التوصيل فالدار البيضاء</small></strong></div><div><i data-lucide="banknote" aria-hidden="true"></i><strong>Paiement à la livraison<small lang="ar" dir="rtl">خلّص ملي توصلك الطلبية</small></strong></div><div><i data-lucide="package-check" aria-hidden="true"></i><strong>Livraison offerte dès 200 DH<small lang="ar" dir="rtl">التوصيل مجاني من 200 درهم</small></strong></div></section>
 </main>
 
+<p id="orderReceipt" class="fs-empty" tabindex="-1" role="status" hidden></p>
 <footer id="contact" class="fs-footer"><div class="fs-footer-inner"><div><a class="fs-footer-brand" href="#accueil">FRESHSOUK</a><p>Le goût du Maroc, chez vous.</p><p lang="ar" dir="rtl">مذاق المغرب، عندكم</p></div><div><h2>Parlons fraîcheur · تواصل معانا</h2><a href="https://wa.me/212643880485" target="_blank" rel="noopener">WhatsApp · 06 43 88 04 85</a><p>Casablanca · الدار البيضاء</p></div><div><h2>Votre marché · السوق ديالك</h2><a href="#qoffas">Nos qoffas · القفف ديالنا</a><a href="#produits" onclick="fsCategory('all')">Tous les produits · جميع المنتجات</a><button class="pwa-footer-button" type="button" data-pwa-install><i data-lucide="download" aria-hidden="true"></i>Installer l’application · ثبّت التطبيق</button></div></div><div class="fs-copyright">© 2026 FRESHSOUK <span>Frais, tout simplement. · الطراوة بكل بساطة</span></div></footer>
 
 <!-- OVERLAY -->
@@ -955,6 +957,7 @@
     <h2>Finaliser ma commande <small lang="ar" dir="rtl">كمّل الطلب ديالك</small></h2>
 
     <form id="checkoutForm">
+      <p id="orderFeedback" role="status" aria-live="polite"></p>
 
       <div class="form-grid">
 
@@ -1048,12 +1051,13 @@
 
       </div>
 
+      <div id="orderChallenge" style="margin:12px 0;min-height:65px"></div>
       <button
         type="submit"
         class="btn-primary"
         style="width:100%;"
       >
-        Confirmer sur WhatsApp · أكد عبر واتساب
+        Confirmer ma commande · أكد الطلب
       </button>
 
     </form>
@@ -1067,7 +1071,8 @@
 
 
 <script src="assets/icons.js"></script>
-<script src="redesign.js?v=baskets-20261027"></script>
+<script src="redesign.js?v=sync1-20261028"></script>
+<script src="storefront.js?v=sync1-20261028"></script>
 <script type="application/json" id="productData">[
   {
     "id": "pack-semaine-familial",
@@ -1534,7 +1539,9 @@
     items: "entry.1554169127", total: "entry.94144248"
   };
   // Configure only after the private Worker is deployed. Never place secrets here.
-  const ORDER_API_URL = "";
+  const ORDER_API_URL = FreshsoukStore.apiUrl;
+  // Subscription enquiries remain the existing, explicitly consented WhatsApp flow.
+  const SUBSCRIPTIONS_API_URL = "";
 
   /* =========================
      PRODUITS
@@ -1597,7 +1604,31 @@
      AFFICHAGE PRODUITS
   ========================= */
 
-  function renderProducts() { if (!window.freshsoukCatalogReady) { if (!window.freshsoukCatalogLoading) { window.freshsoukCatalogLoading = true; const catalogUrl = ORDER_API_URL ? ORDER_API_URL.replace(/\/$/, "") + "/api/catalog" : "./products.json?v=" + Date.now(); fetch(catalogUrl).then(response => { if (!response.ok) throw new Error("Product data unavailable"); return response.json(); }).then(data => { products.splice(0, products.length, ...data.map(product => ({ ...product, name: product.nameFr, description: product.descriptionFr || "Produits frais du marché.", categoryLabel: categoryNames[product.category] || product.category, emoji: categoryEmoji[product.category] || "🥬" }))); cart.forEach(item => { const current = products.find(product => product.id === item.id); if (current) Object.assign(item, current); }); localStorage.setItem("freshsouk_cart", JSON.stringify(cart)); document.querySelectorAll("[data-pack-price]").forEach(badge => { const pack = products.find(product => product.id === badge.dataset.packPrice); if (pack) badge.textContent = badge.textContent.replace(/·\s*[\d,.]+\s*DH/, "· " + Number(pack.price).toFixed(2) + " DH"); }); window.freshsoukCatalogReady = true; renderProducts(); if (typeof renderCart === "function") renderCart(); if (typeof renderMealBaskets === "function") renderMealBaskets(); }).catch(() => { window.freshsoukCatalogReady = true; renderProducts(); }); } return; }
+  let catalogueOnline=false, catalogueRequest;
+  async function refreshCatalogue() {
+    if(catalogueRequest)return catalogueRequest;
+    catalogueRequest=(async()=>{
+      try {
+        const data=await FreshsoukStore.catalogue();
+        const mapped=data.map(product=>({...product,name:product.nameFr,description:product.descriptionFr||'Produits frais du marché.',categoryLabel:categoryNames[product.category]||product.category,emoji:categoryEmoji[product.category]||'🥬'}));
+        const changed=JSON.stringify(products)!==JSON.stringify(mapped);
+        products.splice(0,products.length,...mapped);
+        cart=cart.filter(item=>products.some(p=>p.id===item.id&&p.available!==false)).map(item=>({...products.find(p=>p.id===item.id),quantity:item.quantity}));
+        catalogueOnline=true;window.freshsoukCatalogReady=true;saveCart();
+        if(changed){renderProducts();if(typeof renderMealBaskets==='function')renderMealBaskets();}
+        document.getElementById('catalogueFeedback').hidden=true;
+        return true;
+      } catch {
+        catalogueOnline=false;window.freshsoukCatalogReady=true;renderProducts();
+        const feedback=document.getElementById('catalogueFeedback');feedback.hidden=false;feedback.textContent='Catalogue hors ligne. Reconnectez-vous pour commander. · الكتالوج بلا اتصال، خاص الإنترنت باش تطلب.';
+        return false;
+      } finally {catalogueRequest=undefined;}
+    })();return catalogueRequest;
+  }
+  document.addEventListener('visibilitychange',()=>{if(!document.hidden)refreshCatalogue();});
+  setInterval(()=>{if(!document.hidden)refreshCatalogue();},60000);
+  function renderProducts() {
+    if(!window.freshsoukCatalogReady){refreshCatalogue();return;}
     const container = document.getElementById("productsContainer");
     const query = searchQuery.trim().toLocaleLowerCase();
     const visible = products.filter(product => {
@@ -1699,7 +1730,7 @@
     const product =
       products.find(p => p.id === id);
 
-    if (!product) return;
+    if (!product || product.available===false) return;
     quantity = Number(quantity);
     if (!Number.isFinite(quantity) || quantity <= 0) return;
 
@@ -1841,12 +1872,12 @@
         <div class="cart-item">
 
           <div class="cart-item-image">
-            <img src="${fsImage(item)}" alt="" loading="lazy">
+            <img src="${fsEscape(fsImage(item))}" alt="" loading="lazy">
           </div>
 
           <div class="cart-item-info">
 
-            <strong>${item.name || item.nameFr}</strong><div class="cart-item-ar" lang="ar" dir="rtl">${item.nameAr || ""}</div>
+            <strong>${fsEscape(item.name || item.nameFr)}</strong><div class="cart-item-ar" lang="ar" dir="rtl">${fsEscape(item.nameAr || "")}</div>
 
             <div>
               ${item.price} DH/${item.unit}
@@ -2060,134 +2091,32 @@
     return key;
   }
 
-  async function saveOrderThroughBackend(customer, items) {
-    if (!ORDER_API_URL) return null;
-    const payload = { customer, items: items.map(item => ({ productId: item.id, quantity: Number(item.quantity) })) };
-    const response = await fetch(ORDER_API_URL.replace(/\/$/, "") + "/api/orders", {
-      method: "POST",
-      headers: { "content-type": "application/json", "Idempotency-Key": await getPendingOrderKey(payload) },
-      body: JSON.stringify(payload)
-    });
-    const result = await response.json().catch(() => ({}));
-    if (!response.ok || !result.ok || !result.order) throw new Error(result.error || "Order save failed");
-    sessionStorage.removeItem("freshsouk_pending_order");
-    return result.order;
+  async function saveOrderThroughBackend(customer,items){
+    const payload=FreshsoukStore.payload(customer,items);
+    const receipt=await FreshsoukStore.save(customer,items,await getPendingOrderKey(payload));
+    sessionStorage.removeItem('freshsouk_pending_order');return receipt;
   }
-
-  document
-    .getElementById("checkoutForm")
-    .addEventListener("submit", async function(event) {
-      event.preventDefault();
-      if (cart.length === 0) {
-        alert("Votre panier est vide. / القفة ديالك خاوية");
-        return;
-      }
-
-      const submitButton = event.currentTarget.querySelector('button[type="submit"]');
-      const originalButtonText = submitButton.textContent;
-      submitButton.disabled = true;
-      submitButton.textContent = "Enregistrement de la commande…";
-
-      const name = document.getElementById("customerName").value.trim();
-      const phone = document.getElementById("customerPhone").value.trim();
-      const city = document.getElementById("customerCity").value;
-      const neighborhood = document.getElementById("customerNeighborhood")?.value.trim() || "";
-      const address = document.getElementById("customerAddress").value.trim();
-      const slot = document.getElementById("deliverySlot").value;
-      const note = document.getElementById("customerNote").value.trim();
-      const subtotal = getCartTotal().toFixed(2);
-      const delivery = getDeliveryFee().toFixed(2);
-      const itemsText = cart.map(item => (item.name || item.nameFr) + " x" + item.quantity + " = " +
-        (item.price * item.quantity).toFixed(2) + " DH").join("\n") +
-        "\nSous-total : " + subtotal + " DH\nLivraison : " + delivery + " DH";
-      const total = getOrderTotal().toFixed(2);
-
-      // Replace ASCII markers with UTF-8 emoji bytes after URL encoding.
-      const emojiTokens = {
-        leaf: "FRESH_EMOJI_LEAF",
-        person: "FRESH_EMOJI_PERSON",
-        phone: "FRESH_EMOJI_PHONE",
-        location: "FRESH_EMOJI_LOCATION",
-        home: "FRESH_EMOJI_HOME",
-        clock: "FRESH_EMOJI_CLOCK",
-        cart: "FRESH_EMOJI_CART",
-        money: "FRESH_EMOJI_MONEY",
-        note: "FRESH_EMOJI_NOTE",
-        thanks: "FRESH_EMOJI_THANKS",
-        delivery: "FRESH_EMOJI_DELIVERY"
-      };
-      let message = emojiTokens.leaf + " *NOUVELLE COMMANDE FRESHSOUK*\n\n";
-      message += emojiTokens.person + " Nom : " + name + "\n";
-      message += emojiTokens.phone + " Téléphone : " + phone + "\n";
-      message += emojiTokens.location + " Ville : " + city + (neighborhood ? " · Quartier : " + neighborhood : "") + "\n";
-      message += emojiTokens.home + " Adresse : " + address + "\n";
-      message += emojiTokens.clock + " Créneau : " + slot + "\n\n";
-      message += emojiTokens.cart + " *Produits :*\n" + itemsText + "\n";
-      message += "\nSous-total : " + subtotal + " DH\n" + emojiTokens.delivery + " Livraison : " + delivery + " DH\n";
-      message += "\n" + emojiTokens.money + " *TOTAL : " + total + " DH*\n";
-      if (note) message += "\n" + emojiTokens.note + " Note : " + note;
-      message += "\n\nMerci pour votre confiance " + emojiTokens.thanks;
-
-      const encodedEmojiBytes = {
-        [emojiTokens.leaf]: "%F0%9F%A5%AC",
-        [emojiTokens.person]: "%F0%9F%91%A4",
-        [emojiTokens.phone]: "%F0%9F%93%B1",
-        [emojiTokens.location]: "%F0%9F%93%8D",
-        [emojiTokens.home]: "%F0%9F%8F%A0",
-        [emojiTokens.clock]: "%F0%9F%95%90",
-        [emojiTokens.cart]: "%F0%9F%9B%92",
-        [emojiTokens.money]: "%F0%9F%92%B0",
-        [emojiTokens.note]: "%F0%9F%93%9D",
-        [emojiTokens.thanks]: "%F0%9F%99%8F",
-        [emojiTokens.delivery]: "%F0%9F%9A%9A"
-      };
-      let whatsappText = encodeURIComponent(message);
-      for (const [token, emojiBytes] of Object.entries(encodedEmojiBytes)) {
-        whatsappText = whatsappText.split(token).join(emojiBytes);
-      }
-      const whatsappUrl = "https://api.whatsapp.com/send/?phone=" + WHATSAPP_NUMBER + "&text=" + whatsappText;
-      const whatsappWindow = window.open("about:blank", "_blank");
-
-      try {
-        const savedOrder = await saveOrderThroughBackend({ name, phone, city, neighborhood, address, slot, note }, cart);
-        if (ORDER_API_URL) {
-          if (!savedOrder) throw new Error("Order API is not configured correctly.");
-          const savedLines = JSON.parse(savedOrder.items_json || "[]");
-          const savedItemsText = savedLines.map(item => `${item.nameFr} x${item.quantity} = ${Number(item.lineTotal).toFixed(2)} DH`).join("\n");
-          const savedSubtotal = Number(savedOrder.subtotal).toFixed(2);
-          const savedDelivery = Number(savedOrder.delivery_fee).toFixed(2);
-          const savedTotal = Number(savedOrder.total).toFixed(2);
-          let confirmedMessage = emojiTokens.leaf + " *NOUVELLE COMMANDE FRESHSOUK*\n\n";
-          confirmedMessage += emojiTokens.person + " Nom : " + name + "\n" + emojiTokens.phone + " Téléphone : " + phone + "\n";
-          confirmedMessage += emojiTokens.location + " Ville : " + city + (neighborhood ? " · Quartier : " + neighborhood : "") + "\n";
-          confirmedMessage += emojiTokens.home + " Adresse : " + address + "\n" + emojiTokens.clock + " Créneau : " + slot + "\n\n";
-          confirmedMessage += emojiTokens.cart + " *Produits :*\n" + savedItemsText + "\n\nSous-total : " + savedSubtotal + " DH\n";
-          confirmedMessage += emojiTokens.delivery + " Livraison : " + savedDelivery + " DH\n\n" + emojiTokens.money + " *TOTAL : " + savedTotal + " DH*\n";
-          if (note) confirmedMessage += "\n" + emojiTokens.note + " Note : " + note;
-          confirmedMessage += "\n\nMerci pour votre confiance " + emojiTokens.thanks;
-          let confirmedEncoded = encodeURIComponent(confirmedMessage);
-          for (const [token, emojiBytes] of Object.entries(encodedEmojiBytes)) confirmedEncoded = confirmedEncoded.split(token).join(emojiBytes);
-          const confirmedUrl = "https://api.whatsapp.com/send/?phone=" + WHATSAPP_NUMBER + "&text=" + confirmedEncoded;
-          if (whatsappWindow) whatsappWindow.location.href = confirmedUrl;
-          else window.location.href = confirmedUrl;
-        } else {
-          // Legacy Google Forms cannot confirm its cross-origin saved row.
-          await saveOrderToPrivateSheet({ name, phone, city, address: (neighborhood ? neighborhood + " — " : "") + address, slot, note, items: itemsText, total: total + " DH" });
-          if (whatsappWindow) whatsappWindow.location.href = whatsappUrl;
-          else window.location.href = whatsappUrl;
-        }
-        cart = [];
-        saveCart();
-        renderCart();
-        closeCheckout();
-        if (ORDER_API_URL) alert("تسجلات الطلبية فالنظام بنجاح. دابا كمل إرسالها فـ WhatsApp.");
-      } catch (error) {
-        if (whatsappWindow) whatsappWindow.close();
-        submitButton.disabled = false;
-        submitButton.textContent = originalButtonText;
-        alert("La commande n'a pas pu être enregistrée. Vérifiez votre connexion puis réessayez.");
-      }
-    });
+  document.getElementById('checkoutForm').addEventListener('submit',async function(event){
+    event.preventDefault();
+    if(!cart.length)return;
+    const submit=event.currentTarget.querySelector('button[type="submit"]'),feedback=document.getElementById('orderFeedback');
+    const oldText=submit.textContent;submit.disabled=true;submit.textContent='Enregistrement… · كيتسجل الطلب';feedback.textContent='';
+    try{
+      const expectedTotal=getOrderTotal(),previousItems=JSON.stringify(cart.map(p=>[p.id,p.quantity]));
+      if(!await refreshCatalogue())throw new Error('Reconnectez-vous avant de commander. · خاص الاتصال بالإنترنت.');
+      if(expectedTotal!==getOrderTotal()||previousItems!==JSON.stringify(cart.map(p=>[p.id,p.quantity])))throw new Error('Le panier a été actualisé. Vérifiez-le puis confirmez à nouveau. · تبدل الثمن ولا المخزون، راجع القفة وأكد من جديد.');
+      const customer={name:document.getElementById('customerName').value.trim(),phone:document.getElementById('customerPhone').value.trim(),city:document.getElementById('customerCity').value,neighborhood:document.getElementById('customerNeighborhood')?.value.trim()||'',address:document.getElementById('customerAddress').value.trim(),slot:document.getElementById('deliverySlot').value,note:document.getElementById('customerNote').value.trim()};
+      const receipt=await saveOrderThroughBackend(customer,cart);
+      cart=[];saveCart();renderCart();closeCheckout();
+      const confirmation=document.getElementById('orderReceipt');
+      confirmation.textContent='Commande enregistrée, à confirmer · تسجل الطلب وباقي التأكيد. Référence : '+receipt.id.slice(0,8).toUpperCase()+' · Total : '+new Intl.NumberFormat('fr-MA').format(receipt.totalCents/100)+' DH. Paiement à la livraison · الخلاص عند التوصيل.';
+      confirmation.hidden=false;confirmation.scrollIntoView({behavior:'smooth',block:'center'});confirmation.focus();
+      document.getElementById('checkoutForm').reset();await refreshCatalogue();
+    }catch(error){feedback.textContent=error.message;await FreshsoukStore.prepareChallenge().catch(()=>{});}
+    finally{submit.disabled=false;submit.textContent=oldText;}
+  });
+  const openConnectedCheckout=openCheckout;
+  openCheckout=function(){openConnectedCheckout();if(document.getElementById('checkoutModal').classList.contains('active'))FreshsoukStore.prepareChallenge()?.catch(error=>{document.getElementById('orderFeedback').textContent=error.message;});};
   /* =========================
      INIT
   ========================= */
@@ -2332,7 +2261,7 @@
     const form = document.getElementById("subscriptionForm");
     if (!form) return;
     const submitButton = form.querySelector('button[type="submit"]');
-    if (!ORDER_API_URL) {
+    if (!SUBSCRIPTIONS_API_URL) {
       if (submitButton) submitButton.textContent = "كمّل الطلب على WhatsApp";
       document.getElementById("subConsentText").textContent = "كنوافق نصيفط هاد المعلومات عبر WhatsApp باش تتواصلو معايا على الاشتراك. هاد الطلب غير للاستفسار، وما كاين حتى اشتراك قبل ما نتفاهمو ونأكدوه.";
     }
@@ -2355,7 +2284,7 @@
       const quantity = Number(document.getElementById("subQuantity").value);
       const frequencyWeeks = Number(document.getElementById("subFrequency").value);
       const selectedPack = products.find(product => product.id === packSelect.value);
-      if (!ORDER_API_URL) {
+      if (!SUBSCRIPTIONS_API_URL) {
         if (!selectedPack || !Number.isFinite(quantity) || quantity < 1 || !dateInput.value || !weekday.value) {
           message.textContent = "عمر المعلومات كاملة واختار الباك والتاريخ باش نوجدولك رسالة WhatsApp.";
           return;
@@ -2384,7 +2313,7 @@
       }
       const submit = submitButton; submit.disabled = true; submit.textContent = "كنسجلو الطلب…"; message.textContent = "";
       try {
-        const response = await fetch(ORDER_API_URL.replace(/\/$/, "") + "/api/subscriptions", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ customer, packProductId: packSelect.value, quantity, frequencyWeeks, deliveryWeekday: Number(weekday.value), nextDeliveryDate: dateInput.value, consent: document.getElementById("subConsent").checked }) });
+        const response = await fetch(SUBSCRIPTIONS_API_URL.replace(/\/$/, "") + "/api/subscriptions", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ customer, packProductId: packSelect.value, quantity, frequencyWeeks, deliveryWeekday: Number(weekday.value), nextDeliveryDate: dateInput.value, consent: document.getElementById("subConsent").checked }) });
         const result = await response.json().catch(() => ({}));
         if (!response.ok || !result.ok) throw new Error(result.error || "ما قدرناش نسجلو الاشتراك.");
         message.textContent = "تسجل طلب الاشتراك بنجاح. غادي نتاصلو بيك قبل أول توصيل باش تأكد.";

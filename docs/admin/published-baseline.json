@@ -1,0 +1,73 @@
+{
+  "checkedAt": "2026-10-28T11:08:02.859Z",
+  "url": "https://sifiabdessamad09-collab.github.io/freshsouk/",
+  "sourceBranch": "main",
+  "commit": "2e1a874f940dbe3b61ecb06b682db68ef6469add",
+  "allMatch": true,
+  "files": [
+    {
+      "file": "index.html",
+      "status": 200,
+      "bytes": 125455,
+      "expected": "66be69ec2c729b8c85e81e45f2b3616937d36e0d",
+      "actual": "66be69ec2c729b8c85e81e45f2b3616937d36e0d",
+      "matches": true
+    },
+    {
+      "file": "redesign.css",
+      "status": 200,
+      "bytes": 22242,
+      "expected": "1033d120160e54fef1fc5378313be4b4c7af8155",
+      "actual": "1033d120160e54fef1fc5378313be4b4c7af8155",
+      "matches": true
+    },
+    {
+      "file": "redesign.js",
+      "status": 200,
+      "bytes": 9569,
+      "expected": "96142f88dae3c0e050ccd373e974d9f4827851ac",
+      "actual": "96142f88dae3c0e050ccd373e974d9f4827851ac",
+      "matches": true
+    },
+    {
+      "file": "products.json",
+      "status": 200,
+      "bytes": 17379,
+      "expected": "2b17a12185071ab4c990297651d49c598c12f2c2",
+      "actual": "2b17a12185071ab4c990297651d49c598c12f2c2",
+      "matches": true
+    },
+    {
+      "file": "manifest.json",
+      "status": 200,
+      "bytes": 931,
+      "expected": "71aaf3b11258ed23dcd5c7a2426302f64e2b08f3",
+      "actual": "71aaf3b11258ed23dcd5c7a2426302f64e2b08f3",
+      "matches": true
+    },
+    {
+      "file": "sw.js",
+      "status": 200,
+      "bytes": 3477,
+      "expected": "e0e4641c0fcabc33880098f821fc90b44afd2ab1",
+      "actual": "e0e4641c0fcabc33880098f821fc90b44afd2ab1",
+      "matches": true
+    },
+    {
+      "file": "pwa.js",
+      "status": 200,
+      "bytes": 5110,
+      "expected": "8e378598dd424f2407d00c08862cf0730c5883e6",
+      "actual": "8e378598dd424f2407d00c08862cf0730c5883e6",
+      "matches": true
+    },
+    {
+      "file": "pwa.css",
+      "status": 200,
+      "bytes": 3502,
+      "expected": "fdb782fb1680ae58b2b54e455ffd8f36fab4d68f",
+      "actual": "fdb782fb1680ae58b2b54e455ffd8f36fab4d68f",
+      "matches": true
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow,noarchive">
+  <title>FreshSOUK — Administration privée</title>
+  <link rel="stylesheet" href="/admin/app.css"><script src="/admin/app.js" defer></script>
+</head>
+<body>
+  <div class="demo" id="demoBanner" hidden>Démonstration locale · données fictives uniquement <span lang="ar" dir="rtl">تجربة محلية بمعطيات وهمية</span></div>
+  <aside class="sidebar">
+    <a class="brand" href="#dashboard">FRESHSOUK<span>ADMINISTRATION · الإدارة</span></a>
+    <div class="workspace"><span class="workspace-icon">F</span><div>Votre marché, en coulisses<small lang="ar" dir="rtl">تسيير السوق ديالك</small></div></div>
+    <nav aria-label="Administration">
+      <a href="#dashboard" data-route="dashboard"><span data-icon="dashboard"></span><span>Dashboard<small lang="ar" dir="rtl">نظرة عامة</small></span></a>
+      <a href="#orders" data-route="orders"><span data-icon="orders"></span><span>Commandes<small lang="ar" dir="rtl">الطلبات</small></span><b id="navPending"></b></a>
+      <a href="#products" data-route="products"><span data-icon="products"></span><span>Produits & stocks<small lang="ar" dir="rtl">المنتجات والمخزون</small></span></a>
+    </nav>
+    <div class="sidebar-bottom"><span class="private-label"><span data-icon="lock"></span> Espace privé · فضاء خاص</span><p>Les informations clients restent réservées à votre équipe autorisée.</p><small lang="ar" dir="rtl">معلومات الزبناء كيشوفها غير الفريق المسموح ليه.</small></div>
+  </aside>
+  <main>
+    <header class="topbar"><div><p class="eyebrow">FRESHSOUK / ADMINISTRATION</p><h1 id="pageTitle">Dashboard <small lang="ar" dir="rtl">نظرة عامة</small></h1></div><div class="profile"><span class="avatar">F</span><div><strong>Administrateur</strong><small id="identity">Vérification de la session…</small></div><a id="logout" class="icon-button" href="/cdn-cgi/access/logout" aria-label="Se déconnecter · خرج"><span data-icon="logout"></span></a></div></header>
+    <div id="sessionStatus" class="session-status"><span class="dot"></span><span>Connexion sécurisée</span><time id="todayLabel"></time></div>
+    <div id="content" aria-live="polite"><div class="loading">Chargement de votre espace… · كنحمّلو الفضاء ديالك</div></div>
+    <footer>FRESHSOUK · Casablanca <span lang="ar" dir="rtl">الدار البيضاء</span><a href="https://sifiabdessamad09-collab.github.io/freshsouk/" target="_blank" rel="noreferrer">Voir le site public ↗</a></footer>
+  </main>
+  <div id="toast" role="status" class="toast" hidden></div>
+  <dialog id="editor" aria-labelledby="dialogTitle"><header><h2 id="dialogTitle"></h2><button class="icon-button" id="closeDialog" type="button" aria-label="Fermer · سد">✕</button></header><div id="dialogBody"></div></dialog>
+</body>
+</html>
