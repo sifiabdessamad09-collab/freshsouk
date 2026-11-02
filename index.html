@@ -1085,7 +1085,7 @@
 
 <script src="assets/icons.js"></script>
 <script src="redesign.js?v=viewport-20261029"></script>
-<script src="storefront.js?v=whatsapp-20261029"></script>
+<script src="storefront.js?v=tracking-receipt-20261030"></script>
 <script type="application/json" id="productData">[
   {
     "id": "pack-semaine-familial",
@@ -2124,13 +2124,14 @@
       cart=[];saveCart();renderCart();closeCheckout();
       const confirmation=document.getElementById('orderReceipt');
       confirmation.textContent='Commande enregistrée, à confirmer · تسجل الطلب وباقي التأكيد. Référence : '+receipt.id.slice(0,8).toUpperCase()+' · Total : '+new Intl.NumberFormat('fr-MA').format(receipt.totalCents/100)+' DH. Paiement à la livraison · الخلاص عند التوصيل.';
+      FreshsoukStore.showTracking(confirmation,receipt);
       const hint=document.createElement('p');hint.textContent='Envoyez aussi le récapitulatif sur WhatsApp. Votre commande reste enregistrée si vous revenez sans envoyer. · صيفط نفس الطلب فواتساب. الطلب كيبقى مسجل حتى إلا رجعتي بلا إرسال.';confirmation.append(hint);
       const whatsapp=document.createElement('a');whatsapp.className='btn-primary';whatsapp.textContent='Ouvrir WhatsApp et envoyer · حل واتساب وصيفط';whatsapp.rel='noreferrer';
       try{whatsapp.href=FreshsoukStore.whatsappUrl(customer,submittedItems,receipt,WHATSAPP_NUMBER);confirmation.append(whatsapp);}catch{hint.textContent='Commande enregistrée. WhatsApp indisponible pour le moment. · الطلب تسجل، واتساب ما متوفرش دابا.';}
       confirmation.hidden=false;confirmation.scrollIntoView({behavior:'smooth',block:'center'});confirmation.focus();
       document.getElementById('checkoutForm').reset();
-      // Same-tab handoff avoids asynchronous popup blockers; the receipt link remains on Back.
-      if(whatsapp.hasAttribute('href')){try{window.location.assign(whatsapp.href);}catch{/* Saved receipt and retry link stay visible. */}}
+      // Keep the new personal tracking link visible; WhatsApp remains an explicit action.
+      if(!FreshsoukStore.trackingUrl(receipt)&&whatsapp.hasAttribute('href')){try{window.location.assign(whatsapp.href);}catch{/* Saved receipt and retry link stay visible. */}}
     }catch(error){feedback.textContent=error.message;await FreshsoukStore.prepareChallenge().catch(()=>{});}
     finally{submit.disabled=false;submit.textContent=oldText;}
   });
