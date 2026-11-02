@@ -20,6 +20,32 @@ async function setup(){
  f.track=(token,options={})=>publicWorker.fetch(new Request('https://shop.invalid/api/track/'+token,options),f.env);
  return f;
 }
+
+test('website receipt issues one atomic tracking link; retries never recover or rotate capabilities',async()=>{
+ const f=await fixture();try{
+  f.env.ORDER_TRACKING_ENABLED='true';f.env.PUBLIC_ORDER_INTAKE_ENABLED='true';f.env.ORDER_LIMITER={limit:async()=>({success:true})};f.env.TURNSTILE_SECRET='test';f.env.TURNSTILE_HOSTNAME='sifiabdessamad09-collab.github.io';
+  const key=crypto.randomUUID(),send=()=>publicWorker.fetch(new Request('https://shop.invalid/api/orders',{method:'POST',headers:{Origin:f.env.ALLOWED_ORIGIN,'Content-Type':'application/json','Idempotency-Key':key},body:JSON.stringify({...orderBody,turnstileToken:'test'})}),f.env);
+  const response=await send();assert.equal(response.status,201);const first=(await response.json()).order;
+  assert.match(first.tracking.token,/^[A-Za-z0-9_-]{43}$/);assert(Date.parse(first.tracking.expiresAt)>Date.now());
+  const row=f.db.prepare('SELECT * FROM order_tracking WHERE order_id=?').get(first.id);assert.equal(row.token_hash,await trackingHash(first.tracking.token));assert(!JSON.stringify(row).includes(first.tracking.token));
+  const read=()=>publicWorker.fetch(new Request('https://shop.invalid/api/track/'+first.tracking.token),f.env);
+  assert.equal((await read()).status,200);
+  const retry=(await(await send()).json()).order;assert.equal(retry.id,first.id);assert.equal(retry.tracking,undefined);assert.equal(f.db.prepare('SELECT COUNT(*) n FROM orders').get().n,1);assert.equal(f.db.prepare('SELECT version FROM order_tracking').get().version,1);
+  await f.request('/api/admin/orders/'+first.id+'/tracking',{method:'DELETE',body:{version:1}});
+  assert.equal((await read()).status,404);assert.equal((await(await send()).json()).order.tracking,undefined);assert.equal((await read()).status,404);
+ }finally{f.db.close();}
+});
+
+test('tracking insertion failure rolls back website order, items and reserved stock together',async()=>{
+ const f=await fixture();try{
+  f.env.ORDER_TRACKING_ENABLED='true';
+  f.db.exec("CREATE TRIGGER reject_tracking BEFORE INSERT ON order_tracking BEGIN SELECT RAISE(ABORT,'TEST_FAILURE'); END;");
+  const {createOrder}=await import('../src/orders.mjs');
+  const before=f.db.prepare('SELECT SUM(stock_milli) n FROM products').get().n;
+  await assert.rejects(createOrder(new Request('https://shop.invalid/api/orders',{headers:{'Idempotency-Key':crypto.randomUUID()}}),f.env,orderBody,'customer','website'));
+  assert.equal(f.db.prepare('SELECT COUNT(*) n FROM orders').get().n,0);assert.equal(f.db.prepare('SELECT COUNT(*) n FROM order_items').get().n,0);assert.equal(f.db.prepare('SELECT SUM(stock_milli) n FROM products').get().n,before);
+ }finally{f.db.close();}
+});
 test('32-byte random capabilities are returned once and stored as raw-token SHA-256 only',async()=>{
  const f=await setup();try{
   const a=await(await f.generate(0)).json();assert.match(a.token,/^[A-Za-z0-9_-]{43}$/);assert.equal(Buffer.from(a.token,'base64url').length,32);

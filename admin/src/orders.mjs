@@ -1,5 +1,6 @@
 import { fault } from './auth.mjs';
 import { customerInput,milli,hash,statement,rows,now,STATUSES,csvCell } from './domain.mjs';
+import {newTrackingLink,trackingHash} from './tracking.mjs';
 
 export async function createOrder(request, env, body, actor, source, authorizeNew=async()=>{}) {
   const key=request.headers.get('Idempotency-Key')||'';
@@ -23,6 +24,8 @@ export async function createOrder(request, env, body, actor, source, authorizeNe
   const id=crypto.randomUUID(), date=now(), c=input.customer;
   const batch=[statement(env,`INSERT INTO orders(id,idempotency_key,request_hash,created_at,updated_at,customer_name,phone,city,address,delivery_slot,note,subtotal_cents,delivery_cents,total_cents,source,updated_by) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`,id,key,fingerprint,date,date,c.name,c.phone,c.city,c.address,c.slot,input.note,subtotal,delivery,subtotal+delivery,source,actor)];
   for(const {p,amount,lineCents} of items) batch.push(statement(env,`INSERT INTO order_items(order_id,product_id,name_fr,name_ar,unit,quantity_milli,unit_price_cents,line_cents,product_version,reserved_stock) VALUES(?,?,?,?,?,?,?,?,?,?)`,id,p.id,p.name_fr,p.name_ar,p.unit,amount,p.price_cents,lineCents,p.version,p.track_stock));
+  const tracking=source==='website'&&env.ORDER_TRACKING_ENABLED==='true'?newTrackingLink():null;
+  if(tracking)batch.push(statement(env,'INSERT INTO order_tracking(order_id,token_hash,created_at,expires_at,updated_by) VALUES(?,?,?,?,?)',id,await trackingHash(tracking.token),date,tracking.expiresAt,actor));
   try { await env.DB.batch(batch); }
   catch(error) {
     const winner=await statement(env,'SELECT id,request_hash,status,total_cents FROM orders WHERE idempotency_key=?',key).first();
@@ -30,7 +33,7 @@ export async function createOrder(request, env, body, actor, source, authorizeNe
     if (/CATALOG_CHANGED|INSUFFICIENT_STOCK|UNIQUE constraint failed: orders.idempotency_key/.test(String(error))) throw fault(409,'Catalogue ou stock modifié. Actualisez puis réessayez.');
     throw error;
   }
-  return {id,status:'pending',totalCents:subtotal+delivery};
+  return {id,status:'pending',totalCents:subtotal+delivery,...(tracking?{tracking}:{})};
 }
 function receipt(order) { return {id:order.id,status:order.status,totalCents:order.total_cents}; }
 

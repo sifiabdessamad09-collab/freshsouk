@@ -1,5 +1,5 @@
 'use strict';
-const VERSION='freshsouk-pwa-viewport-20261029';
+const VERSION='freshsouk-pwa-tracking-receipt-20261030';
 const SHELL=VERSION+'-shell';
 const MEDIA=VERSION+'-media';
 const ROOT=new URL('./',self.registration.scope);
@@ -7,7 +7,7 @@ const ROOT_KEY=ROOT.href;
 const OFFLINE=new URL('offline.html',ROOT).href;
 const SHELL_FILES=[
  './','./index.html','./offline.html','./manifest.json','./products.json',
- './storefront.js?v=whatsapp-20261029',
+ './storefront.js?v=tracking-receipt-20261030',
  './pwa.js?v=app1-20261027','./pwa.css?v=app1-20261027',
  './redesign.js?v=viewport-20261029','./redesign.css?v=baskets-20261027',
  './assets/icons.js','./app-icon-192.png','./app-icon-512.png',

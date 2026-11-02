@@ -3,6 +3,20 @@ import assert from 'node:assert/strict';
 import vm from 'node:vm';
 import {readFile} from 'node:fs/promises';
 
+test('receipt tracking uses a fixed trusted URL, safe DOM and explicit clipboard actions',async()=>{
+ const source=await readFile(new URL('../../storefront.js',import.meta.url),'utf8');
+ const element=()=>({children:[],style:{},append(...items){this.children.push(...items);},setAttribute(){},addEventListener(type,fn){this[type]=fn;},focus(){this.focused=true;},select(){this.selected=true;}});
+ let copied;const context={window:{},document:{createElement:element},navigator:{clipboard:{async writeText(value){copied=value;}}}};
+ vm.createContext(context);vm.runInContext(source,context);const store=context.window.FreshsoukStore,receipt={tracking:{token:'A'.repeat(43),expiresAt:new Date(Date.now()+60000).toISOString()}};
+ const url=store.trackingUrl(receipt);assert.equal(url,'https://sifiabdessamad09-collab.github.io/freshsouk/track.html#'+'A'.repeat(43));
+ for(const token of ['javascript:alert(1)','<script>', 'https://evil.example'])assert.equal(store.trackingUrl({tracking:{...receipt.tracking,token}}),null);
+ assert.equal(store.trackingUrl({tracking:{token:'A'.repeat(43),expiresAt:'2000-01-01'}}),null);
+ const empty=element();store.showTracking(empty,{});assert.equal(empty.children.length,0);
+ const host=element();store.showTracking(host,receipt);const section=host.children[0],copy=section.children[3],input=section.children[2].children[0];assert.equal(section.children[1].href,url);assert.equal(input.readOnly,true);
+ await copy.click();assert.equal(copied,url);assert.match(section.children[4].textContent,/Lien copié/);
+ context.navigator.clipboard.writeText=async()=>{throw Error('Denied');};await copy.click();assert(input.selected&&input.focused);assert.match(section.children[4].textContent,/Sélectionnez Copier/);
+});
+
 test('storefront sends the exact private API contract and requires a server receipt',async()=>{
  const source=await readFile(new URL('../../storefront.js',import.meta.url),'utf8');
  let callback,answer=Response.json({ok:true,order:{id:'test-order',status:'pending',totalCents:2800}}),sent;
@@ -34,7 +48,7 @@ test('WhatsApp handoff preserves bilingual details, server total and one shared 
 test('checkout opens WhatsApp only after saved receipt; API failure keeps cart and never navigates',async()=>{
  const html=await readFile(new URL('../../index.html',import.meta.url),'utf8');
  const handler=html.slice(html.indexOf("document.getElementById('checkoutForm').addEventListener('submit'"),html.indexOf('  const openConnectedCheckout='));
- for(const failure of [true,false]){
+ for(const [failure,hasTracking] of [[true,false],[false,false],[false,true]]){
   let submitHandler,saved=false,navigated=false;
   const elements=new Map();const element=()=>({value:'TEST',textContent:'',disabled:false,children:[],append(x){this.children.push(x);},hasAttribute(k){return k in this;},scrollIntoView(){},focus(){},reset(){}});
   const document={getElementById(id){if(!elements.has(id))elements.set(id,element());return elements.get(id);},createElement:element};
@@ -42,11 +56,11 @@ test('checkout opens WhatsApp only after saved receipt; API failure keeps cart a
   const context={document,WHATSAPP_NUMBER:'212643880485',cart:[{id:'tomates',quantity:1}],getOrderTotal:()=>28,refreshCatalogue:async()=>true,
    saveOrderThroughBackend:async()=>{if(failure)throw Error('API unavailable');saved=true;return {id:'order-test',totalCents:2800};},
    saveCart(){},renderCart(){},closeCheckout(){},Intl,
-   FreshsoukStore:{prepareChallenge:async()=>{},whatsappUrl(){assert(saved);return 'https://wa.me/212643880485?text=TEST';}},
+   FreshsoukStore:{prepareChallenge:async()=>{},trackingUrl:()=>hasTracking?'https://sifiabdessamad09-collab.github.io/freshsouk/track.html#test':null,showTracking(){assert(saved);},whatsappUrl(){assert(saved);return 'https://wa.me/212643880485?text=TEST';}},
    window:{location:{assign(url){assert(saved);assert.match(url,/^https:\/\/wa.me\//);navigated=true;throw Error('App handoff blocked');}}}};
   vm.createContext(context);vm.runInContext(handler,context);
   await submitHandler({preventDefault(){},currentTarget:{querySelector:()=>element()}});
-  assert.equal(navigated,!failure);assert.equal(context.cart.length,failure?1:0);
+  assert.equal(navigated,!failure&&!hasTracking);assert.equal(context.cart.length,failure?1:0);
   if(failure)assert.equal(document.getElementById('orderFeedback').textContent,'API unavailable');
   else{assert.equal(document.getElementById('orderReceipt').hidden,false);assert.equal(document.getElementById('orderReceipt').children[1].href,'https://wa.me/212643880485?text=TEST');}
  }

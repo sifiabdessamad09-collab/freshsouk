@@ -3,6 +3,10 @@ import {statement,rows,STATUSES,now} from './domain.mjs';
 
 const TOKEN=/^[A-Za-z0-9_-]{43}$/;
 const unavailable=()=>fault(404,'Lien de suivi indisponible. · رابط التتبع ما متوفرش.');
+export function newTrackingLink() {
+ const bytes=crypto.getRandomValues(new Uint8Array(32));
+ return {token:btoa(String.fromCharCode(...bytes)).replaceAll('+','-').replaceAll('/','_').replaceAll('=',''),expiresAt:new Date(Date.now()+30*86400000).toISOString()};
+}
 export async function trackingHash(token) {
  return [...new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(token)))].map(b=>b.toString(16).padStart(2,'0')).join('');
 }
@@ -11,9 +15,8 @@ export async function trackingMetadata(env,id) {
  return link?{version:link.version,expiresAt:link.expires_at,active:!!link.has_token&&!link.revoked_at&&link.expires_at>now()}:{version:0,expiresAt:null,active:false};
 }
 export async function generateTracking(env,id,version,actor) {
- const bytes=crypto.getRandomValues(new Uint8Array(32));
- const token=btoa(String.fromCharCode(...bytes)).replaceAll('+','-').replaceAll('/','_').replaceAll('=','');
- const at=now(),expires=new Date(Date.now()+30*86400000).toISOString();
+ const {token,expiresAt:expires}=newTrackingLink();
+ const at=now();
  const existing=await trackingMetadata(env,id);
  if(existing.version!==version)throw fault(409,'Lien modifié. Rechargez les détails de la commande.');
  const result=await statement(env,`INSERT INTO order_tracking(order_id,token_hash,created_at,expires_at,updated_by) VALUES(?,?,?,?,?)
