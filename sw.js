@@ -1,5 +1,5 @@
 'use strict';
-const VERSION='freshsouk-pwa-tracking-receipt-20261030';
+const VERSION='freshsouk-pwa-journey-video-20261105';
 const SHELL=VERSION+'-shell';
 const MEDIA=VERSION+'-media';
 const ROOT=new URL('./',self.registration.scope);
@@ -9,7 +9,7 @@ const SHELL_FILES=[
  './','./index.html','./offline.html','./manifest.json','./products.json',
  './storefront.js?v=tracking-receipt-20261030',
  './pwa.js?v=app1-20261027','./pwa.css?v=app1-20261027',
- './redesign.js?v=viewport-20261029','./redesign.css?v=baskets-20261027',
+ './redesign.js?v=journey-video-20261105','./redesign.css?v=journey-video-20261105',
  './assets/icons.js','./app-icon-192.png','./app-icon-512.png',
  './app-icon-maskable-512.png','./apple-touch-icon.png'
 ].map(file=>new URL(file,ROOT).href);
