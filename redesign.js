@@ -84,6 +84,88 @@ function fsRenderQuickProducts(){
  host.innerHTML=['tomates','carottes','oranges','oignons-rouges','herbes','pomme-de-terre'].map(id=>{const p=products.find(p=>p.id===id);return p?`<button onclick="fsFindProduct('${id}')" aria-label="Voir ${fsEscape(p.nameFr)} / ${fsEscape(p.nameAr)}"><img src="${fsEscape(fsImage(p))}" alt="${fsEscape(p.nameFr)}" loading="lazy"><span>${fsEscape(p.nameFr.replace(' premium','').replace(' fraîches','').replace(' locales','').replace(' à jus','').replace('Herbes (coriandre, persil, céleri, menthe)','Herbes'))}</span><small lang="ar" dir="rtl">${fsEscape(p.nameAr)}</small></button>`:''}).join('');
 }
 function fsFindProduct(id){fsCategory('all');const card=document.querySelector(`[data-product-id="${id}"]`);if(card){card.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'center'});card.classList.add('fs-highlight');setTimeout(()=>card.classList.remove('fs-highlight'),1600);}}
+function fsInitHeroVideo(){
+ const video=document.getElementById('fsHeroVideo'),toggle=document.getElementById('fsHeroVideoToggle');
+ if(!video||!toggle)return;
+ const hero=video.closest('.fs-video-hero'),reduced=matchMedia('(prefers-reduced-motion: reduce)');
+ let wanted=!reduced.matches&&!navigator.connection?.saveData,inView=true;
+ video.muted=true;video.defaultMuted=true;toggle.hidden=false;
+ function label(){toggle.textContent=video.paused?'Lire la vidéo · شغّل الفيديو':'Pause vidéo · وقّف الفيديو';}
+ function update(){
+  if(!wanted||!inView||document.hidden){video.pause();label();return;}
+  if(!video.getAttribute('src'))video.src=video.dataset.src;
+  video.play().catch(()=>{if(!inView||document.hidden||!wanted)return;wanted=false;label();});
+ }
+ toggle.addEventListener('click',()=>{wanted=video.paused;update();});
+ video.addEventListener('playing',()=>{hero.classList.add('fs-video-ready');label();});
+ video.addEventListener('pause',label);
+ video.addEventListener('error',()=>{wanted=false;video.pause();hero.classList.remove('fs-video-ready');label();});
+ document.addEventListener('visibilitychange',update);
+ reduced.addEventListener('change',()=>{if(reduced.matches){wanted=false;update();}});
+ if('IntersectionObserver' in window)new IntersectionObserver(entries=>{
+  inView=entries[0].isIntersecting;update();
+ },{threshold:.05}).observe(hero);
+ label();update();
+}
+/* Presentation only: the catalogue, cart and checkout keep their existing logic. */
+function fsInitMotion(){
+ const preference=matchMedia('(prefers-reduced-motion: reduce)');
+ if(!('animate' in Element.prototype))return;
+ const running=new Set(),seen=new Set();
+ function play(element,frames,options={}){
+  if(!element||preference.matches||document.hidden)return;
+  const animation=element.animate(frames,{duration:560,easing:'cubic-bezier(.22,1,.36,1)',...options});
+  running.add(animation);
+  animation.finished.catch(()=>{}).finally(()=>running.delete(animation));
+ }
+ function stop(){for(const animation of running)animation.cancel();running.clear();}
+ preference.addEventListener('change',()=>{if(preference.matches)stop();});
+ document.addEventListener('visibilitychange',()=>{if(document.hidden)stop();});
+ // Content stays visible without JS, observers or animation support.
+ const observer='IntersectionObserver' in window?new IntersectionObserver(entries=>{
+  for(const entry of entries){
+   if(!entry.isIntersecting)continue;
+   observer.unobserve(entry.target);
+   const key=entry.target.dataset.productId||entry.target.querySelector('[data-qoffa]')?.dataset.qoffa||entry.target;
+   if(seen.has(key))continue;
+   seen.add(key);
+   play(entry.target,[{opacity:.35,transform:'translateY(22px)'},{opacity:1,transform:'translateY(0)'}],{delay:Number(entry.target.dataset.motionDelay||0)});
+  }
+ },{threshold:.08}):null;
+ function watch(container,selector){
+  if(!container||!observer)return;
+  function scan(){container.querySelectorAll(selector).forEach((element,index)=>{
+   element.dataset.motionDelay=String((index%4)*55);
+   observer.observe(element);
+  });}
+  scan();
+  // Live catalogue refreshes replace cards; disconnect detached targets first.
+  new MutationObserver(records=>{
+   for(const record of records)for(const node of record.removedNodes){
+    if(node.nodeType!==1)continue;
+    observer.unobserve(node);
+    node.querySelectorAll(selector).forEach(element=>observer.unobserve(element));
+   }
+   scan();
+  }).observe(container,{childList:true});
+ }
+ watch(document.getElementById('productsContainer'),'.product');
+ watch(document.getElementById('qoffaGrid'),'.fs-qoffa');
+ document.querySelectorAll('.fs-additions-copy,.fs-catalog-heading,.fs-delivery').forEach(element=>observer?.observe(element));
+ document.querySelectorAll('.fs-hero-copy > *').forEach((element,index)=>{
+  play(element,[{opacity:0,transform:'translateY(16px)'},{opacity:1,transform:'translateY(0)'}],{delay:index*85,duration:680});
+ });
+ play(document.querySelector('.fs-hero-image'),[{transform:'scale(1.035)'},{transform:'scale(1)'}],{duration:1500});
+ const count=document.getElementById('cartCount');
+ if(count){
+  let previous=Number(count.textContent)||0;
+  new MutationObserver(()=>{
+   const next=Number(count.textContent)||0;
+   if(next>previous)play(count,[{transform:'scale(1)'},{transform:'scale(1.32)',offset:.4},{transform:'scale(1)'}],{duration:420});
+   previous=next;
+  }).observe(count,{childList:true,characterData:true,subtree:true});
+ }
+}
 function fsSyncViewport(){
  const viewport=window.visualViewport;
  if(viewport&&viewport.scale!==1)return;
@@ -93,6 +175,8 @@ function fsSyncViewport(){
  document.documentElement.style.setProperty('--fs-viewport-top',(viewport?.offsetTop||0)+'px');
 }
 document.addEventListener('DOMContentLoaded',()=>{
+ fsInitHeroVideo();
+ fsInitMotion();
  fsSyncViewport();
  window.addEventListener('resize',fsSyncViewport,{passive:true});
  window.addEventListener('pageshow',fsSyncViewport,{passive:true});

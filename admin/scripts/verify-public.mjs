@@ -4,7 +4,7 @@ const root=new URL('../../',import.meta.url);
 const lines=(await readFile(new URL('docs/admin/source-tree.txt',root),'utf8')).replace(/^\uFEFF/,'').trim().split(/\r?\n/);
 let approved={};
 try {approved=JSON.parse(await readFile(new URL('docs/admin/public-sync-blobs.json',root),'utf8'));}catch(error){if(error.code!=='ENOENT')throw error;}
-if(Object.keys(approved).some(name=>!['index.html','redesign.js','sw.js'].includes(name)))throw new Error('Unexpected public integration file.');
+if(Object.keys(approved).some(name=>!['index.html','redesign.js','redesign.css','sw.js'].includes(name)))throw new Error('Unexpected public integration file.');
 let checked=0;
 for(const line of lines) {
   const split=line.indexOf(' '),name=line.slice(split+1),expected=approved[name]||line.slice(0,split);
