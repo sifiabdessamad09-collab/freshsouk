@@ -3,6 +3,14 @@ window.FreshsoukStore = (() => {
   const apiUrl = 'https://freshsouk-shop-api.freshsouk.workers.dev';
   const sitekey = '0x4AAAAAAFp2ZZ69sg3BOgl1';
   let widget, token = '', loading;
+  async function settings(){
+    const response=await fetch(apiUrl+'/api/shop-settings',{cache:'no-store',credentials:'omit',signal:AbortSignal.timeout(10000)});
+    if(response.status===404)return {deliveryFeeCents:2000,freeThresholdCents:20000,zones:['Casablanca']};
+    if(!response.ok)throw new Error('Configuration de livraison indisponible.');
+    const data=await response.json();
+    if(!Number.isSafeInteger(data.deliveryFeeCents)||data.deliveryFeeCents<0||data.deliveryFeeCents>100000||!Number.isSafeInteger(data.freeThresholdCents)||data.freeThresholdCents<1||data.freeThresholdCents>100000000||!Array.isArray(data.zones)||!data.zones.length||data.zones.length>3||data.zones.some(z=>!['Casablanca','Bouskoura','Mohammedia'].includes(z)))throw new Error('Configuration de livraison invalide.');
+    return {deliveryFeeCents:data.deliveryFeeCents,freeThresholdCents:data.freeThresholdCents,zones:data.zones};
+  }
   async function catalogue() {
     const response = await fetch(apiUrl + '/api/catalog', {cache:'no-store',credentials:'omit',signal:AbortSignal.timeout(10000)});
     if (!response.ok) throw new Error('Catalogue indisponible · الكتالوج ما متوفرش دابا');
@@ -72,5 +80,5 @@ window.FreshsoukStore = (() => {
     if(!response.ok||!result.ok||!result.order?.id||!Number.isSafeInteger(result.order.totalCents))throw new Error(result.error||'Enregistrement impossible · ما تسجلش الطلب');
     return result.order;
   }
-  return {apiUrl,catalogue,payload,prepareChallenge,save,whatsappUrl,trackingUrl,showTracking};
+  return {apiUrl,catalogue,settings,payload,prepareChallenge,save,whatsappUrl,trackingUrl,showTracking};
 })();

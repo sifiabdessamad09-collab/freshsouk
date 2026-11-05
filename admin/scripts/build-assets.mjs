@@ -9,7 +9,7 @@ if(path.relative(repository,target).replaceAll('\\','/').replace(/\/$/,'')!=='ad
 try {if((await lstat(target)).isSymbolicLink())throw new Error('Refusing a symlink as generated asset directory.');}catch(error){if(error.code!=='ENOENT')throw error;}
 await rm(target,{recursive:true,force:true});
 await mkdir(new URL('admin/media/',root),{recursive:true});
-for(const name of ['index.html','app.css','app.js'])await copyFile(new URL('../ui/'+name,import.meta.url),new URL('admin/'+name,root));
+for(const name of ['index.html','app.css','app.js','app-v2.js','theme.js'])await copyFile(new URL('../ui/'+name,import.meta.url),new URL('admin/'+name,root));
 const products=await sourceCatalog(),keys=[...new Set(['leaf',...products.map(p=>p.imageKey)])].sort();
 await writeFile(new URL('image-keys.json',root),JSON.stringify(keys));
 for(const key of keys.filter(k=>k!=='leaf'))await copyFile(new URL('../../assets/'+key+'-transparent.webp',import.meta.url),new URL('admin/media/'+key+'.webp',root));

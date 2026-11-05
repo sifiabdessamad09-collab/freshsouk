@@ -1,17 +1,20 @@
 import { fault } from './auth.mjs';
 import { customerInput,milli,hash,statement,rows,now,STATUSES,csvCell } from './domain.mjs';
 import {newTrackingLink,trackingHash} from './tracking.mjs';
+import {shippingSettings,ZONES} from './shipping.mjs';
 
 export async function createOrder(request, env, body, actor, source, authorizeNew=async()=>{}) {
   const key=request.headers.get('Idempotency-Key')||'';
   if (!/^[a-zA-Z0-9._:-]{20,100}$/.test(key)) throw fault(400,'Clé d’idempotence requise.');
-  const input=customerInput(body), fingerprint=await hash(input);
+  const input=customerInput(body,env.ADMIN_V2_ENABLED==='true'?ZONES:['Casablanca']), fingerprint=await hash(input);
   const existing=await statement(env,'SELECT id,request_hash,status,total_cents FROM orders WHERE idempotency_key=?',key).first();
   if (existing) {
     if (existing.request_hash!==fingerprint) throw fault(409,'Clé déjà utilisée pour une autre demande.');
     return receipt(existing);
   }
   await authorizeNew();
+  const shipping=await shippingSettings(env);
+  if(!shipping.zones.includes(input.customer.city))throw fault(400,'Cette zone de livraison n’est pas activée.');
   const catalog=await rows(statement(env,'SELECT * FROM products'));
   const items=input.items.map(line=>{
     const p=catalog.find(p=>p.id===line.productId&&p.active);
@@ -20,10 +23,11 @@ export async function createOrder(request, env, body, actor, source, authorizeNe
     if (p.track_stock && p.stock_milli<amount) throw fault(409,'Stock insuffisant.');
     return {p,amount,lineCents:Math.round(p.price_cents*amount/1000)};
   });
-  const subtotal=items.reduce((sum,line)=>sum+line.lineCents,0), delivery=subtotal>=20000?0:2000;
+  const subtotal=items.reduce((sum,line)=>sum+line.lineCents,0), delivery=subtotal>=shipping.freeThresholdCents?0:shipping.deliveryFeeCents;
   const id=crypto.randomUUID(), date=now(), c=input.customer;
   const batch=[statement(env,`INSERT INTO orders(id,idempotency_key,request_hash,created_at,updated_at,customer_name,phone,city,address,delivery_slot,note,subtotal_cents,delivery_cents,total_cents,source,updated_by) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`,id,key,fingerprint,date,date,c.name,c.phone,c.city,c.address,c.slot,input.note,subtotal,delivery,subtotal+delivery,source,actor)];
   for(const {p,amount,lineCents} of items) batch.push(statement(env,`INSERT INTO order_items(order_id,product_id,name_fr,name_ar,unit,quantity_milli,unit_price_cents,line_cents,product_version,reserved_stock) VALUES(?,?,?,?,?,?,?,?,?,?)`,id,p.id,p.name_fr,p.name_ar,p.unit,amount,p.price_cents,lineCents,p.version,p.track_stock));
+  if(env.ADMIN_V2_ENABLED==='true')for(const {p} of items)batch.push(statement(env,'INSERT INTO order_item_costs(order_id,product_id,unit_cost_cents) SELECT ?,product_id,unit_cost_cents FROM product_costs WHERE product_id=? AND unit_cost_cents IS NOT NULL',id,p.id));
   const tracking=source==='website'&&env.ORDER_TRACKING_ENABLED==='true'?newTrackingLink():null;
   if(tracking)batch.push(statement(env,'INSERT INTO order_tracking(order_id,token_hash,created_at,expires_at,updated_by) VALUES(?,?,?,?,?)',id,await trackingHash(tracking.token),date,tracking.expiresAt,actor));
   try { await env.DB.batch(batch); }
