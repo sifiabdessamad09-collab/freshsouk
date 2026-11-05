@@ -15,7 +15,7 @@ Le site public, son identité, ses produits, ses paniers personnalisables et la 
 - `admin/src/public-worker.mjs` : liste fermée de routes publiques, sans accès aux endpoints privés.
 - Une seule D1 partagée par ces deux services. Le répertoire historique `backend/` n’est pas activé comme second système de commandes.
 - Les paramètres Wrangler versionnés sont des gabarits ; ils ne prouvent pas l’état déployé. Ils sont inchangés.
-- L’audit distant actuel a rencontré un OAuth expiré (API Cloudflare 401) et des réponses anonymes HTTP 403 sans redirection Access exploitable. Cela ne prouve ni une panne du service ni la validation de toutes les politiques Access/MFA. **Vérification distante des paramètres et MFA à renouveler avant tout déploiement.** Aucun secret ni export clients n’est joint au rapport.
+- Après renouvellement de la session Wrangler existante le 5 novembre à 15:44 UTC, les paramètres des deux Workers et l’inventaire D1 répondent 200 et confirment une D1 partagée. L’API publique health/catalog répond 200 ; un accès anonyme aux commandes privées est redirigé 302 vers Cloudflare Access. L’API Access renvoie néanmoins une liste vide : la politique exacte propriétaire/MFA reste à vérifier, sans prétendre que la protection est absente. main a été relu via l’API GitHub : toujours df8ef5842c4871d133654ec82ff41fa7a01321c9. Aucun changement de portée OAuth ou de service. Aucun secret ni export clients n’est joint au rapport.
 
 ## Fonctions réalisées
 
@@ -45,7 +45,7 @@ V2 exige exactement un email autorisé côté serveur. Les endpoints et assets p
 
 ## Résultats vérifiés
 
-- **42/42 tests automatisés réussis**, dont les 32 tests existants et 10 nouveaux : auth/projection privée, CSRF/CORS, concurrence, sauvegarde des lignes lors de migration peuplée, rollback sur erreur, shipping et compatibilité ancien backend, coûts figés, résultat incomplet, dépenses idempotentes, clients/notes, notifications, rapports, refus HTML de connexion et restauration du focus.
+- **43/43 tests automatisés réussis**, dont les 32 tests existants et 11 nouveaux : auth/projection privée, CSRF/CORS, concurrence, sauvegarde des lignes lors de migration peuplée, rollback sur erreur, shipping et compatibilité ancien backend, coûts figés, résultat incomplet, dépenses idempotentes, clients/notes, notifications, rapports, refus HTML de connexion et restauration du focus.
 - Build assets : 5 fichiers UI + 32 images approuvées + manifeste des images ; contrôle de frontière réussi. Aucun SQL, fixture, configuration serveur, clé ou donnée privée copié.
 - Compilation locale esbuild : Worker privé 56,1 KiB et public 56,7 KiB, avant compression. Aucun déploiement. Syntaxe des scripts vérifiée.
 - Conservation : 96 blobs legacy contrôlés, 4 intégrations publiques explicitement autorisées ; vidéo inchangée.
@@ -119,3 +119,11 @@ Revoir la version locale et le guide `docs/admin/ADMIN-V2.md`. Ensuite seulement
 - `docs/admin/ADMIN-V2.md`
 
 Les répertoires ignorés `.local/`, `.assets/`, les exports privés et `.launch/` ne font pas partie de cette livraison. Les fichiers `admin/wrangler.toml` et `admin/wrangler.public.toml` restent inchangés.
+
+## Préparation de la revue privée — suite du 5 novembre
+
+Ajout de `admin/scripts/prepare-v2-review.mjs` et `admin/tests/review-preparation.test.mjs`. Le générateur, sans aucune requête réseau, écrit deux configurations uniquement sous le dossier ignoré `admin/.local/v2-review/`. Les noms sont fixés à `freshsouk-admin-v2-review` et `freshsouk-api-v2-review`, avec une seule nouvelle D1 `freshsouk-admin-v2-review`. Les routes HTTP, previews, intake public, suivi et flag V2 sont désactivés initialement. Aucun secret ni ancien identifiant D1 n’est repris.
+
+Le générateur refuse les identifiants des bases existantes hors revue et tout identifiant D1 utilisé par les Workers actuels, à partir d’un inventaire privé récent. Les TOML ont été parsés et les chemins des sources vérifiés. Le CLI Wrangler dry-run a été tenté sans déployer ; Windows refuse le sous-processus avec `spawn EPERM`. Ce contrôle CLI n’est donc pas déclaré réussi ; la compilation esbuild directe précédemment réussie reste disponible, et le dry-run devra passer en CI ou dans un environnement autorisant le processus avant déploiement.
+
+Plan concret à valider : `docs/admin/ADMIN-V2-REVIEW-PLAN.md`. Aucun Worker, D1 ou application Access V2 créé à ce stade. Mise en production, fusion, DNS et service payant restent exclus.
