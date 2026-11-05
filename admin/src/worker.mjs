@@ -2,6 +2,8 @@ import { requireAdmin, requireSameOrigin, fault } from './auth.mjs';
 import { readBody,fields,text,integer,productInput,adminProduct,publicProduct,statement,rows,now,ID,TRANSITIONS } from './domain.mjs';
 import { createOrder,listOrders,dashboard,exportOrders } from './orders.mjs';
 import {publicTracking,trackingMetadata,generateTracking,revokeTracking} from './tracking.mjs';
+import {v2Route} from './admin-v2.mjs';
+import {shippingSettings} from './shipping.mjs';
 
 const SECURITY = {
   'cache-control':'no-store, max-age=0','cdn-cache-control':'no-store','pragma':'no-cache',
@@ -33,12 +35,13 @@ export default {
         if(!(await limiter.limit({key:'track:'+(request.headers.get('CF-Connecting-IP')||'unknown')})).success)throw fault(429,'Réessayez dans une minute.');
         return secured(json(await publicTracking(env,path.slice('/api/track/'.length)),200,cors));
       }
-      if(path==='/api/catalog'||path==='/api/orders') {
+      if(path==='/api/catalog'||path==='/api/orders'||path==='/api/shop-settings') {
         const origin=request.headers.get('Origin');
         if(origin&&origin!==env.ALLOWED_ORIGIN&&origin!==url.origin)throw fault(403,'Origine refusée.');
         if(origin===env.ALLOWED_ORIGIN)cors={'access-control-allow-origin':origin,'vary':'Origin'};
         if(request.method==='OPTIONS')return secured(new Response(null,{status:204,headers:{...cors,'access-control-allow-methods':'GET, POST, OPTIONS','access-control-allow-headers':'Content-Type, Idempotency-Key'}}));
         if(path==='/api/catalog'&&request.method==='GET')return secured(json((await rows(statement(env,'SELECT * FROM products WHERE active=1 ORDER BY name_fr'))).map(publicProduct),200,cors));
+        if(path==='/api/shop-settings'&&request.method==='GET')return secured(json(await shippingSettings(env),200,cors));
         if(path==='/api/orders'&&request.method==='POST') {
           if(env.PUBLIC_ORDER_INTAKE_ENABLED!=='true')throw fault(503,'Les commandes en ligne ne sont pas encore activées.');
           if(!origin||!env.ORDER_LIMITER||!env.TURNSTILE_SECRET||!env.TURNSTILE_HOSTNAME)throw fault(503,'Réception des commandes non configurée.');
@@ -51,15 +54,16 @@ export default {
       if(path==='/admin'||path.startsWith('/admin/')||path.startsWith('/api/admin/')) {
         if(path.startsWith('/api/admin/')||!['GET','HEAD'].includes(request.method))requireSameOrigin(request);
         const admin=await requireAdmin(request,env);
+        if(path.startsWith('/api/admin/v2/'))return secured(await v2Route(request,env,admin,url));
         if(path==='/admin'||path==='/admin/'||path==='/admin/index.html') {
           if(request.method!=='GET')throw fault(405,'Méthode non autorisée.');
           return secured(await asset(env,request,'/admin/index.html'));
         }
-        if(path==='/admin/app.css'||path==='/admin/app.js'||/^\/admin\/media\/[a-z0-9-]+\.webp$/.test(path)) {
+        if(['/admin/app.css','/admin/app.js','/admin/app-v2.js','/admin/theme.js'].includes(path)||/^\/admin\/media\/[a-z0-9-]+\.webp$/.test(path)) {
           if(request.method!=='GET')throw fault(405,'Méthode non autorisée.');
           return secured(await asset(env,request,path));
         }
-        if(path==='/api/admin/session'&&request.method==='GET')return secured(json({...admin,role:'administrator',storeConnected:env.SHOP_SYNC_ENABLED==='true',trackingEnabled:env.ORDER_TRACKING_ENABLED==='true'}));
+        if(path==='/api/admin/session'&&request.method==='GET')return secured(json({...admin,role:'administrator',v2Enabled:env.ADMIN_V2_ENABLED==='true',storeConnected:env.SHOP_SYNC_ENABLED==='true',trackingEnabled:env.ORDER_TRACKING_ENABLED==='true'}));
         if(path==='/api/admin/dashboard'&&request.method==='GET')return secured(json(await dashboard(env)));
         if(path==='/api/admin/products') {
           if(request.method==='GET') {
@@ -68,7 +72,7 @@ export default {
             return secured(json({products:products.map(adminProduct),images}));
           }
           if(request.method==='POST') {
-            const p=productInput(await readBody(request),true);
+            const p=productInput(await readBody(request),true,env.ADMIN_V2_ENABLED==='true');
             await verifyImage(env,request,p.imageKey);
             try {
               await statement(env,`INSERT INTO products(id,name_fr,name_ar,category,unit,description_fr,description_ar,price_cents,active,track_stock,stock_milli,low_stock_milli,image_key,updated_at,updated_by,update_reason) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`,p.id,p.nameFr,p.nameAr,p.category,p.unit,p.descriptionFr,p.descriptionAr,p.priceCents,p.active,p.trackStock,p.stockMilli,p.lowStockMilli,p.imageKey,now(),admin.email,p.reason).run();
@@ -78,7 +82,7 @@ export default {
         }
         const product=path.match(/^\/api\/admin\/products\/([a-z0-9-]+)$/);
         if(product&&request.method==='PATCH') {
-          const p=productInput(await readBody(request));
+          const p=productInput(await readBody(request),false,env.ADMIN_V2_ENABLED==='true');
           if(p.id!==product[1]||!ID.test(p.id))throw fault(400,'Identifiant incohérent.');
           const current=await statement(env,'SELECT unit FROM products WHERE id=?',p.id).first();
           if(!current)throw fault(404,'Produit introuvable.');
