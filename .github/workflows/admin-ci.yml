@@ -1,11 +1,11 @@
 name: FreshSOUK private admin checks
 on:
   push:
-    branches: [codex/freshsouk-admin, codex/freshsouk-boutique-sync, codex/freshsouk-order-tracking, codex/freshsouk-checkout-tracking]
-    paths: [admin/**, docs/admin/**, .github/workflows/admin-ci.yml, .gitignore, index.html, redesign.js, sw.js, storefront.js, track.*]
+    branches: [codex/freshsouk-admin, codex/freshsouk-boutique-sync, codex/freshsouk-order-tracking, codex/freshsouk-checkout-tracking, codex/freshsouk-video-journey]
+    paths: [admin/**, docs/admin/**, .github/workflows/admin-ci.yml, .gitignore, index.html, redesign.js, redesign.css, sw.js, storefront.js, track.*]
   pull_request:
     branches: [main]
-    paths: [admin/**, docs/admin/**, .github/workflows/admin-ci.yml, .gitignore, index.html, redesign.js, sw.js, storefront.js, track.*]
+    paths: [admin/**, docs/admin/**, .github/workflows/admin-ci.yml, .gitignore, index.html, redesign.js, redesign.css, sw.js, storefront.js, track.*]
 permissions:
   contents: read
 jobs:
