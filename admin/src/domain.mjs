@@ -41,11 +41,11 @@ export function milli(value, unit) {
   if (amount <= 0 || amount > 100000 || Math.abs(value * 1000 - amount) > 0.00001 || amount % step) throw fault(400,'Quantité : demi-kilos ou unités entières uniquement.');
   return amount;
 }
-export function productInput(body, creating=false) {
+export function productInput(body, creating=false, v2=false) {
   fields(body,['id','nameFr','nameAr','category','unit','descriptionFr','descriptionAr','priceCents','active','trackStock','stockMilli','lowStockMilli','imageKey','version','reason']);
   const id = text(body.id,'identifiant',1,80);
   if (!ID.test(id)) throw fault(400,'Identifiant produit invalide.');
-  if (!['legumes','fruits','packs'].includes(body.category) || !['kg','botte','unité','pack'].includes(body.unit)) throw fault(400,'Catégorie ou unité invalide.');
+  if (!(v2?['legumes','fruits','herbes','packs']:['legumes','fruits','packs']).includes(body.category) || !['kg','botte','unité','pack'].includes(body.unit)) throw fault(400,'Catégorie ou unité invalide.');
   const stock=integer(body.stockMilli,'stock'), threshold=integer(body.lowStockMilli,'seuil');
   const step=body.unit==='kg'?500:1000;
   if (stock%step || threshold%step) throw fault(400,'Stock : demi-kilos ou unités entières uniquement.');
@@ -56,13 +56,13 @@ export function productInput(body, creating=false) {
     priceCents:integer(body.priceCents,'prix',1,10000000), active:boolean(body.active,'actif'), trackStock:boolean(body.trackStock,'suivi du stock'), stockMilli:stock, lowStockMilli:threshold,imageKey:key,
     version:creating?1:integer(body.version,'version',1),reason:text(body.reason,'motif',3,240) };
 }
-export function customerInput(body) {
+export function customerInput(body, zones=['Casablanca']) {
   fields(body,['customer','items','note','turnstileToken']);
   fields(body.customer,['name','phone','city','address','slot']);
   const c=body.customer;
   const phone=text(c.phone,'téléphone',10,20).replace(/[\s-]/g,'');
   if (!/^(0[567][0-9]{8}|\+212[567][0-9]{8})$/.test(phone)) throw fault(400,'Téléphone marocain invalide.');
-  if (c.city !== 'Casablanca' || !SLOTS.includes(c.slot)) throw fault(400,'Ville ou créneau invalide.');
+  if (!zones.includes(c.city) || !SLOTS.includes(c.slot)) throw fault(400,'Ville ou créneau invalide.');
   if (!Array.isArray(body.items) || !body.items.length || body.items.length > 32) throw fault(400,'Produits requis (32 lignes maximum).');
   const seen=new Set();
   const items=body.items.map(line=>{

@@ -9,6 +9,6 @@
     "build": "node scripts/build-assets.mjs",
     "test": "node --test --test-isolation=none tests/*.test.mjs",
     "preview": "node scripts/preview.mjs",
-    "check": "node --check src/worker.mjs && node --check ui/app.js && node scripts/verify-public.mjs"
+    "check": "node --check src/worker.mjs && node --check ui/app.js && node --check ui/app-v2.js && node --check ui/theme.js && node scripts/verify-public.mjs"
   }
 }

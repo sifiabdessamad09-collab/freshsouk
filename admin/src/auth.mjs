@@ -26,7 +26,7 @@ export async function requireAdmin(request, env) {
   const audience = env.ACCESS_AUD || '';
   const allow = (env.ADMIN_EMAILS || '').split(',').map(v => v.trim().toLowerCase()).filter(Boolean);
   if (!/^[a-z0-9-]+\.cloudflareaccess\.com$/.test(team) || team.includes('REPLACE') ||
-      !audience || audience.includes('REPLACE') || !allow.length) throw fault(503, 'Accès administrateur non configuré.');
+      !audience || audience.includes('REPLACE') || !allow.length || (env.ADMIN_V2_ENABLED==='true'&&allow.length!==1)) throw fault(503, 'Accès administrateur non configuré.');
   const token = request.headers.get('Cf-Access-Jwt-Assertion');
   if (!token || token.length > 16000) throw fault(401, 'Authentification requise.');
   let header, claims, parts;

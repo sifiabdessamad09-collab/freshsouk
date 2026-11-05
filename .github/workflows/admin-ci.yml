@@ -1,7 +1,7 @@
 name: FreshSOUK private admin checks
 on:
   push:
-    branches: [codex/freshsouk-admin, codex/freshsouk-boutique-sync, codex/freshsouk-order-tracking, codex/freshsouk-checkout-tracking, codex/freshsouk-video-journey]
+    branches: [codex/freshsouk-admin, codex/freshsouk-boutique-sync, codex/freshsouk-order-tracking, codex/freshsouk-checkout-tracking, codex/freshsouk-video-journey, codex/freshsouk-admin-v2]
     paths: [admin/**, docs/admin/**, .github/workflows/admin-ci.yml, .gitignore, index.html, redesign.js, redesign.css, sw.js, storefront.js, track.*]
   pull_request:
     branches: [main]
@@ -31,6 +31,8 @@ jobs:
           node scripts/check-assets.mjs
       - name: Authentication, private orders and transactional stock tests
         run: npm test
+      - name: Validate populated migration on local Cloudflare workerd D1
+        run: node scripts/check-d1-migration.mjs
       - name: Check public tracking script syntax
         run: node --check ../track.js
       - name: Compile Worker without deploying or creating remote resources

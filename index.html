@@ -844,7 +844,7 @@
     @media(max-width:600px){.products{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.product-image{height:clamp(120px,34vw,155px)}.product-content{padding:9px}.product-names{min-height:34px}.product h3,.product-ar{font-size:11px}.product-price{font-size:13px}.quantity-picker{min-height:33px}.quantity-picker button,.quantity-picker output{height:31px}.quantity-picker button{width:25px}.quantity-picker output{min-width:25px;font-size:11px}.product-bottom{gap:6px}.product-purchase-row{gap:4px}.product-actions{gap:4px}.product-actions button{min-height:33px;padding:7px 7px;font-size:9px}.product-actions .whatsapp-btn{width:31px;min-width:31px;padding:0;font-size:14px}}
     @media(max-width:380px){.product-content{padding:8px}.product h3,.product-ar{font-size:10px}.product-price{font-size:12px}.quantity-picker button{width:22px}.quantity-picker output{min-width:22px}.product-actions button{padding-inline:5px}}
 </style>
-<link rel="stylesheet" href="redesign.css?v=journey-video-20261105">
+<link rel="stylesheet" href="redesign.css?v=admin-v2-20261105">
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#073c30">
 <meta name="mobile-web-app-capable" content="yes">
@@ -1086,8 +1086,8 @@
 
 
 <script src="assets/icons.js"></script>
-<script src="redesign.js?v=journey-video-20261105"></script>
-<script src="storefront.js?v=tracking-receipt-20261030"></script>
+<script src="redesign.js?v=admin-v2-20261105"></script>
+<script src="storefront.js?v=admin-v2-20261105"></script>
 <script type="application/json" id="productData">[
   {
     "id": "pack-semaine-familial",
@@ -1545,8 +1545,8 @@
 
   const CONFIG_BOUTIQUE = Object.freeze({ whatsappNumber: "212643880485", deliveryFee: 20, freeShippingThreshold: 200, deliveryZones: ["Casablanca"] });
   const WHATSAPP_NUMBER = CONFIG_BOUTIQUE.whatsappNumber;
-  const DELIVERY_FEE = CONFIG_BOUTIQUE.deliveryFee;
-  const FREE_SHIPPING_THRESHOLD = CONFIG_BOUTIQUE.freeShippingThreshold;
+  let DELIVERY_FEE = CONFIG_BOUTIQUE.deliveryFee;
+  let FREE_SHIPPING_THRESHOLD = CONFIG_BOUTIQUE.freeShippingThreshold;
   const ORDER_FORM_RESPONSE_URL = "https://docs.google.com/forms/d/e/1FAIpQLSehoScQrxRTyRqWgTY4oklJ11BotppPYkOgnEM-tZW712JliA/formResponse";
   const ORDER_FORM_FIELDS = {
     name: "entry.1211204224", phone: "entry.75017083", city: "entry.292690853",
@@ -1624,7 +1624,14 @@
     if(catalogueRequest)return catalogueRequest;
     catalogueRequest=(async()=>{
       try {
-        const data=await FreshsoukStore.catalogue();
+        const [data,shipping]=await Promise.all([FreshsoukStore.catalogue(),FreshsoukStore.settings()]);
+        DELIVERY_FEE=shipping.deliveryFeeCents/100;FREE_SHIPPING_THRESHOLD=shipping.freeThresholdCents/100;
+        const citySelect=document.getElementById('customerCity'),previousCity=citySelect.value;
+        citySelect.replaceChildren(new Option('Choisir / اختار',''),...shipping.zones.map(z=>new Option(z,z)));citySelect.value=shipping.zones.includes(previousCity)?previousCity:'';
+        const deliveryLabel=document.querySelector('.fs-delivery div:last-child strong');
+        if(deliveryLabel){const ar=document.createElement('small');ar.lang='ar';ar.dir='rtl';ar.textContent='التوصيل مجاني من '+FREE_SHIPPING_THRESHOLD+' درهم';deliveryLabel.replaceChildren(document.createTextNode('Livraison offerte dès '+FREE_SHIPPING_THRESHOLD+' DH'),ar);}
+        const zonesLabel=document.querySelector('.fs-delivery div:first-child strong');
+        if(zonesLabel){const ar=document.createElement('small');ar.lang='ar';ar.dir='rtl';const names={Casablanca:'الدار البيضاء',Bouskoura:'بوسكورة',Mohammedia:'المحمدية'};ar.textContent='التوصيل : '+shipping.zones.map(z=>names[z]).join(' · ');zonesLabel.replaceChildren(document.createTextNode(shipping.zones.join(' · ')),ar);}
         const mapped=data.map(product=>({...product,name:product.nameFr,description:product.descriptionFr||'Produits frais du marché.',categoryLabel:categoryNames[product.category]||product.category,emoji:categoryEmoji[product.category]||'🥬'}));
         const changed=JSON.stringify(products)!==JSON.stringify(mapped);
         products.splice(0,products.length,...mapped);
@@ -1647,7 +1654,7 @@
     const container = document.getElementById("productsContainer");
     const query = searchQuery.trim().toLocaleLowerCase();
     const visible = products.filter(product => {
-      const matchesCategory = selectedCategory === "all" || product.category === selectedCategory;
+      const matchesCategory = selectedCategory === "all" || product.category === selectedCategory || (selectedCategory === "herbes" && product.id === "herbes");
       const text = `${product.nameFr} ${product.nameAr} ${product.descriptionFr} ${product.descriptionAr}`.toLocaleLowerCase();
       return matchesCategory && text.includes(query);
     });
