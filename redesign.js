@@ -50,8 +50,7 @@ function fsImage(p){
 function fsIcons(){if(window.lucide) lucide.createIcons({attrs:{'stroke-width':1.6}});}
 function fsCategory(category){
  searchQuery=''; document.getElementById('headerSearch').value='';
- setCategory(category==='herbes'?'all':category);
- if(category==='herbes'){searchQuery='herbes';renderProducts();}
+ setCategory(category);
  document.querySelectorAll('[data-category]').forEach(b=>b.classList.toggle('active',b.dataset.category===category));
 }
 function fsResetSearch(){fsCategory('all');}
