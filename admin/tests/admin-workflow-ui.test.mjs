@@ -29,6 +29,9 @@ test('real UI renders quick filters, keeps status actions visible, and saves ext
 });
 test('language display changes do not alter monetary inputs or customer data; disabled push never prompts',async()=>{
  const u=await ui();try{const {w,id}=u,d=w.document;await w.orderDetail(id);const input=d.querySelector('[name=goods]');input.value='17.5';const language=d.querySelector('#languageSelect');language.value='ar';language.dispatchEvent(new w.Event('change'));
+ const ordersNav=d.querySelector('[data-route=orders]');assert.equal(ordersNav.querySelectorAll('.copy-ar').length,1);assert.equal((ordersNav.textContent.match(/الطلبات/g)||[]).length,1);assert.equal(ordersNav.querySelectorAll('[lang=ar]:not(.copy-ar)').length,0);
+ const pendingBadge=d.querySelector('tbody .badge.pending');assert.equal((pendingBadge.parentElement.textContent.match(/جديد/g)||[]).length,1);assert.equal(pendingBadge.parentElement.querySelectorAll('.copy-ar').length,1);
+ w.localizeWorkflow(d.body);assert.equal(ordersNav.querySelectorAll('.copy-ar').length,1);
  assert.equal(d.documentElement.dir,'rtl');assert.equal(input.value,'17.5');assert(d.querySelector('#order-tab-couts').textContent.includes('التكاليف'));assert(d.querySelector('#dialogBody').textContent.includes('Client fictif'));
  language.value='fr';language.dispatchEvent(new w.Event('change'));assert.equal(d.documentElement.dir,'ltr');assert.equal(input.value,'17.5');
  assert.equal(w.localStorage.getItem('freshsouk-admin-language'),'fr');assert.equal(w.localStorage.length,1);
