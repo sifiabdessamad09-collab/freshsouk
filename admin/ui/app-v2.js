@@ -190,8 +190,12 @@ function languagePairs(raw){const trimmed=raw.trim();if(!trimmed||!/[A-Za-z\u060
 }
 function localizeWorkflow(root=document.body){
  const walker=document.createTreeWalker(root,NodeFilter.SHOW_TEXT),nodes=[];while(walker.nextNode())nodes.push(walker.currentNode);
- for(const node of nodes){const parent=node.parentElement;if(!parent||parent.closest('script,style,textarea,option,select,[data-copy],.chart-column,.metric strong,#identity'))continue;const pair=languagePairs(node.textContent);if(!pair||!pair.fr||!pair.ar)continue;
-  const span=document.createElement('span');span.dataset.copy='';span.className='translated-copy';const fr=document.createElement('span'),ar=document.createElement('span'),divider=document.createElement('span');fr.className='copy-fr';ar.className='copy-ar';ar.lang='ar';ar.dir='rtl';divider.className='copy-divider';divider.textContent=' · ';fr.textContent=pair.fr;ar.textContent=pair.ar;span.append(fr,divider,ar);node.replaceWith(span);
+ for(const node of nodes){const parent=node.parentElement;if(!parent||parent.closest('script,style,textarea,option,select,[data-copy],.chart-column,.metric strong,#identity'))continue;
+  // Reuse the Arabic already present in navigation, headings and status labels.
+  // Keeping one pair also lets Arabic-only mode hide the original French text.
+  const raw=node.textContent.trim(),existingAr=Object.hasOwn(workflowDictionary,raw)?[...parent.children].find(el=>el.matches('small[lang="ar"]'))||(parent.matches('.badge')&&parent.nextElementSibling?.matches('small[lang="ar"]')?parent.nextElementSibling:null):null;
+  const pair=existingAr?{fr:raw,ar:existingAr.textContent.trim()}:languagePairs(node.textContent);if(!pair||!pair.fr||!pair.ar)continue;
+  const span=document.createElement('span');span.dataset.copy='';span.className='translated-copy';const fr=document.createElement('span'),ar=existingAr||document.createElement('span'),divider=document.createElement('span');fr.className='copy-fr';ar.classList.add('copy-ar');ar.removeAttribute('data-language-hidden');ar.lang='ar';ar.dir='rtl';divider.className='copy-divider';divider.textContent=' · ';fr.textContent=pair.fr;ar.textContent=pair.ar;span.append(fr);if(!existingAr)span.append(divider);span.append(ar);node.replaceWith(span);
  }
  applyWorkflowLanguage();
 }
