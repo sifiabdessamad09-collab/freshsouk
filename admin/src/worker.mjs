@@ -2,6 +2,7 @@ import { requireAdmin, requireSameOrigin, fault } from './auth.mjs';
 import { readBody,fields,text,integer,productInput,adminProduct,publicProduct,statement,rows,now,ID,TRANSITIONS } from './domain.mjs';
 import { createOrder,listOrders,dashboard,exportOrders } from './orders.mjs';
 import {publicTracking,trackingMetadata,generateTracking,revokeTracking} from './tracking.mjs';
+import {sendPendingPush} from './push.mjs';
 import {v2Route} from './admin-v2.mjs';
 import {shippingSettings} from './shipping.mjs';
 
@@ -17,6 +18,7 @@ function secured(response) { const headers=new Headers(response.headers);for(con
 const uuid=/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 export default {
+  async scheduled(_event,env,ctx){ctx.waitUntil(sendPendingPush(env));},
   async fetch(request,env) {
     const url=new URL(request.url),path=url.pathname;
     let cors={};
@@ -59,7 +61,7 @@ export default {
           if(request.method!=='GET')throw fault(405,'Méthode non autorisée.');
           return secured(await asset(env,request,'/admin/index.html'));
         }
-        if(['/admin/app.css','/admin/app.js','/admin/app-v2.js','/admin/theme.js'].includes(path)||/^\/admin\/media\/[a-z0-9-]+\.webp$/.test(path)) {
+        if(['/admin/app.css','/admin/app.js','/admin/app-v2.js','/admin/theme.js','/admin/push-worker.js'].includes(path)||/^\/admin\/media\/[a-z0-9-]+\.webp$/.test(path)) {
           if(request.method!=='GET')throw fault(405,'Méthode non autorisée.');
           return secured(await asset(env,request,path));
         }
