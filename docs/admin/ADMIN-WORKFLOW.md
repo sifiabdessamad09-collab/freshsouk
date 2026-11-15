@@ -23,6 +23,8 @@ This change builds on the existing private Admin V2. It does not change the publ
 
 No remote migration or deployment is performed by these scripts or by CI. Existing rates (20 DH / free from 200 DH) and zone activation remain the owner's settings.
 
+For a dashboard-only code deployment, run `node scripts/prepare-dashboard-deploy.mjs`, then `npx wrangler deploy --config .local/dashboard/wrangler.toml --dry-run --outdir bundle`. Paste the generated `.local/dashboard/bundle/entry.js` into the existing Worker's editor. This embeds the six matching UI assets behind the same authentication and CSP; catalogue media and image keys still use the existing ASSETS binding. Preserve the deployed Worker's bindings, variables, secrets and triggers. Do not deploy the generated placeholder configuration remotely. Apply migration 0005 first, record it in the migration ledger, and retain the previous Worker version for rollback. Push remains disabled unless explicitly configured.
+
 ## Background notifications
 
 The implementation uses empty Web Push messages with VAPID authentication (RFC 8030 / RFC 8292). No name, address, phone, total or order identifier is sent to a push provider or displayed on a device lock screen. The notification opens `/admin/#orders`, where Cloudflare Access still applies. The service worker has no fetch handler or caches.
