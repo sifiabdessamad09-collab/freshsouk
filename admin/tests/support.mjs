@@ -44,7 +44,7 @@ export async function fixture({v2=false}={}) {
     ASSETS:{async fetch(request){return new URL(request.url).pathname==='/image-keys.json'?Response.json(['leaf',...new Set(catalog.map(p=>p.imageKey))]):new Response('<html>Private application</html>',{headers:{'content-type':'text/html'}});}}
   };
   const jwt=await token();
-  if(v2)env.ADMIN_V2_ENABLED='true';
+  if(v2){db.exec(await readFile(new URL('../db/0005_admin_workflow.sql',import.meta.url),'utf8'));env.ADMIN_V2_ENABLED='true';}
   async function request(path,options={}) {
     const {body,auth=true,headers={},method=body?'POST':'GET'}=options;
     return worker.fetch(new Request('https://admin.freshsouk.invalid'+path,{method,headers:{...(auth?{'Cf-Access-Jwt-Assertion':jwt}:{}),...(body?{'Content-Type':'application/json','X-Freshsouk-Admin':'1',Origin:'https://admin.freshsouk.invalid'}:{}),...headers},...(body?{body:JSON.stringify(body)}:{})}),env);

@@ -28,7 +28,9 @@ try{
  const tables=['products','orders','order_items','order_tracking','audit_log'];const before=new Map(tables.map(t=>[t,JSON.stringify(query('SELECT * FROM '+t+' ORDER BY 1'))]));
  await copyFile(path.join(admin,'db/0004_admin_v2.sql'),path.join(migrations,'0004_admin_v2.sql'));cli(['migrations','apply','DB']);
  for(const t of tables)assert.equal(JSON.stringify(query('SELECT * FROM '+t+' ORDER BY 1')),before.get(t),t+' changed during D1 migration');
- assert.deepEqual(query('PRAGMA foreign_key_check'),[]);assert.equal(query('SELECT count(*) n FROM d1_migrations')[0].n,4);
+ await copyFile(path.join(admin,'db/0005_admin_workflow.sql'),path.join(migrations,'0005_admin_workflow.sql'));cli(['migrations','apply','DB']);
+ for(const t of tables)assert.equal(JSON.stringify(query('SELECT * FROM '+t+' ORDER BY 1')),before.get(t),t+' changed during additive workflow migration');
+ assert.deepEqual(query('PRAGMA foreign_key_check'),[]);assert.equal(query('SELECT count(*) n FROM d1_migrations')[0].n,5);
  assert.equal(query("SELECT stock_milli FROM products WHERE id='tomates'")[0].stock_milli,3000);
  query(`UPDATE orders SET status='cancelled',version=version+1,updated_by='ci@freshsouk.invalid' WHERE id='${id}'`);
  assert.equal(query("SELECT stock_milli FROM products WHERE id='tomates'")[0].stock_milli,5000);

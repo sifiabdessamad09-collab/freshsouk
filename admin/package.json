@@ -3,12 +3,17 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "engines": { "node": ">=24" },
-  "devDependencies": { "wrangler": "4.154.0" },
+  "engines": {
+    "node": ">=24"
+  },
+  "devDependencies": {
+    "jsdom": "31.0.1",
+    "wrangler": "4.154.0"
+  },
   "scripts": {
     "build": "node scripts/build-assets.mjs",
     "test": "node --test --test-isolation=none tests/*.test.mjs",
     "preview": "node scripts/preview.mjs",
-    "check": "node --check src/worker.mjs && node --check ui/app.js && node --check ui/app-v2.js && node --check ui/theme.js && node scripts/verify-public.mjs"
+    "check": "node --check src/worker.mjs && node --check ui/app.js && node --check ui/app-v2.js && node --check ui/theme.js && node --check src/push.mjs && node --check ui/push-worker.js && node scripts/verify-public.mjs"
   }
 }

@@ -1,3 +1,4 @@
+import {pushRoute} from './push.mjs';
 import {fault} from './auth.mjs';
 import {statement,rows,now,readBody,fields,text,integer,hash,csvCell,STATUSES,ID} from './domain.mjs';
 import {dayStart,filters} from './orders.mjs';
@@ -22,19 +23,22 @@ function search(params){const q=text(params.get('q')||'','recherche',0,100);retu
 function changed(result){if(!result.meta.changes)throw fault(409,'Données modifiées par une autre opération. Actualisez avant de réessayer.');}
 
 export async function analytics(env,params){
- const range=period(params);
+ const range=period(params),basis=params.get('basis')||'order_created_at';
+ if(!['order_created_at','delivered_at'].includes(basis))throw fault(400,'Base de date invalide.');
+ const dateColumn=basis==='delivered_at'?'o.updated_at':'o.created_at';
+ const dateCondition=(basis==='delivered_at'?"o.status='delivered' AND ":'')+dateColumn+'>=? AND '+dateColumn+'<?';
  const orders=await rows(statement(env,`SELECT o.id,o.created_at,o.updated_at,o.status,o.city,o.subtotal_cents,o.delivery_cents,o.total_cents,
  p.goods_cost_cents,p.delivery_cost_cents,c.known_lines,c.item_lines,c.snapshot_goods
  FROM orders o LEFT JOIN order_operations p ON p.order_id=o.id
  LEFT JOIN (SELECT i.order_id,count(*) item_lines,count(c.unit_cost_cents) known_lines,
  sum(CASE WHEN c.unit_cost_cents IS NOT NULL THEN round(i.quantity_milli*c.unit_cost_cents/1000.0) ELSE 0 END) snapshot_goods
  FROM order_items i LEFT JOIN order_item_costs c ON c.order_id=i.order_id AND c.product_id=i.product_id GROUP BY i.order_id) c ON c.order_id=o.id
- WHERE o.created_at>=? AND o.created_at<? ORDER BY o.created_at,o.id LIMIT 5001`,range.start,range.end));
+ WHERE ${dateCondition} ORDER BY ${dateColumn},o.id LIMIT 5001`,range.start,range.end));
  if(orders.length>5000)throw fault(422,'Plus de 5 000 commandes : réduisez la période du rapport.');
  const daily=new Map(),zoneMap=new Map(),counts=Object.fromEntries(STATUSES.map(s=>[s,0]));
  let revenue=0,goods=0,deliveryCost=0,deliveryCharged=0,delivered=0,missingGoods=0,missingDelivery=0;
  for(const o of orders){
-  counts[o.status]++;const day=localDay(o.created_at),d=daily.get(day)||{day,orders:0,delivered:0,revenueCents:0};d.orders++;
+  counts[o.status]++;const day=localDay(basis==='delivered_at'?o.updated_at:o.created_at),d=daily.get(day)||{day,orders:0,delivered:0,revenueCents:0};d.orders++;
   const z=zoneMap.get(o.city)||{zone:o.city,orders:0,delivered:0,revenueCents:0};z.orders++;
   if(o.status==='delivered'){
    delivered++;revenue+=o.total_cents;deliveryCharged+=o.delivery_cents;d.delivered++;d.revenueCents+=o.total_cents;z.delivered++;z.revenueCents+=o.total_cents;
@@ -46,17 +50,21 @@ export async function analytics(env,params){
  }
  const items=await rows(statement(env,`SELECT i.product_id id,i.name_fr name,i.unit,p.category,sum(i.quantity_milli) quantityMilli,sum(i.line_cents) revenueCents
  FROM order_items i JOIN orders o ON o.id=i.order_id JOIN products p ON p.id=i.product_id
- WHERE o.status='delivered' AND o.created_at>=? AND o.created_at<? GROUP BY i.product_id,i.unit ORDER BY revenueCents DESC`,range.start,range.end));
+ WHERE o.status='delivered' AND ${dateCondition} GROUP BY i.product_id,i.unit ORDER BY revenueCents DESC`,range.start,range.end));
  const categoryMap=new Map();for(const p of items){const c=categoryMap.get(p.category)||{category:p.category,revenueCents:0};c.revenueCents+=p.revenueCents;categoryMap.set(c.category,c);}
  const expenses=await rows(statement(env,'SELECT id,spent_on,label,amount_cents,created_at FROM expenses WHERE spent_on>=? AND spent_on<=? ORDER BY spent_on DESC,id DESC LIMIT 1001',range.from,range.to));
  if(expenses.length>1000)throw fault(422,'Plus de 1 000 dépenses : réduisez la période.');
+ const collection=await statement(env,`SELECT coalesce(sum(c.collected_cents),0) collected,coalesce(sum(c.remitted_cents),0) remitted,
+ sum(CASE WHEN c.order_id IS NULL THEN 1 ELSE 0 END) unknown FROM orders o LEFT JOIN order_collections c ON c.order_id=o.id
+ WHERE o.status='delivered' AND ${dateCondition}`,range.start,range.end).first();
  const expenseCents=expenses.reduce((s,x)=>s+x.amount_cents,0),today=localDay(new Date());
  const current=await statement(env,`SELECT coalesce(sum(CASE WHEN updated_at>=? THEN total_cents ELSE 0 END),0) day,
  coalesce(sum(total_cents),0) month FROM orders WHERE status='delivered' AND updated_at>=? AND updated_at<?`,dayStart(today),dayStart(today.slice(0,7)+'-01'),dayStart(nextDay(today))).first();
- return {range:{from:range.from,to:range.to,basis:'order_created_at',timezone:'Africa/Casablanca'},counts,totalOrders:orders.length,delivered,
+ return {range:{from:range.from,to:range.to,basis,timezone:'Africa/Casablanca'},counts,totalOrders:orders.length,delivered,
  revenueCents:revenue,averageCents:delivered?Math.round(revenue/delivered):0,deliveryChargedCents:deliveryCharged,
  knownGoodsCostCents:goods,knownDeliveryCostCents:deliveryCost,missingGoodsOrders:missingGoods,missingDeliveryOrders:missingDelivery,
  grossMarginCents:missingGoods?null:revenue-deliveryCharged-goods,resultCents:missingGoods||missingDelivery?null:revenue-goods-deliveryCost-expenseCents,
+ collection:{collectedCents:collection.collected,remittedCents:collection.remitted,heldByCourierCents:collection.collected-collection.remitted,unknownOrders:collection.unknown||0},
  expenseCents,expenses,daily:[...daily.values()],zones:[...zoneMap.values()],products:items,categories:[...categoryMap.values()],
  currentRevenue:{dayCents:current.day,monthCents:current.month,basis:'delivered_status_updated_at'},generatedAt:now()};
 }
@@ -74,16 +82,18 @@ async function notices(env,owner){
  const pending=await rows(statement(env,"SELECT id,status,created_at FROM orders WHERE status='pending' ORDER BY created_at DESC,id DESC LIMIT 50"));
  const stock=await rows(statement(env,'SELECT id,name_fr,version,updated_at FROM products WHERE active=1 AND track_stock=1 AND stock_milli<=low_stock_milli ORDER BY updated_at DESC LIMIT 50'));
  const reads=new Set((await rows(statement(env,'SELECT notification_id FROM notification_reads WHERE owner=?',owner))).map(x=>x.notification_id));
- const list=[...pending.map(o=>({id:'pending:'+o.id,type:'pending',title:'À confirmer · خاص التأكيد #'+o.id.slice(0,8).toUpperCase(),at:o.created_at,route:'orders',orderId:o.id})),
- ...recent.map(o=>({id:'order:'+o.id,type:'new',title:'Commande reçue · طلب تسجّل #'+o.id.slice(0,8).toUpperCase(),at:o.created_at,route:'orders',orderId:o.id})),
+ const list=[...pending.map(o=>({id:'order:'+o.id,type:'pending',title:'À confirmer · خاص التأكيد #'+o.id.slice(0,8).toUpperCase(),at:o.created_at,route:'orders',orderId:o.id})),
+ ...recent.filter(o=>o.status!=='pending').map(o=>({id:'order:'+o.id,type:'new',title:'Commande reçue · طلب تسجّل #'+o.id.slice(0,8).toUpperCase(),at:o.created_at,route:'orders',orderId:o.id})),
  ...stock.map(p=>({id:'stock:'+p.id+':'+p.version,type:'stock',title:'Stock à vérifier · راجع المخزون : '+p.name_fr,at:p.updated_at,route:'products'}))];
  const pendingCount=(await statement(env,"SELECT count(*) total FROM orders WHERE status='pending'").first()).total;
- const notifications=list.slice(0,150).map(n=>({...n,read:reads.has(n.id)}));return {notifications,pendingCount,unread:notifications.filter(n=>!n.read).length,scope:'50 latest orders, 50 pending, 50 stock alerts; while admin is open'};
+ const notifications=list.slice(0,150).map(n=>({...n,read:reads.has(n.id)||Boolean(n.orderId&&reads.has('pending:'+n.orderId))}));return {notifications,pendingCount,unread:notifications.filter(n=>!n.read).length,scope:'50 latest orders, 50 pending, 50 stock alerts; while admin is open'};
 }
 
 export async function v2Route(request,env,admin,url){
  if(env.ADMIN_V2_ENABLED!=='true')throw fault(404,'Admin V2 non activé.');
  const settings=await shippingSettings(env),path=url.pathname.replace('/api/admin/v2/',''),method=request.method;
+ if(path.startsWith('push/'))return pushRoute(request,env,admin.email,path);
+ if(path==='couriers'&&method==='GET')return json({couriers:(await rows(statement(env,"SELECT DISTINCT courier FROM order_operations WHERE courier<>'' ORDER BY courier LIMIT 100"))).map(r=>r.courier)});
  if(path==='analytics'&&method==='GET')return json(await analytics(env,url.searchParams));
  if(path==='settings'){
   if(method==='GET')return json({...settings,availableZones:ZONES});
@@ -126,8 +136,28 @@ export async function v2Route(request,env,admin,url){
   }
  }
  if(path==='deliveries'&&method==='GET'){
-  const {clause,args}=filters(url.searchParams),p=page(url.searchParams),count=await statement(env,`SELECT count(*) total FROM orders WHERE ${clause}`,...args).first();
-  return json({orders:await rows(statement(env,`SELECT o.id,o.created_at,o.customer_name,o.phone,o.city,o.address,o.delivery_slot,o.status,o.total_cents,o.delivery_cents,p.courier,p.neighborhood,p.delivery_cost_cents FROM orders o LEFT JOIN order_operations p ON p.order_id=o.id WHERE ${clause} ORDER BY o.created_at DESC,o.id DESC LIMIT 25 OFFSET ?`,...args,(p-1)*25)),total:count.total,page:p,pageSize:25});
+  const {clause,args}=filters(url.searchParams),p=page(url.searchParams),where=[clause];
+  for(const [name,column,max] of [['courier',"coalesce(p.courier,'')",160],['neighborhood',"coalesce(nullif(p.neighborhood,''),CASE WHEN instr(o.address,' — ')>0 THEN substr(o.address,1,instr(o.address,' — ')-1) ELSE '' END)",160],['slot','o.delivery_slot',32]]){
+   if(url.searchParams.has(name)){where.push(column+'=?');args.push(name==='courier'&&url.searchParams.get(name)==='__unassigned'?'':text(url.searchParams.get(name),name,0,max));}
+  }
+  const sort=url.searchParams.get('sort')||'recent',sorts={recent:'o.created_at DESC,o.id DESC',neighborhood:'display_neighborhood COLLATE NOCASE,o.delivery_slot,o.created_at',slot:'o.delivery_slot,display_neighborhood COLLATE NOCASE,o.created_at',courier:"coalesce(p.courier,'') COLLATE NOCASE,o.delivery_slot,o.created_at"};
+  if(!Object.hasOwn(sorts,sort))throw fault(400,'Tri invalide.');
+  const join='FROM orders o LEFT JOIN order_operations p ON p.order_id=o.id WHERE '+where.join(' AND ');
+  const count=await statement(env,'SELECT count(*) total '+join,...args).first();
+  return json({orders:await rows(statement(env,`SELECT o.id,o.created_at,o.customer_name,o.phone,o.city,o.address,o.delivery_slot,o.status,o.total_cents,o.delivery_cents,p.courier,p.neighborhood,p.delivery_cost_cents,
+  coalesce(nullif(p.neighborhood,''),CASE WHEN instr(o.address,' — ')>0 THEN substr(o.address,1,instr(o.address,' — ')-1) ELSE '' END) display_neighborhood `+join+' ORDER BY '+sorts[sort]+' LIMIT 25 OFFSET ?',...args,(p-1)*25)),total:count.total,page:p,pageSize:25});
+ }
+ const collectionPath=path.match(/^orders\/([0-9a-f-]{36})\/collection$/i);
+ if(collectionPath){
+  const order=await statement(env,'SELECT id,status,total_cents FROM orders WHERE id=?',collectionPath[1]).first();if(!order)throw fault(404,'Commande introuvable.');
+  if(method==='GET')return json({collection:await statement(env,'SELECT * FROM order_collections WHERE order_id=?',order.id).first()});
+  if(method==='PATCH'){
+   const b=await readBody(request);fields(b,['version','collectedCents','remittedCents']);
+   const version=integer(b.version,'version',0),collected=integer(b.collectedCents,'encaissé',0,order.total_cents),remitted=integer(b.remittedCents,'reversé',0,collected);
+   if(order.status!=='delivered')throw fault(409,'Le suivi des encaissements est réservé aux commandes livrées.');
+   changed(version===0?await statement(env,'INSERT OR IGNORE INTO order_collections(order_id,collected_cents,remitted_cents,updated_at,updated_by) VALUES(?,?,?,?,?)',order.id,collected,remitted,now(),admin.email).run():await statement(env,'UPDATE order_collections SET collected_cents=?,remitted_cents=?,version=version+1,updated_at=?,updated_by=? WHERE order_id=? AND version=?',collected,remitted,now(),admin.email,order.id,version).run());
+   return json({ok:true,version:version+1});
+  }
  }
  if(path==='expenses'&&method==='POST'){
   const key=request.headers.get('Idempotency-Key')||'';if(!/^[a-zA-Z0-9._:-]{20,100}$/.test(key))throw fault(400,'Clé d’idempotence requise.');
