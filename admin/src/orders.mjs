@@ -78,9 +78,9 @@ export async function dashboard(env) {
   const counts=await rows(statement(env,'SELECT status,count(*) AS count FROM orders GROUP BY status'));
   const sales=await statement(env,"SELECT coalesce(sum(total_cents),0) AS revenue,coalesce(round(avg(total_cents)),0) AS average FROM orders WHERE status='delivered'").first();
   const day=dayFormat.format(new Date()),today=await statement(env,'SELECT count(*) AS count FROM orders WHERE created_at>=? AND created_at<?',dayStart(day),dayStart(nextDay(day))).first();
-  const inventory=await statement(env,'SELECT count(*) AS products,sum(CASE WHEN active=1 AND track_stock=1 AND stock_milli<=low_stock_milli THEN 1 ELSE 0 END) AS lowStock FROM products').first();
+  const inventory=await statement(env,'SELECT count(*) AS products,sum(CASE WHEN active=1 AND track_stock=1 AND stock_milli<=low_stock_milli THEN 1 ELSE 0 END) AS lowStock,sum(CASE WHEN active=1 AND track_stock=1 THEN 1 ELSE 0 END) AS trackedStock,sum(CASE WHEN active=1 AND track_stock=0 THEN 1 ELSE 0 END) AS untrackedStock FROM products').first();
   const popular=await rows(statement(env,"SELECT i.name_fr AS name,sum(i.quantity_milli)/1000.0 AS quantity,i.unit FROM order_items i JOIN orders o ON o.id=i.order_id WHERE o.status='delivered' GROUP BY i.product_id,i.unit ORDER BY sum(i.quantity_milli) DESC LIMIT 5"));
-  return {today:today.count,statuses:Object.fromEntries(STATUSES.map(s=>[s,counts.find(c=>c.status===s)?.count||0])),revenueCents:sales.revenue,averageCents:sales.average,products:inventory.products,lowStock:inventory.lowStock||0,popular,timezone:'Africa/Casablanca',generatedAt:now()};
+  return {today:today.count,statuses:Object.fromEntries(STATUSES.map(s=>[s,counts.find(c=>c.status===s)?.count||0])),revenueCents:sales.revenue,averageCents:sales.average,products:inventory.products,lowStock:inventory.lowStock||0,trackedStock:inventory.trackedStock||0,untrackedStock:inventory.untrackedStock||0,popular,timezone:'Africa/Casablanca',generatedAt:now()};
 }
 export async function exportOrders(env,params,actor) {
   const {clause,args}=filters(params);
