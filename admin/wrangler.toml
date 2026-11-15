@@ -25,7 +25,12 @@ name = "ORDER_LIMITER"
 namespace_id = "1002"
 simple = { limit = 10, period = 60 }
 
+[triggers]
+crons = [] # Configure a minute trigger only when enabling PUSH_ENABLED.
+
 [vars]
+PUSH_ENABLED = "false"
+
 ACCESS_TEAM_DOMAIN = "REPLACE_WITH_TEAM.cloudflareaccess.com"
 ACCESS_AUD = "REPLACE_WITH_ACCESS_APPLICATION_AUD"
 ALLOWED_ORIGIN = "https://sifiabdessamad09-collab.github.io"
