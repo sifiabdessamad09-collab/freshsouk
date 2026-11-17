@@ -1,5 +1,5 @@
 'use strict';
-const VERSION='freshsouk-pwa-admin-v2-20261105';
+const VERSION='freshsouk-pwa-qoffas-home';
 const SHELL=VERSION+'-shell';
 const MEDIA=VERSION+'-media';
 const ROOT=new URL('./',self.registration.scope);
@@ -9,7 +9,7 @@ const SHELL_FILES=[
  './','./index.html','./offline.html','./manifest.json','./products.json',
  './storefront.js?v=admin-v2-20261105',
  './pwa.js?v=app1-20261027','./pwa.css?v=app1-20261027',
- './redesign.js?v=admin-v2-20261105','./redesign.css?v=admin-v2-20261105',
+ './redesign.js?v=qoffas-home','./redesign.css?v=qoffas-home',
  './assets/icons.js','./app-icon-192.png','./app-icon-512.png',
  './app-icon-maskable-512.png','./apple-touch-icon.png'
 ].map(file=>new URL(file,ROOT).href);

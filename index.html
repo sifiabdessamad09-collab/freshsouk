@@ -844,7 +844,7 @@
     @media(max-width:600px){.products{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.product-image{height:clamp(120px,34vw,155px)}.product-content{padding:9px}.product-names{min-height:34px}.product h3,.product-ar{font-size:11px}.product-price{font-size:13px}.quantity-picker{min-height:33px}.quantity-picker button,.quantity-picker output{height:31px}.quantity-picker button{width:25px}.quantity-picker output{min-width:25px;font-size:11px}.product-bottom{gap:6px}.product-purchase-row{gap:4px}.product-actions{gap:4px}.product-actions button{min-height:33px;padding:7px 7px;font-size:9px}.product-actions .whatsapp-btn{width:31px;min-width:31px;padding:0;font-size:14px}}
     @media(max-width:380px){.product-content{padding:8px}.product h3,.product-ar{font-size:10px}.product-price{font-size:12px}.quantity-picker button{width:22px}.quantity-picker output{min-width:22px}.product-actions button{padding-inline:5px}}
 </style>
-<link rel="stylesheet" href="redesign.css?v=admin-v2-20261105">
+<link rel="stylesheet" href="redesign.css?v=qoffas-home">
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#073c30">
 <meta name="mobile-web-app-capable" content="yes">
@@ -898,7 +898,10 @@
   </div>
   <button type="button" class="fs-video-toggle" id="fsHeroVideoToggle" aria-controls="fsHeroVideo" hidden>Lire la vidéo · شغّل الفيديو</button>
 </section>
-<section id="qoffas" class="fs-qoffas" aria-label="Nos qoffas / القفف ديالنا"><div id="qoffaGrid" class="fs-qoffa-grid"></div></section>
+<section id="qoffas" class="fs-qoffas" aria-labelledby="fsQoffasTitle">
+ <h2 id="fsQoffasTitle">Nos qoffas <span lang="ar" dir="rtl">القفف ديالنا</span></h2>
+ <div id="qoffaGrid" class="fs-qoffa-grid"></div>
+</section>
 <section class="fs-additions" aria-labelledby="fsAdditionsTitle">
  <div class="fs-additions-copy"><h2 id="fsAdditionsTitle">À ajouter à votre panier <span lang="ary" dir="rtl">زيد لقفتك</span></h2><p>Complétez votre qoffa avec vos produits préférés.</p><p lang="ary" dir="rtl">كمّل قفتك بالمنتجات اللي كتعجبك</p></div>
  <div class="fs-quick-products" id="quickProducts"></div>
@@ -1086,7 +1089,7 @@
 
 
 <script src="assets/icons.js"></script>
-<script src="redesign.js?v=admin-v2-20261105"></script>
+<script src="redesign.js?v=qoffas-home"></script>
 <script src="storefront.js?v=admin-v2-20261105"></script>
 <script type="application/json" id="productData">[
   {
@@ -1654,6 +1657,7 @@
     const container = document.getElementById("productsContainer");
     const query = searchQuery.trim().toLocaleLowerCase();
     const visible = products.filter(product => {
+      if (product.category === "packs" && selectedCategory === "all" && !query) return false;
       const matchesCategory = selectedCategory === "all" || product.category === selectedCategory || (selectedCategory === "herbes" && product.id === "herbes");
       const text = `${product.nameFr} ${product.nameAr} ${product.descriptionFr} ${product.descriptionAr}`.toLocaleLowerCase();
       return matchesCategory && text.includes(query);
