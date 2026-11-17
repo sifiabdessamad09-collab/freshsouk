@@ -44,6 +44,33 @@ test('shipping defaults stay 20 DH/free at 200, settings use CAS, new zones and 
  assert.equal((await create(f,{...orderBody,customer:{...orderBody.customer,city:'Rabat'}})).status,400);
  assert.equal((await api(f,'settings',{...b,version:2,zones:['Casablanca','<script>']})).status,400);f.db.close();
 });
+
+test('catalog proposals need an explicit price and activation before they appear in the shop',async()=>{
+  const f=await fixture({v2:true});
+  try {
+    const proposalsPath='/api/admin/products';
+    assert.equal((await f.request(proposalsPath,{auth:false})).status,401);
+    const {proposals,images}=await (await f.request(proposalsPath)).json();
+    assert.equal(proposals.length,9);
+    assert(proposals.every(proposal=>images.includes(proposal.imageKey)&&!('priceCents' in proposal)));
+    const avocado=proposals.find(proposal=>proposal.id==='avocat');
+    assert.equal(avocado.unit,'kg');
+    const publicCatalog=async()=>await (await publicWorker.fetch(new Request('https://public.invalid/api/catalog'),f.env)).json();
+    const body={...avocado,active:false,trackStock:false,stockMilli:0,lowStockMilli:5000,reason:'Test catalogue'};
+    assert.equal((await f.request(proposalsPath,{body})).status,400);
+    assert.equal((await f.request(proposalsPath,{body:{...body,priceCents:2400}})).status,201);
+    assert(!(await publicCatalog()).some(product=>product.id==='avocat'));
+
+    const path=proposalsPath+'/avocat';
+    const saved=productBody(f.db.prepare('SELECT * FROM products WHERE id=?').get('avocat'));
+    assert.equal((await f.request(path,{method:'PATCH',body:{...saved,active:true}})).status,200);
+    const product=(await publicCatalog()).find(product=>product.id==='avocat');
+    assert.equal(product.price,24);
+    assert(product.image.endsWith('/assets/catalog-avocat-transparent.webp'));
+  } finally {
+    f.db.close();
+  }
+});
 test('financials distinguish revenue, missing costs and profit; purchase prices are snapshotted and expenses idempotent',async()=>{
  const f=await fixture({v2:true});assert.equal((await api(f,'product-costs/tomates',{version:0,unitCostCents:300})).status,200);
  const id=(await(await create(f)).json()).order.id;await deliver(f,id);

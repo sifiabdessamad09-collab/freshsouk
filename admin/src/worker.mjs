@@ -71,7 +71,9 @@ export default {
           if(request.method==='GET') {
             const products=await rows(statement(env,'SELECT * FROM products ORDER BY active DESC,category,name_fr'));
             const images=await (await asset(env,request,'/image-keys.json')).json();
-            return secured(json({products:products.map(adminProduct),images}));
+            const proposalsAsset=await asset(env,request,'/catalog-proposals.json');
+            const proposals=await proposalsAsset.json();
+            return secured(json({products:products.map(adminProduct),images,proposals}));
           }
           if(request.method==='POST') {
             const p=productInput(await readBody(request),true,env.ADMIN_V2_ENABLED==='true');
