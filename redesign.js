@@ -31,8 +31,8 @@ const fsAssetImages = {
   "grenades": "catalog-grenades"
 };
 const fsQoffas = [
+ {id:'family',fr:'Qoffa Famille',ar:'قفة العائلة',featured:true,description:'9 kg de légumes et de fruits, avec une botte d’herbes.',descriptionAr:'9 كيلو ديال الخضر والفواكه مع ربطة ديال الأعشاب.',items:[['pomme-de-terre',2],['tomates',1.5],['oignons-rouges',1],['carottes',1],['courgettes',.5],['concombres',.5],['aubergines',.5],['oranges',1],['pommes-rouges',.5],['bananes',.5],['herbes',1]]},
  {id:'solo',fr:'Qoffa Solo',ar:'قفة فردية',description:'L’essentiel de la semaine pour une personne.',descriptionAr:'قفة فيها الأساسيات ديال السيمانة لشخص واحد.',items:[['pomme-de-terre',1],['tomates',.5],['oignons-rouges',.5],['carottes',.5],['courgettes',.5],['herbes',1]]},
- {id:'family',fr:'Qoffa Famille',ar:'قفة العائلة',description:'Une sélection généreuse pour toute la famille.',descriptionAr:'تشكيلة سخية من الخضر الطرية للعائلة كاملة.',items:[['pomme-de-terre',2],['tomates',1],['oignons-rouges',1],['carottes',1],['courgettes',1],['aubergines',.5],['poivrons',.5],['herbes',2]]},
  {id:'fruits',fr:'Qoffa Fruits',ar:'قفة الفواكه',description:'Des fruits frais et de saison pour faire le plein de vitamines.',descriptionAr:'فواكه طرية ومتنوعة باش تزيد الحيوية لنهارك.',items:[['oranges',1],['bananes',1],['pommes-rouges',1],['raisins',.5],['fraises',.5],['kiwi',.5]]}
 ];
 function fsEscape(value){return String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
@@ -62,20 +62,53 @@ function fsProductMarkup(p){
  <div class="product-bottom"><div class="product-price">${p.available===false?'<span>Indisponible · سالا المخزون</span><br>':''}${fsMoney(Number(p.price))} DH <small>/ ${fsEscape(p.unit==='Kg'?'kg':p.unit)}</small></div>
  <div class="product-purchase-row"><div class="quantity-picker" aria-label="Quantité / الكمية"><button type="button" aria-label="Diminuer / نقص" onclick="adjustProductQuantity(this,-1)"><i data-lucide="minus" aria-hidden="true"></i></button><output data-quantity-value data-quantity="1" data-unit="${fsEscape(p.unit)}" aria-live="polite">1</output><button type="button" aria-label="Augmenter / زيد" onclick="adjustProductQuantity(this,1)"><i data-lucide="plus" aria-hidden="true"></i></button></div><button class="fs-product-add" ${p.available===false?'disabled':''} onclick="addSelectedToCart('${fsEscape(p.id)}',this)" aria-label="Ajouter ${fsEscape(p.nameFr)} / زيد ${fsEscape(p.nameAr)}"><i data-lucide="plus" aria-hidden="true"></i></button></div></div></div></article>`;
 }
+function fsQoffaLines(qoffa) {
+ return qoffa.items.map(([id,quantity])=>({id,quantity,product:products.find(p=>p.id===id)}));
+}
+function fsQoffaAvailable(product) {
+ return !!product && product.active!==false && product.available!==false && product.inStock!==false;
+}
+function fsQoffaCard(q,expanded) {
+ return `<article class="fs-qoffa${q.featured?' fs-qoffa-featured':''}">
+ <img class="fs-qoffa-image" src="${fsEscape(q.image)}" alt="" ${q.featured?'fetchpriority="high"':'loading="lazy"'}>
+ <h3>${fsEscape(q.fr)}<span lang="ar" dir="rtl">${fsEscape(q.ar)}</span></h3>
+ <div class="fs-qoffa-description"><p>${fsEscape(q.description)}</p><p lang="ary" dir="rtl">${fsEscape(q.descriptionAr)}</p></div>
+ <p class="fs-qoffa-price">${q.available?'':'Indisponible · غير متوفرة · '}<strong>${fsMoney(q.total)} DH</strong></p>
+ <button class="fs-button fs-choose" data-qoffa-id="${fsEscape(q.id)}" onclick="fsAddQoffa(this.dataset.qoffaId)" ${q.available?'':'disabled'}>Choisir <i data-lucide="arrow-right" aria-hidden="true"></i><span lang="ar">اختار</span></button>
+ <details class="fs-qoffa-details" data-qoffa="${fsEscape(q.id)}" ${expanded.has(q.id)?'open':''}><summary>Voir le contenu · شوف شنو فيها</summary>${q.contents}</details>
+ </article>`;
+}
 function fsRenderQoffas(){
- const target=document.getElementById('qoffaGrid'); if(!target)return;
- const expanded=new Set([...target.querySelectorAll('details[open]')].map(d=>d.dataset.qoffa));
- target.innerHTML=fsQoffas.map(q=>{
- const available=q.items.every(([id])=>products.some(p=>p.id===id && p.active!==false && p.available!==false && p.inStock!==false));
- const total=q.items.reduce((sum,[id,qty])=>sum+(Number(products.find(p=>p.id===id)?.price)||0)*qty,0);
- return `<article class="fs-qoffa"><img class="fs-qoffa-image" src="assets/${q.id}-transparent.webp" alt="${q.fr} / ${q.ar}" ${q.id==='solo'?'fetchpriority="high"':'loading="lazy"'}><h2>${q.fr}<span lang="ar" dir="rtl">${q.ar}</span></h2><div class="fs-qoffa-description"><p>${q.description}</p><p lang="ary" dir="rtl">${q.descriptionAr}</p></div><p class="fs-qoffa-price">${available?'':'Indisponible · غير متوفرة · '}<strong>${fsMoney(total)} DH</strong></p><button class="fs-button fs-choose" onclick="fsAddQoffa('${q.id}')" ${available?'':'disabled'}>Choisir <i data-lucide="arrow-right" aria-hidden="true"></i><span lang="ar">اختار</span></button><details class="fs-qoffa-details" data-qoffa="${q.id}" ${expanded.has(q.id)?'open':''}><summary>Voir le contenu · شوف شنو فيها</summary><ul>${q.items.map(([id,quantity])=>{const p=products.find(p=>p.id===id);return `<li><span>${fsEscape(p?.nameFr||id)}<small lang="ar" dir="rtl">${fsEscape(p?.nameAr||'')}</small></span><b>${fsMoney(quantity)} ${p?.unit==='Kg'?'kg':fsEscape(p?.unit||'')}</b></li>`}).join('')}</ul></details></article>`;
- }).join('');
+ const target=document.getElementById('qoffaGrid');
+ if(!target)return;
+ const expanded=new Set([...target.querySelectorAll('details[open]')].map(details=>details.dataset.qoffa));
+ const qoffas=fsQoffas.map(q=>{
+  const lines=fsQoffaLines(q);
+  const contents=lines.map(({id,product,quantity})=>`<li><span>${fsEscape(product?.nameFr||id)}<small lang="ar" dir="rtl">${fsEscape(product?.nameAr)}</small></span><b>${fsMoney(quantity)} ${fsEscape(product?.unit==='Kg'?'kg':product?.unit)}</b></li>`).join('');
+  return {...q,image:`assets/${q.id}-transparent.webp`,available:lines.every(({product})=>fsQoffaAvailable(product)),total:lines.reduce((sum,{product,quantity})=>sum+(Number(product?.price)||0)*quantity,0),contents:`<ul>${contents}</ul>`};
+ });
+ const packs=products.filter(p=>p.category==='packs'&&p.active!==false).map(p=>({
+  id:p.id,fr:p.nameFr,ar:p.nameAr,image:fsImage(p),
+  description:'Panier préparé',descriptionAr:'قفة واجدة',
+  available:fsQoffaAvailable(p),total:Number(p.price),
+  contents:`<div class="fs-pack-composition"><p>${fsEscape(p.descriptionFr)}</p><p lang="ar" dir="rtl">${fsEscape(p.descriptionAr)}</p></div>`
+ }));
+ target.innerHTML=[...qoffas,...packs].map(q=>fsQoffaCard(q,expanded)).join('');
 }
 function fsAddQoffa(id){
- const q=fsQoffas.find(q=>q.id===id);if(!q)return;
- const lines=q.items.map(([productId,quantity])=>({product:products.find(p=>p.id===productId),quantity}));
- if(lines.some(l=>!l.product||l.product.available===false))return;
- for(const {product,quantity} of lines){const previous=cart.find(item=>item.id===product.id);if(previous)previous.quantity=Number((Number(previous.quantity)+quantity).toFixed(2));else cart.push({...product,quantity});}
+ const q=fsQoffas.find(qoffa=>qoffa.id===id);
+ if(!q){
+  const pack=products.find(p=>p.id===id&&p.category==='packs');
+  if(fsQoffaAvailable(pack))addToCart(id);
+  return;
+ }
+ const lines=fsQoffaLines(q);
+ if(lines.some(({product})=>!fsQoffaAvailable(product)))return;
+ for(const {product,quantity} of lines){
+  const previous=cart.find(item=>item.id===product.id);
+  if(previous)previous.quantity=Number((Number(previous.quantity)+quantity).toFixed(2));
+  else cart.push({...product,quantity});
+ }
  saveCart();openCart();fsIcons();
 }
 function fsRenderQuickProducts(){
