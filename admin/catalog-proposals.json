@@ -1,0 +1,92 @@
+[
+  {
+    "id": "citron",
+    "nameFr": "Citrons frais",
+    "nameAr": "حامض طري",
+    "category": "fruits",
+    "unit": "kg",
+    "descriptionFr": "Citrons frais pour salades, marinades et jus.",
+    "descriptionAr": "حامض طري للسلطة والتتبيلة والعصير.",
+    "imageKey": "catalog-citron"
+  },
+  {
+    "id": "ail",
+    "nameFr": "Ail rouge · sachet 250 g",
+    "nameAr": "ثوم حمر · كيس 250 غ",
+    "category": "legumes",
+    "unit": "unité",
+    "descriptionFr": "Têtes d’ail rouge dans un sachet de 250 g.",
+    "descriptionAr": "روس الثوم الحمر فكيس ديال 250 غرام.",
+    "imageKey": "catalog-ail"
+  },
+  {
+    "id": "laitue",
+    "nameFr": "Laitue beldi",
+    "nameAr": "خس بلدي",
+    "category": "legumes",
+    "unit": "unité",
+    "descriptionFr": "Une laitue beldi entière.",
+    "descriptionAr": "خسة بلدية كاملة.",
+    "imageKey": "catalog-laitue"
+  },
+  {
+    "id": "patate-douce",
+    "nameFr": "Patates douces orange",
+    "nameAr": "بطاطا حلوة برتقالية",
+    "category": "legumes",
+    "unit": "kg",
+    "descriptionFr": "Patates douces à chair orange, pour rôtir ou cuire à la vapeur.",
+    "descriptionAr": "بطاطا حلوة برتقالية من الداخل، للفران أو للتبخير.",
+    "imageKey": "catalog-patate-douce"
+  },
+  {
+    "id": "avocat",
+    "nameFr": "Avocats frais",
+    "nameAr": "أفوكا طرية",
+    "category": "fruits",
+    "unit": "kg",
+    "descriptionFr": "Avocats frais à ajouter aux salades ou aux smoothies.",
+    "descriptionAr": "أفوكا طرية للسلطة أو العصير.",
+    "imageKey": "catalog-avocat"
+  },
+  {
+    "id": "coriandre",
+    "nameFr": "Coriandre fraîche",
+    "nameAr": "قزبور طري",
+    "category": "herbes",
+    "unit": "botte",
+    "descriptionFr": "Une botte de coriandre fraîche.",
+    "descriptionAr": "ربطة قزبور طري.",
+    "imageKey": "catalog-coriandre"
+  },
+  {
+    "id": "persil",
+    "nameFr": "Persil plat frais",
+    "nameAr": "معدنوس طري",
+    "category": "herbes",
+    "unit": "botte",
+    "descriptionFr": "Une botte de persil plat frais.",
+    "descriptionAr": "ربطة معدنوس طري.",
+    "imageKey": "catalog-persil"
+  },
+  {
+    "id": "menthe",
+    "nameFr": "Menthe fraîche",
+    "nameAr": "نعناع طري",
+    "category": "herbes",
+    "unit": "botte",
+    "descriptionFr": "Une botte de menthe fraîche.",
+    "descriptionAr": "ربطة نعناع طري.",
+    "imageKey": "menthe"
+  },
+  {
+    "id": "celeri",
+    "nameFr": "Céleri frais",
+    "nameAr": "كرافس طري",
+    "category": "herbes",
+    "unit": "botte",
+    "descriptionFr": "Une botte de céleri frais pour soupes et sauces.",
+    "descriptionAr": "ربطة كرافس طري للشوربة والمرقة.",
+    "imageKey": "catalog-celeri"
+  }
+]

@@ -1,4 +1,4 @@
-import {mkdir,copyFile,writeFile,rm,lstat} from 'node:fs/promises';
+import {mkdir,copyFile,readFile,writeFile,rm,lstat} from 'node:fs/promises';
 import {fileURLToPath} from 'node:url';
 import path from 'node:path';
 import {sourceCatalog} from './catalog.mjs';
@@ -10,7 +10,11 @@ try {if((await lstat(target)).isSymbolicLink())throw new Error('Refusing a symli
 await rm(target,{recursive:true,force:true});
 await mkdir(new URL('admin/media/',root),{recursive:true});
 for(const name of ['index.html','app.css','app.js','app-v2.js','theme.js','push-worker.js'])await copyFile(new URL('../ui/'+name,import.meta.url),new URL('admin/'+name,root));
-const products=await sourceCatalog(),keys=[...new Set(['leaf',...products.map(p=>p.imageKey)])].sort();
+const proposalsFile=new URL('../catalog-proposals.json',import.meta.url);
+const proposals=JSON.parse(await readFile(proposalsFile,'utf8'));
+await copyFile(proposalsFile,new URL('catalog-proposals.json',root));
+const products=await sourceCatalog();
+const keys=[...new Set(['leaf',...[...products,...proposals].map(p=>p.imageKey)])].sort();
 await writeFile(new URL('image-keys.json',root),JSON.stringify(keys));
 for(const key of keys.filter(k=>k!=='leaf'))await copyFile(new URL('../../assets/'+key+'-transparent.webp',import.meta.url),new URL('admin/media/'+key+'.webp',root));
 // A neutral leaf icon is rendered by the UI for imageKey=leaf; no photo is invented.

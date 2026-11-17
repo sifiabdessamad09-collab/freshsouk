@@ -9,7 +9,7 @@ const categories={legumes:'Légumes · الخضر',fruits:'Fruits · الفوا�
 const paths={dashboard:'M3 3h7v7H3zM14 3h7v7h-7zM3 14h7v7H3zM14 14h7v7h-7z',orders:'M8 4H5v17h14V4h-3M9 3h6v4H9zM8 12h8M8 16h5',products:'M4 7l8-4 8 4v10l-8 4-8-4zM4 7l8 4 8-4M12 11v10',lock:'M6 10h12v11H6zM8 10V7a4 4 0 0 1 8 0v3',logout:'M9 4H4v16h5M10 12h11M17 8l4 4-4 4',plus:'M12 4v16M4 12h16',refresh:'M20 7v5h-5M4 17v-5h5M6 7a7 7 0 0 1 12-1l2 2M4 16l2 2a7 7 0 0 0 12-1',download:'M12 3v12M7 10l5 5 5-5M4 16v5h16v-5',leaf:'M20 3C9 2 3 7 5 14c2 7 14 5 15-11ZM5 20l10-11',clock:'M12 8v5l3 2M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0',money:'M3 6h18v12H3zM16 12h2M6 12h1M14 12a2 2 0 1 1-4 0 2 2 0 0 1 4 0',alert:'M12 3L2 21h20zM12 9v5M12 17h.01'};
 const icon=name=>`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="${paths[name]||paths.leaf}"/></svg>`;
 document.querySelectorAll('[data-icon]').forEach(node=>node.innerHTML=icon(node.dataset.icon));
-const state={session:null,products:[],images:[],orders:[],filters:{},page:1,route:'dashboard',generation:0,locked:false};
+const state={session:null,products:[],images:[],proposals:[],orders:[],filters:{},page:1,route:'dashboard',generation:0,locked:false};
 let toastTimer,expiryTimer,returnFocus;
 
 function toast(message){$('#toast').textContent=message;$('#toast').hidden=false;clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('#toast').hidden=true,5500);}
@@ -41,7 +41,14 @@ const arStatus=status=>statuses[status]?.[1]||'';
 const empty=message=>`<div class="empty">${icon('leaf')}${e(message)}</div>`;
 const button=(label,action,extra='',className='secondary')=>`<button type="button" class="btn ${className}" data-action="${action}" ${extra}>${label}</button>`;
 function route(){const value=location.hash.slice(1);return ['dashboard','orders','products','clients','deliveries','finances','reports','notifications','settings'].includes(value)?value:'dashboard';}
-async function products(){const data=await(await api('/api/admin/products')).json();if(state.locked)return [];state.products=data.products;state.images=data.images;return data.products;}
+async function products(){
+  const data=await(await api('/api/admin/products')).json();
+  if(state.locked)return [];
+  state.products=data.products;
+  state.images=data.images;
+  state.proposals=data.proposals??[];
+  return data.products;
+}
 
 async function loadPage() {
   // Let the browser finish removing the native modal before replacing its background.
@@ -102,12 +109,16 @@ async function editProduct(id) {
   if(!state.products.length)await products();
   const current=id?state.products.find(p=>p.id===id):null;
   if(id&&!current)throw new Error('Produit introuvable. Actualisez.');
-  const p=current||{id:'',nameFr:'',nameAr:'',category:'legumes',unit:'kg',priceCents:100,stockMilli:0,lowStockMilli:5000,trackStock:false,active:true,imageKey:'leaf',descriptionFr:'',descriptionAr:''};
+  const p=current||{id:'',nameFr:'',nameAr:'',category:'legumes',unit:'kg',stockMilli:0,lowStockMilli:5000,trackStock:false,active:true,imageKey:'leaf',descriptionFr:'',descriptionAr:''};
+  const availableProposals=current?[]:state.proposals.filter(proposal=>
+    (proposal.category!=='herbes'||state.session?.v2Enabled)&&!state.products.some(product=>product.id===proposal.id)
+  );
   openDialog(current?'Modifier le produit · بدّل المنتوج':'Nouveau produit · منتوج جديد',`<form id="productForm" data-id="${e(id||'')}"><div class="form-grid">
+    ${availableProposals.length?`<label class="field full">Modèle de produit · نموذج المنتوج<select name="proposal"><option value="">Choisir un modèle · اختار نموذج</option>${availableProposals.map(proposal=>`<option value="${e(proposal.id)}">${e(proposal.nameFr)} · ${e(proposal.nameAr)}</option>`).join('')}</select><small>Renseignez le prix de vente avant d’activer le produit. · دخل ثمن البيع قبل ما تفعّل المنتوج.</small></label>`:''}
     ${field('Nom français · الاسم بالفرنسية','nameFr','text',p.nameFr,'required maxlength="160"')}${field('Nom arabe · الاسم بالعربية','nameAr','text',p.nameAr,'required maxlength="160" dir="rtl"')}
     ${field('Identifiant · المرجع','id','text',p.id,`required maxlength="80" pattern="[a-z0-9][a-z0-9-]{0,79}" ${current?'readonly':''}`)}
     <label class="field">Catégorie<select name="category">${Object.entries(categories).filter(([key])=>key!=='herbes'||state.session?.v2Enabled).map(([key,label])=>`<option value="${key}" ${p.category===key?'selected':''}>${e(label)}</option>`).join('')}</select></label>
-    ${field('Prix en DH · الثمن بالدرهم','price','number',p.priceCents/100,'required min="0.01" max="100000" step="0.01"')}
+    ${field('Prix en DH par unité choisie · الثمن بالدرهم للوحدة المختارة','price','number',current?current.priceCents/100:'','required min="0.01" max="100000" step="0.01"')}
     <label class="field">Unité · الوحدة<select name="unit" ${current?'disabled':''}>${['kg','botte','unité','pack'].map(u=>`<option ${p.unit===u?'selected':''}>${u}</option>`).join('')}</select><small>Une unité existante est conservée pour protéger les commandes.</small></label>
     <div class="checks"><label><input type="checkbox" name="active" ${p.active?'checked':''}> Actif · خدام</label><label><input type="checkbox" name="trackStock" ${p.trackStock?'checked':''}> Suivre le stock · تتبع المخزون</label></div>
     ${field('Stock disponible · الكمية المتوفرة','stock','number',p.stockMilli/1000,`required min="0" max="100000" step="${p.unit==='kg'?'.5':'1'}" ${p.trackStock?'':'disabled'}`)}
@@ -120,6 +131,17 @@ async function editProduct(id) {
   const form=$('#productForm');
   form.elements.trackStock.addEventListener('change',()=>form.elements.stock.disabled=!form.elements.trackStock.checked);
   form.elements.unit.addEventListener('change',()=>{for(const key of ['stock','threshold'])form.elements[key].step=form.elements.unit.value==='kg'?'.5':'1';});
+  form.elements.proposal?.addEventListener('change',()=>{
+    const proposal=availableProposals.find(item=>item.id===form.elements.proposal.value);
+    if(!proposal)return;
+    for(const name of ['id','nameFr','nameAr','category','unit','imageKey','descriptionFr','descriptionAr']){
+      form.elements[name].value=proposal[name];
+    }
+    form.elements.id.dataset.edited='true';
+    form.elements.unit.dispatchEvent(new Event('change'));
+    form.elements.price.value='';
+    form.elements.active.checked=false;
+  });
   if(!current)form.elements.nameFr.addEventListener('input',()=>{if(!form.elements.id.dataset.edited)form.elements.id.value=form.elements.nameFr.value.normalize('NFKD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,80);});
   form.elements.id.addEventListener('input',()=>form.elements.id.dataset.edited='true');
   form.addEventListener('submit',event=>submitForm(event,async()=>{

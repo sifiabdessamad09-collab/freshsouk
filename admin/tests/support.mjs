@@ -38,10 +38,16 @@ export async function fixture({v2=false}={}) {
   db.exec(await readFile(new URL('../db/0001_admin.sql',import.meta.url),'utf8'));
   db.exec(await readFile(new URL('../db/0003_order_tracking.sql',import.meta.url),'utf8'));
   const catalog=await sourceCatalog();db.exec(seedStatements(catalog));
+  const proposals=JSON.parse(await readFile(new URL('../catalog-proposals.json',import.meta.url),'utf8'));
   if(v2)db.exec('BEGIN;'+await readFile(new URL('../db/0004_admin_v2.sql',import.meta.url),'utf8')+'COMMIT;');
   const env={DB:sqliteAdapter(db),ACCESS_TEAM_DOMAIN:TEAM,ACCESS_AUD:AUD,ADMIN_EMAILS:EMAIL,
     ALLOWED_ORIGIN:'https://sifiabdessamad09-collab.github.io',PUBLIC_ORDER_INTAKE_ENABLED:'false',
-    ASSETS:{async fetch(request){return new URL(request.url).pathname==='/image-keys.json'?Response.json(['leaf',...new Set(catalog.map(p=>p.imageKey))]):new Response('<html>Private application</html>',{headers:{'content-type':'text/html'}});}}
+    ASSETS:{async fetch(request){
+      const path=new URL(request.url).pathname;
+      if(path==='/catalog-proposals.json')return Response.json(proposals);
+      if(path==='/image-keys.json')return Response.json(['leaf',...new Set([...catalog,...proposals].map(p=>p.imageKey))]);
+      return new Response('<html>Private application</html>',{headers:{'content-type':'text/html'}});
+    }}
   };
   const jwt=await token();
   if(v2){db.exec(await readFile(new URL('../db/0005_admin_workflow.sql',import.meta.url),'utf8'));env.ADMIN_V2_ENABLED='true';}
